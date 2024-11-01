@@ -10,13 +10,16 @@ import {
 } from "../ui/form";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
+import { useFormStore } from "../../store/useFormStore";
+import { useEffect } from "react";
 
 // define form schema
 const formSchema = z.object({
-  summary: z.string().min(1),
+  summary: z.string().min(1, { message: "Summary is required" }),
 });
 
 export const SummaryForm: React.FC = () => {
+  const { formData, prevStep, nextStep, setData } = useFormStore();
   // 1. Define the form using the useForm hook
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -28,11 +31,23 @@ export const SummaryForm: React.FC = () => {
 
   // Define a submit handler
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    // set the form data to the store
+    setData({ ...formData, ...values });
+    nextStep();
   }
 
+  // handle input change
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    // get the form data from the store and set it to the form inputs
+    form.reset(formData);
+  }, [formData]);
+
   return (
-    <>
+    <div>
       <h2 className="text-2xl font-bold mb-4">Summary</h2>
       <Form {...form}>
         <form
@@ -47,8 +62,16 @@ export const SummaryForm: React.FC = () => {
                 <FormItem className="flex-1">
                   <FormControl>
                     <Textarea
+                      rows={5}
                       placeholder="I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks."
                       {...field}
+                      onChange={handleChange}
+                      onInput={(e) => {
+                        // increase the height of the textarea as the user types
+                        e.currentTarget.style.height = "auto";
+                        e.currentTarget.style.height =
+                          e.currentTarget.scrollHeight + "px";
+                      }}
                     />
                   </FormControl>
                   <FormMessage />
@@ -56,11 +79,14 @@ export const SummaryForm: React.FC = () => {
               )}
             />
           </div>
-          <Button type="submit" className=" self-end">
-            Next
-          </Button>
+          <div className="flex justify-between">
+            <Button type="button" onClick={prevStep}>
+              Prev
+            </Button>
+            <Button type="submit">Next</Button>
+          </div>
         </form>
       </Form>
-    </>
+    </div>
   );
 };
