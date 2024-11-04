@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useFormStore } from "../../store/useFormStore";
 import { HeaderForm } from "../core/HeaderForm";
 import { SummaryForm } from "../core/SummaryForm";
+import { ExperienceForm } from "../core/ExperienceForm";
 
 export const CvForm: React.FC = () => {
   const { step, formData } = useFormStore();
@@ -11,9 +12,10 @@ export const CvForm: React.FC = () => {
   }, [formData]);
 
   return (
-    <div className="w-1/3">
+    <div className="w-1/2">
       {step === 0 && <HeaderForm />}
       {step === 1 && <SummaryForm />}
+      {step === 2 && <ExperienceForm />}
     </div>
   );
 };

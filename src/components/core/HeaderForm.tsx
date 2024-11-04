@@ -14,8 +14,30 @@ import { Button } from "../ui/button";
 import { useFormStore } from "../../store/useFormStore";
 import { useEffect } from "react";
 
+// Define a type for the form data
+type personalInfo = {
+  name: string;
+  title: string;
+  email: string;
+  linkedin: string;
+  otherLink: string;
+  phone: string;
+  location: string;
+};
+
+// define default form data
+const personalInfoForm: personalInfo = {
+  name: "Mohamed Ashraf",
+  title: "Frontend Developer",
+  email: "moashraf@gmail.com",
+  linkedin: "http://linkedin.com/in/mohamedashraf",
+  otherLink: " http://github.com/mohamedashraf",
+  phone: "+20123456789",
+  location: "Cairo, Egypt",
+};
+
 // define form schema
-const formSchema = z.object({
+const personalInfoSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   title: z.string().min(1, { message: "Job title is required" }),
   email: z.string().email().optional(),
@@ -23,6 +45,10 @@ const formSchema = z.object({
   otherLink: z.string().url().optional(),
   phone: z.string().optional(),
   location: z.string().optional(),
+});
+
+const formSchema = z.object({
+  personalInfo: z.array(personalInfoSchema),
 });
 
 export const HeaderForm: React.FC = () => {
@@ -34,30 +60,25 @@ export const HeaderForm: React.FC = () => {
     resolver: zodResolver(formSchema),
     // will get from local storage later
     defaultValues: {
-      name: "",
-      title: "Frontend Developer",
-      phone: " +201234567890",
-      email: "moashraf@gmail.com",
-      linkedin: "https://www.linkedin.com/in/mohamedashraf",
-      otherLink: "https://www.github.com/mohamedashraf",
-      location: "",
+      personalInfo: [personalInfoForm],
     },
   });
 
   // Define a submit handler
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // prevent default form submission
-    nextStep();
     // set the form data to the store
-    setData({ ...formData, ...values });
+    setData({ ...formData, personalInfo: values.personalInfo });
+    nextStep();
   }
 
   // handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData({ ...formData, [e.target.name]: e.target.value });
+    // setData({ ...formData, [e.target.name]: e.target.value });
   };
 
   useEffect(() => {
+    console.log(form.getValues(), formData);
+
     // get the form data from the store and set it to the form inputs
     form.reset(formData);
   }, [formData]);
@@ -73,7 +94,7 @@ export const HeaderForm: React.FC = () => {
           <div className="flex gap-4">
             <FormField
               control={form.control}
-              name="name"
+              name={`personalInfo.0.name`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Name</FormLabel>
@@ -81,7 +102,7 @@ export const HeaderForm: React.FC = () => {
                     <Input
                       placeholder="John Doe"
                       {...field}
-                      onChange={handleChange}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -90,7 +111,7 @@ export const HeaderForm: React.FC = () => {
             />
             <FormField
               control={form.control}
-              name="title"
+              name={`personalInfo.0.title`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Job Title</FormLabel>
@@ -98,7 +119,7 @@ export const HeaderForm: React.FC = () => {
                     <Input
                       placeholder="Software Developer"
                       {...field}
-                      onChange={handleChange}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -109,7 +130,7 @@ export const HeaderForm: React.FC = () => {
           <div className="flex gap-4">
             <FormField
               control={form.control}
-              name="phone"
+              name={`personalInfo.0.phone`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Phone</FormLabel>
@@ -117,7 +138,7 @@ export const HeaderForm: React.FC = () => {
                     <Input
                       placeholder="+010101010"
                       {...field}
-                      onChange={handleChange}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -126,7 +147,7 @@ export const HeaderForm: React.FC = () => {
             />
             <FormField
               control={form.control}
-              name="email"
+              name={`personalInfo.0.email`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Email</FormLabel>
@@ -134,7 +155,7 @@ export const HeaderForm: React.FC = () => {
                     <Input
                       placeholder="johndeo@gmail.com"
                       {...field}
-                      onChange={handleChange}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -145,7 +166,7 @@ export const HeaderForm: React.FC = () => {
           <div className="flex gap-4">
             <FormField
               control={form.control}
-              name="linkedin"
+              name={`personalInfo.0.linkedin`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Linkedin/Portfolio</FormLabel>
@@ -153,7 +174,7 @@ export const HeaderForm: React.FC = () => {
                     <Input
                       placeholder="http://linkedin.com/in/johndeo"
                       {...field}
-                      onChange={handleChange}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -162,7 +183,7 @@ export const HeaderForm: React.FC = () => {
             />
             <FormField
               control={form.control}
-              name="otherLink"
+              name={`personalInfo.0.otherLink`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Other link</FormLabel>
@@ -170,7 +191,7 @@ export const HeaderForm: React.FC = () => {
                     <Input
                       placeholder="johndeo@github.com"
                       {...field}
-                      onChange={handleChange}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />
@@ -179,7 +200,7 @@ export const HeaderForm: React.FC = () => {
             />{" "}
             <FormField
               control={form.control}
-              name="location"
+              name={`personalInfo.0.location`}
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Location</FormLabel>
@@ -187,7 +208,7 @@ export const HeaderForm: React.FC = () => {
                     <Input
                       placeholder="Cairo, Egypt"
                       {...field}
-                      onChange={handleChange}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />

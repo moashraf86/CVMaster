@@ -25,7 +25,8 @@ export const SummaryForm: React.FC = () => {
     resolver: zodResolver(formSchema),
     // will get from local storage later
     defaultValues: {
-      summary: "",
+      summary:
+        "I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks.",
     },
   });
 
@@ -38,7 +39,10 @@ export const SummaryForm: React.FC = () => {
 
   // handle input change
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setData({ ...formData, [e.target.name]: e.target.value });
+    // setData({ ...formData, [e.target.name]: e.target.value });
+    // increase the height of the textarea as the user types
+    e.currentTarget.style.height = "auto";
+    e.currentTarget.style.height = e.currentTarget.scrollHeight + "px";
   };
 
   useEffect(() => {
@@ -65,13 +69,7 @@ export const SummaryForm: React.FC = () => {
                       rows={5}
                       placeholder="I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks."
                       {...field}
-                      onChange={handleChange}
-                      onInput={(e) => {
-                        // increase the height of the textarea as the user types
-                        e.currentTarget.style.height = "auto";
-                        e.currentTarget.style.height =
-                          e.currentTarget.scrollHeight + "px";
-                      }}
+                      onInput={handleChange}
                     />
                   </FormControl>
                   <FormMessage />
