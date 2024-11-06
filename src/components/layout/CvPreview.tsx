@@ -14,6 +14,7 @@ import { useState } from "react";
 import { HeaderPreview } from "../core/HeaderPreview";
 import { SummaryPreview } from "../core/SummaryPreview";
 import { Button } from "../ui/button";
+import { ExperiencePreview } from "../core/ExperiencePreview";
 
 interface PDFDocumentProps {
   formData: Record<string, string | number | boolean>;
@@ -184,6 +185,7 @@ export const CvPreview: React.FC = () => {
       <div className="flex-1 w-full font-libre shadow-2xl px-8 py-4">
         <HeaderPreview />
         <SummaryPreview />
+        <ExperiencePreview />
       </div>
 
       {/* <PDFViewer className="flex-1 w-full " height="800">
