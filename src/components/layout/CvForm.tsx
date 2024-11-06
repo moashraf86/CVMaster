@@ -12,7 +12,7 @@ export const CvForm: React.FC = () => {
   }, [formData]);
 
   return (
-    <div className="w-1/2">
+    <div className="w-2/5">
       {step === 0 && <HeaderForm />}
       {step === 1 && <SummaryForm />}
       {step === 2 && <ExperienceForm />}

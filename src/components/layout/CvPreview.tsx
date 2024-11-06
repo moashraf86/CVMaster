@@ -173,7 +173,7 @@ export const CvPreview: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col gap-4  w-1/2 min-h-[90dvh]">
+    <div className="flex flex-col gap-4 w-3/5 min-h-[90dvh]">
       <Button variant="default" size="default" className="self-end" asChild>
         <PDFDownloadLink
           document={<PDFDocument formData={formData} />}

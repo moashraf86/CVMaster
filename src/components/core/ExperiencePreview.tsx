@@ -1,4 +1,5 @@
 import { useFormStore } from "../../store/useFormStore";
+import { Experience } from "../../types/types";
 
 export const ExperiencePreview: React.FC = () => {
   const { formData } = useFormStore();
@@ -17,10 +18,10 @@ export const ExperiencePreview: React.FC = () => {
   };
 
   // process experience data to display in the component
-  const processedExperience = experience.map((exp: any) => ({
+  const processedExperience = experience.map((exp: Experience) => ({
     ...exp,
     description: removeBulletPoints(exp.description),
-    startDate: extractMonthYear(new Date(exp.startDate)),
+    startDate: extractMonthYear(exp.startDate),
     endDate:
       exp.endDate && !exp.currentlyWorking
         ? extractMonthYear(exp.endDate)
@@ -34,21 +35,22 @@ export const ExperiencePreview: React.FC = () => {
       </h3>
       {/* // !Error frequently comes from here */}
       {experience &&
-        processedExperience.map((exp: any, index: number) => (
+        processedExperience.map((exp: Experience, index: number) => (
           <div key={index} className="mb-2">
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-bold">{exp.title}</h4>
               <p className="text-sm">
-                {exp.startDate} - {exp.endDate}
+                {String(exp.startDate)} - {String(exp.endDate)}
               </p>
             </div>
             <span className="text-sm">
               {exp.companyName} - {exp.employmentType}
             </span>
             <br />
-            <span className="text-sm">
-              {exp.location} - {exp.locationType}
-            </span>
+            {exp.location && <span className="text-sm">{exp.location}</span>}
+            {exp.locationType && (
+              <span className="text-sm"> - {exp.locationType}</span>
+            )}
             <ul className="text-sm whitespace-pre-line list-disc ps-4 ms-4">
               {exp.description
                 .split("\n")

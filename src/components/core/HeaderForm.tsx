@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -12,21 +13,10 @@ import {
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFormStore } from "../../store/useFormStore";
-import { useEffect } from "react";
-
-// Define a type for the form data
-type personalInfo = {
-  name: string;
-  title: string;
-  email: string;
-  linkedin: string;
-  otherLink: string;
-  phone: string;
-  location: string;
-};
+import { PersonalInfo } from "../../types/types";
 
 // define default form data
-const personalInfoForm: personalInfo = {
+const personalInfoForm: PersonalInfo = {
   name: "Mohamed Ashraf",
   title: "Frontend Developer",
   email: "moashraf@gmail.com",
