@@ -1,38 +1,93 @@
-import { useEffect, useState } from "react";
 import { z } from "zod";
-import { cn } from "../../lib/utils";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
 import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { useFormStore } from "../../store/useFormStore";
+import { ControllerRenderProps, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import { Switch } from "../ui/switch";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { cn } from "../../lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "../ui/calendar";
 
 // Define a type for the experience
 type Experience = {
   companyName: string;
-  position: string;
-  startDate: string;
-  endDate: string;
+  title: string;
+  employmentType: string;
+  location: string;
+  locationType: string;
+  currentlyWorking: boolean;
+  startDate: Date;
+  endDate: Date | undefined;
   description: string;
 };
 
 // Define a default experience form
 const experienceForm: Experience = {
   companyName: "",
-  position: "",
-  startDate: "",
-  endDate: "",
+  title: "",
+  employmentType: "",
+  location: "",
+  locationType: "",
+  currentlyWorking: false,
+  startDate: new Date(),
+  endDate: undefined,
   description: "",
 };
 
 // Define the validation schema using zod
-const experienceSchema = z.object({
-  companyName: z.string().min(1, { message: "Company Name is required" }),
-  position: z.string().min(1, { message: "Position is required" }),
-  startDate: z.string().min(1, { message: "Start Date is required" }),
-  endDate: z.string().min(1, { message: "End Date is required" }),
-  description: z.string().min(1, { message: "Description is required" }),
-});
+const experienceSchema = z
+  .object({
+    companyName: z.string().min(1, { message: "Company Name is required" }),
+    title: z.string().min(1, { message: "Position is required" }),
+    employmentType: z
+      .string()
+      .min(1, { message: "Employment Type is required" }),
+    location: z.string().optional(),
+    locationType: z.string().optional(),
+    currentlyWorking: z.boolean().optional(),
+    startDate: z.date({
+      required_error: "Start Date is required",
+    }),
+    endDate: z.date().optional(),
+    description: z.string().min(1, { message: "Description is required" }),
+  })
+  .refine(
+    (data) => {
+      // `endDate` is required only if `currentlyWorking` is false
+      // const startDate = ctx.parent?.startDate;
+      if (!data.currentlyWorking && !data.endDate) {
+        return false; // Return false if `endDate` is required
+      }
+      if (data.endDate && data.startDate && data.endDate < data.startDate) {
+        return false;
+      }
+      return true;
+    },
+    {
+      path: ["endDate"], // Specify path to `endDate` field for error message location
+      message: "End Date is required",
+    }
+  );
 
 const formSchema = z.object({
   experience: z.array(experienceSchema),
@@ -40,201 +95,392 @@ const formSchema = z.object({
 
 export const ExperienceForm: React.FC = () => {
   const { formData, setData, prevStep, nextStep } = useFormStore();
-  const [experienceList, setExperienceList] = useState<Experience[]>([
-    formData.experience || experienceForm,
-  ]);
-  const [errors, setErrors] = useState<{
-    [key: number]: { [key: string]: string };
-  }>({});
+  const experienceList = formData.experience || [experienceForm];
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      experience: [...experienceList],
+    },
+  });
 
   // Define a submit handler
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    // validate the form data using the schema
-    const result = formSchema.safeParse({ experience: experienceList });
-    if (!result.success) {
-      const fieldErrors: { [key: number]: { [key: string]: string } } = {};
-      result.error.issues.map((issue) => {
-        const path = issue.path;
-        const index = path[1];
-        const fieldName = path[2];
-        if (!fieldErrors[index as number]) fieldErrors[index as number] = {};
-        fieldErrors[index as number][fieldName] = issue.message;
-      });
-      setErrors(fieldErrors);
-      return;
-    }
-    setData({ ...formData, experience: experienceList });
-    // nextStep();
-  };
-
-  // handle input change
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-    index: number
-  ) => {
-    const updatedExperienceList = experienceList.map((experience, i) => {
-      // check if the index matches the current index
-      if (i === index) {
-        return { ...experience, [e.target.name]: e.target.value };
-      }
-      return experience;
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    // add experience list to the store
+    setData({
+      ...formData,
+      experience: [...experienceList, experienceForm],
     });
-    setExperienceList(updatedExperienceList);
+    // set the form data to the store
+    setData({ ...formData, experience: values.experience });
+    // nextStep();
+  }
 
-    // clear the error message when the user starts typing
-    if (errors[index] && errors[index][e.target.name]) {
-      setErrors((prev) => {
-        const newErrors = { ...prev };
-        delete newErrors[index][e.target.name];
-        return newErrors;
-      });
+  // handle bullet points
+  const handleBulletPoints = (
+    e: React.KeyboardEvent<HTMLTextAreaElement>,
+    field: ControllerRenderProps<any>
+  ) => {
+    const { value, selectionStart } = e.target as HTMLTextAreaElement;
+    // add bullet point to the text area if it's empty
+    if (value === "") {
+      field.onChange("• ");
+      e.preventDefault();
+    }
+
+    if (e.key === "Enter") {
+      e.preventDefault();
+      // add bullet point to the text area if it's empty
+
+      // Insert a new line with a bullet point
+      const newValue =
+        value.substring(0, selectionStart) +
+        "\n• " +
+        value.substring(selectionStart);
+
+      // Use React Hook Form's setValue to update the field value
+      field.onChange(newValue);
+
+      // Move the cursor to the correct title
+      setTimeout(() => {
+        (e.target as HTMLTextAreaElement).setSelectionRange(
+          selectionStart + 3,
+          selectionStart + 3
+        );
+      }, 0);
     }
   };
-
-  useEffect(() => {
-    console.log(formData);
-    console.log(errors);
-
-    // get the form data from the store and set it to the form inputs
-    // form.reset(formData);
-  }, [formData, errors]);
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">Personal Info</h2>
-      <form onSubmit={handleSubmit}>
-        {experienceList.map((experience, index) => (
-          <div
-            key={index}
-            className={cn(
-              "space-y-4 pb-6",
-              index > 0 && "pt-4 border-t border-border"
-            )}
-          >
-            {/* Company & position */}
-            <div className="flex gap-4">
-              <div className="space-y-2 flex-1">
-                <Label htmlFor={`companyName${index}`}>Company Name</Label>
-                <Input
-                  type="text"
-                  name="companyName"
-                  id={`companyName${index}`}
-                  placeholder="Company Name"
-                  value={experience.companyName}
-                  onChange={(e) => handleChange(e, index)}
+      <h2 className="text-2xl font-bold mb-4">Experience</h2>
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+        >
+          {/* Map via exp list */}
+          {experienceList.map((_: Experience, index: number) => (
+            <div key={index} className="flex flex-col gap-4">
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.companyName`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Company Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="John Doe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {/* Error message goes here */}
-                {errors[index] && errors[index].companyName && (
-                  <p className="text-xs text-destructive">
-                    {errors[index].companyName}
-                  </p>
-                )}
-              </div>
-              <div className="space-y-2 flex-1">
-                <Label htmlFor={`position${index}`}>Position</Label>
-                <Input
-                  type="text"
-                  name="position"
-                  placeholder="Position"
-                  value={experience.position}
-                  onChange={(e) => handleChange(e, index)}
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.title`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Position</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Software Developer" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {/* Error message goes here */}
-                {errors[index] && errors[index].position && (
-                  <p className="text-xs text-destructive">
-                    {errors[index].position}
-                  </p>
-                )}
-              </div>
-            </div>
-            {/* Start & end Date */}
-            <div className="flex gap-4">
-              <div className="space-y-2 flex-1">
-                <Label htmlFor={`startDate${index}`}>Start Date</Label>
-                <Input
-                  type="date"
-                  name="startDate"
-                  value={experience.startDate}
-                  onChange={(e) => handleChange(e, index)}
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.employmentType`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Employment Type</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Full-time">Full-time</SelectItem>
+                          <SelectItem value="Part-time">Part-time</SelectItem>
+                          <SelectItem value="Freelance">Freelance</SelectItem>
+                          <SelectItem value="Internship">Internship</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {/* Error message goes here */}
-                {errors[index] && errors[index].startDate && (
-                  <p className="text-xs text-destructive">
-                    {errors[index].startDate}
-                  </p>
-                )}
               </div>
-              <div className="space-y-2 flex-1">
-                <Label htmlFor={`endDate${index}`}>End Date</Label>
-                <Input
-                  type="date"
-                  name="endDate"
-                  value={experience.endDate}
-                  onChange={(e) => handleChange(e, index)}
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.location`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="San Francisco, CA"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-                {/* Error message goes here */}
-                {errors[index] && errors[index].endDate && (
-                  <p className="text-xs text-destructive">
-                    {errors[index].endDate}
-                  </p>
-                )}
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.locationType`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Location Type</FormLabel>
+                      <Select onValueChange={field.onChange}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select a type" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="On-site">On-site</SelectItem>
+                          <SelectItem value="Hybrid">Hybrid</SelectItem>
+                          <SelectItem value="Remote">Remote</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
               </div>
-            </div>
-            {/* Description */}
-            <div className="space-y-2 flex-1">
-              <Label htmlFor={`description${index}`}>Description</Label>
-              <Textarea
-                rows={5}
-                name="description"
-                placeholder="Description"
-                value={experience.description}
-                onChange={(e) => handleChange(e, index)}
+              {/* Checkbox */}
+              <FormField
+                control={form.control}
+                name={`experience.${index}.currentlyWorking`}
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <div className="space-y-0.5">
+                      <FormLabel>Currently Working Here</FormLabel>
+                      <FormDescription>
+                        Check this box if you are currently working at this
+                        company.
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={() => {
+                          field.onChange(!field.value);
+                          //`Find another way to update the form with the new value of the switch rather than setting the value directly in the form data object using setData as this cause the form to lose the previous values entered by the user and reset to the default values`
+                          form.setValue(
+                            `experience.${index}.currentlyWorking`,
+                            !field.value
+                          );
+                        }}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
               />
-              {/* Error message goes here */}
-              {errors[index] && errors[index].description && (
-                <p className="text-xs text-destructive">
-                  {errors[index].description}
-                </p>
-              )}
+              {/* Start/end Date */}
+              <div className="flex gap-4">
+                {/* new date picker */}
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.startDate`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>Start Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() || date < new Date("1900-01-01")
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />{" "}
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.endDate`}
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col">
+                      <FormLabel>End Date</FormLabel>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              disabled={form.getValues(
+                                `experience.${index}.currentlyWorking`
+                              )}
+                              variant={"outline"}
+                              className={cn(
+                                "w-[240px] pl-3 text-left font-normal",
+                                !field.value && "text-muted-foreground"
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, "PPP")
+                              ) : (
+                                <span>Pick a date</span>
+                              )}
+                              <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto p-0" align="start">
+                          <Calendar
+                            mode="single"
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            disabled={(date) =>
+                              date > new Date() ||
+                              date < new Date("1900-01-01") ||
+                              date <
+                                form.getValues(`experience.${index}.startDate`)
+                            }
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                {/* <FormField
+                  control={form.control}
+                  name={`experience.${index}.startDate`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Start Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="date"
+                          placeholder="2020-01-01"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.endDate`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>End Date</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={
+                            formData.experience?.[index]?.currentlyWorking
+                          }
+                          type="date"
+                          placeholder="2021-01-01"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
+              </div>
+              <div className="flex gap-4">
+                <FormField
+                  control={form.control}
+                  name={`experience.${index}.description`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          rows={5}
+                          placeholder="I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks."
+                          {...field}
+                          onKeyDown={(e) => handleBulletPoints(e, field)}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="flex justify-between">
+                {/* add/remove experience list */}
+                {experienceList.length - 1 === index && (
+                  <Button
+                    variant="default"
+                    type="button"
+                    onClick={() => {
+                      setData({
+                        ...formData,
+                        experience: [...experienceList, experienceForm],
+                      });
+                    }}
+                  >
+                    Add Experience
+                  </Button>
+                )}
+                {experienceList.length > 1 && (
+                  <Button
+                    variant="outline"
+                    type="button"
+                    className="flex ms-auto text-destructive border-destructive hover:text-primary-foreground hover:border-destructive hover:bg-destructive"
+                    onClick={() => {
+                      setData({
+                        ...formData,
+                        experience: experienceList.filter(
+                          (_: Experience, i: number) => i !== index
+                        ),
+                      });
+                    }}
+                  >
+                    Remove
+                  </Button>
+                )}
+              </div>
             </div>
-            {/* add / Remove experience */}
-            <div className="flex">
-              <Button
-                variant="outline"
-                type="button"
-                className="flex me-auto hover:text-destructive hover:border-destructive"
-                onClick={() =>
-                  setExperienceList(
-                    experienceList.filter((exp, i) => i !== index)
-                  )
-                }
-              >
-                Remove
-              </Button>
-              {index === experienceList.length - 1 && (
-                <Button
-                  variant="outline"
-                  type="button"
-                  onClick={() =>
-                    setExperienceList([...experienceList, experienceForm])
-                  }
-                >
-                  + Add Experience
-                </Button>
-              )}
-            </div>
+          ))}
+          <div className="flex items-center justify-between mt-6">
+            <Button variant="outline" type="button" onClick={prevStep}>
+              Prev
+            </Button>
+            <Button type="submit" className="self-end">
+              Next
+            </Button>
           </div>
-        ))}
-        <div className="flex items-center justify-between mt-6">
-          <Button variant="outline" type="button" onClick={prevStep}>
-            Prev
-          </Button>
-          <Button type="submit" className="self-end">
-            Next
-          </Button>
-        </div>
-      </form>
+        </form>
+      </Form>
     </div>
   );
 };
