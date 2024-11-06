@@ -12,6 +12,13 @@ import { Button } from "../ui/button";
 import { Textarea } from "../ui/textarea";
 import { useFormStore } from "../../store/useFormStore";
 import { useEffect } from "react";
+import { Summary } from "../../types/types";
+
+//define default form data
+const summaryForm: Summary = {
+  summary:
+    "I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks.",
+};
 
 // define form schema
 const formSchema = z.object({
@@ -25,8 +32,7 @@ export const SummaryForm: React.FC = () => {
     resolver: zodResolver(formSchema),
     // will get from local storage later
     defaultValues: {
-      summary:
-        "I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks.",
+      ...summaryForm,
     },
   });
 

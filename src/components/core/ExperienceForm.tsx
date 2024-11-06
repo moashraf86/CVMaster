@@ -27,19 +27,7 @@ import { cn } from "../../lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
-
-// Define a type for the experience
-type Experience = {
-  companyName: string;
-  title: string;
-  employmentType: string;
-  location: string;
-  locationType: string;
-  currentlyWorking: boolean;
-  startDate: Date;
-  endDate: Date | undefined;
-  description: string;
-};
+import { Experience } from "../../types/types";
 
 // Define a default experience form
 const experienceForm: Experience = {
@@ -51,7 +39,8 @@ const experienceForm: Experience = {
   currentlyWorking: false,
   startDate: new Date(),
   endDate: undefined,
-  description: "",
+  description:
+    "• Collaborated with designers to translate design mockups and user stories into functional and responsive web pages \n • Ensured cross-browser compatibility and responsiveness across various devices for an optimal user experience. \n • Utilized Storybook to showcase component variations, interactions, and usage examples, facilitating collaboration and maintainability.",
 };
 
 // Define the validation schema using zod
