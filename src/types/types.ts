@@ -26,3 +26,10 @@ export interface Experience {
   endDate: Date | undefined;
   description: string;
 }
+
+export interface Project {
+  title: string;
+  description: string;
+  link: string;
+  skills: string[];
+}
