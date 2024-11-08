@@ -30,7 +30,7 @@ export const ExperiencePreview: React.FC = () => {
 
   return (
     <section className="mb-4 font-roboto">
-      <h3 className="text-[12px] font-normal border-b border-primary mb-2">
+      <h3 className="text-lg font-bold border-b border-primary mb-2">
         Experience
       </h3>
       {/* // !Error frequently comes from here */}
@@ -39,7 +39,7 @@ export const ExperiencePreview: React.FC = () => {
           <div key={index} className="mb-2">
             <div className="flex items-center justify-between">
               <h4 className="text-lg font-bold">{exp.title}</h4>
-              <p className="text-sm">
+              <p className="text-sm font-bold">
                 {String(exp.startDate)} - {String(exp.endDate)}
               </p>
             </div>
@@ -51,7 +51,7 @@ export const ExperiencePreview: React.FC = () => {
             {exp.locationType && (
               <span className="text-sm"> - {exp.locationType}</span>
             )}
-            <ul className="text-sm whitespace-pre-line list-disc ps-4 ms-4">
+            <ul className="whitespace-pre-line list-disc ps-4 ms-4">
               {exp.description
                 .split("\n")
                 .map((point: string, index: number) => (

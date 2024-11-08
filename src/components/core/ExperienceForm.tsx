@@ -102,7 +102,7 @@ export const ExperienceForm: React.FC = () => {
     });
     // set the form data to the store
     setData({ ...formData, experience: values.experience });
-    // nextStep();
+    nextStep();
   }
 
   // handle bullet points
@@ -264,7 +264,6 @@ export const ExperienceForm: React.FC = () => {
                         checked={field.value}
                         onCheckedChange={() => {
                           field.onChange(!field.value);
-                          //`Find another way to update the form with the new value of the switch rather than setting the value directly in the form data object using setData as this cause the form to lose the previous values entered by the user and reset to the default values`
                           form.setValue(
                             `experience.${index}.currentlyWorking`,
                             !field.value
@@ -366,43 +365,6 @@ export const ExperienceForm: React.FC = () => {
                     </FormItem>
                   )}
                 />
-                {/* <FormField
-                  control={form.control}
-                  name={`experience.${index}.startDate`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>Start Date</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="date"
-                          placeholder="2020-01-01"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name={`experience.${index}.endDate`}
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>End Date</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={
-                            formData.experience?.[index]?.currentlyWorking
-                          }
-                          type="date"
-                          placeholder="2021-01-01"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
               </div>
               <div className="flex gap-4">
                 <FormField

@@ -6,7 +6,7 @@ export const SummaryPreview: React.FC = () => {
 
   return (
     <section className="mb-4 font-roboto">
-      <h3 className="text-[12px] font-normal border-b border-primary mb-2">
+      <h3 className="text-lg font-bold border-b border-primary mb-2">
         Summary
       </h3>
       {summary && <p>{summary}</p>}
