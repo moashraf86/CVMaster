@@ -16,6 +16,11 @@ export const ProjectsPreview: React.FC = () => {
     description: removeBulletPoints(project.description),
   }));
 
+  // check if there are no projects
+  if (!projects || projects.length === 0) {
+    return null;
+  }
+
   return (
     <section className="mb-4 font-roboto">
       <h3 className="text-lg font-bold border-b border-primary mb-2">
@@ -30,13 +35,17 @@ export const ProjectsPreview: React.FC = () => {
                 <a href={project.link}>{project.title}</a>
               </h4>{" "}
               |
-              <p className="text-sm italic">
-                {project.skills.map((skill: string, index: number) => (
-                  <span>
-                    {index === project.skills.length - 1 ? skill : `${skill}, `}
-                  </span>
-                ))}
-              </p>
+              {project.skills && (
+                <p className="text-sm italic">
+                  {project.skills.map((skill: string, index: number) => (
+                    <span>
+                      {index === project.skills.length - 1
+                        ? skill
+                        : `${skill}, `}
+                    </span>
+                  ))}
+                </p>
+              )}
             </div>
             <ul className="whitespace-pre-line list-disc ps-4 ms-4">
               {project.description

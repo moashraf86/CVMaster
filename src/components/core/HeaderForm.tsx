@@ -14,6 +14,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { useFormStore } from "../../store/useFormStore";
 import { PersonalInfo } from "../../types/types";
+import { FormNavigation } from "../layout/FormNavigation";
 
 // define default form data
 const personalInfoForm: PersonalInfo = {
@@ -74,12 +75,12 @@ export const HeaderForm: React.FC = () => {
   }, [formData]);
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h2 className="text-2xl font-bold mb-4">Personal Info</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 grow"
         >
           <div className="flex gap-4">
             <FormField
@@ -206,9 +207,7 @@ export const HeaderForm: React.FC = () => {
               )}
             />
           </div>
-          <Button type="submit" className=" self-end">
-            Next
-          </Button>
+          <FormNavigation />
         </form>
       </Form>
     </div>

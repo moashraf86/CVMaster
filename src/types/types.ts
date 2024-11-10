@@ -33,3 +33,8 @@ export interface Project {
   link: string;
   skills: string[];
 }
+
+export interface Skill {
+  category: string | undefined;
+  name: string;
+}

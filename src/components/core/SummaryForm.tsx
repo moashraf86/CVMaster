@@ -13,6 +13,7 @@ import { Textarea } from "../ui/textarea";
 import { useFormStore } from "../../store/useFormStore";
 import { useEffect } from "react";
 import { Summary } from "../../types/types";
+import { FormNavigation } from "../layout/FormNavigation";
 
 //define default form data
 const summaryForm: Summary = {
@@ -57,12 +58,12 @@ export const SummaryForm: React.FC = () => {
   }, [formData]);
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h2 className="text-2xl font-bold mb-4">Summary</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 grow"
         >
           <div className="flex gap-4">
             <FormField
@@ -83,12 +84,7 @@ export const SummaryForm: React.FC = () => {
               )}
             />
           </div>
-          <div className="flex justify-between">
-            <Button type="button" onClick={prevStep}>
-              Prev
-            </Button>
-            <Button type="submit">Next</Button>
-          </div>
+          <FormNavigation />
         </form>
       </Form>
     </div>

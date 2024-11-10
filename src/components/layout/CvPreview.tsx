@@ -8,20 +8,24 @@ import {
   StyleSheet,
   Link,
   PDFDownloadLink,
+  PDFViewer,
 } from "@react-pdf/renderer";
 import { useFormStore } from "../../store/useFormStore";
-import { useState } from "react";
+import { useEffect } from "react";
 import { HeaderPreview } from "../core/HeaderPreview";
 import { SummaryPreview } from "../core/SummaryPreview";
-import { Button } from "../ui/button";
 import { ExperiencePreview } from "../core/ExperiencePreview";
 import { ProjectsPreview } from "../core/ProjectsPreview";
+import { SKillsPreview } from "../core/SkillsPreview";
 
 interface PDFDocumentProps {
   formData: Record<string, string | number | boolean>;
 }
 
 const PDFDocument: React.FC<PDFDocumentProps> = ({ formData }) => {
+  // const { name, title, phone, email, linkedin, summary } =
+  // formData.personalInfo[0] || {};
+
   Font.register({
     family: "Libre Baskerville",
     src: "http://fonts.gstatic.com/s/librebaskerville/v4/pR0sBQVcY0JZc_ciXjFsKwAUTJOA6-irsSazDq377BE.ttf",
@@ -93,35 +97,45 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ formData }) => {
     document: {
       width: "100%",
       height: "100%",
-      padding: 35,
+
       display: "flex",
       flexDirection: "column",
       justifyContent: "center",
       alignItems: "center",
       boxShadow: "0 0 10px rgba(0,0,0,0.1)",
+      fontFamily: "Merriweather",
     },
     body: {
-      paddingTop: 1,
-      paddingBottom: 15,
-      paddingHorizontal: 15,
+      width: "100%",
+      height: "100%",
+      paddingLeft: 15,
+      paddingRight: 15,
       fontFamily: "Roboto Slab",
       fontWeight: 300,
     },
     section: {
       margin: 10,
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
     },
     name: {
       fontSize: 22,
       textAlign: "center",
-      fontWeight: 400,
+      fontWeight: 700,
+      display: "flex",
+      justifyContent: "center",
     },
     title: {
       fontSize: 14,
       textAlign: "center",
+      fontFamily: "Roboto Slab",
+      display: "flex",
+      justifyContent: "center",
     },
     contact: {
       fontSize: 10,
-      flexDirection: "row",
+      display: "flex",
       justifyContent: "center",
       gap: 10,
     },
@@ -135,9 +149,16 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ formData }) => {
       borderBottom: 1,
       borderBottomColor: "#001",
       marginBottom: 5,
+      fontFamily: "Merriweather",
+    },
+    link: {
+      color: "black",
     },
   });
 
+  useEffect(() => {
+    console.log(name);
+  }, [formData]);
   return (
     <Document style={styles.document}>
       <Page style={styles.body}>
@@ -148,11 +169,15 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ formData }) => {
             <Text style={styles.text}>Phone: {formData.phone}</Text>
             <Text style={styles.text}>
               Email:{" "}
-              <Link src={`mailto:${formData.email}`}>{formData.email}</Link>
+              <Link style={styles.link} src={`mailto:${formData.email}`}>
+                {formData.email}
+              </Link>
             </Text>
             <Text style={styles.text}>
               LinkedIn:
-              <Link src={formData.linkedin}>LinkedIn</Link>
+              <Link style={styles.link} src={formData.linkedIn}>
+                LinkedIn
+              </Link>
             </Text>
           </View>
         </View>
@@ -167,7 +192,6 @@ const PDFDocument: React.FC<PDFDocumentProps> = ({ formData }) => {
 
 export const CvPreview: React.FC = () => {
   const { formData } = useFormStore();
-  const [pdfBlobUrl, setPdfBlobUrl] = useState<string | null>(null);
 
   const [instance] = usePDF({
     document: <PDFDocument formData={formData} />,
@@ -175,24 +199,13 @@ export const CvPreview: React.FC = () => {
 
   return (
     <div className="flex flex-col gap-4 w-3/5 min-h-[90dvh]">
-      <Button variant="default" size="default" className="self-end" asChild>
-        <PDFDownloadLink
-          document={<PDFDocument formData={formData} />}
-          fileName="cv.pdf"
-        >
-          Download PDF
-        </PDFDownloadLink>
-      </Button>
       <div className="flex-1 w-full font-libre shadow-2xl px-8 py-4">
         <HeaderPreview />
         <SummaryPreview />
         <ExperiencePreview />
         <ProjectsPreview />
+        <SKillsPreview />
       </div>
-
-      {/* <PDFViewer className="flex-1 w-full " height="800">
-        <PDFDocument formData={formData} />
-      </PDFViewer> */}
     </div>
   );
 };

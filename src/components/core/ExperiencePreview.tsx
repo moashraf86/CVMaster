@@ -28,6 +28,10 @@ export const ExperiencePreview: React.FC = () => {
         : "Present",
   }));
 
+  if (!experience || experience.length === 0) {
+    return null;
+  }
+
   return (
     <section className="mb-4 font-roboto">
       <h3 className="text-lg font-bold border-b border-primary mb-2">

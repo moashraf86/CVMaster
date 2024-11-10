@@ -4,6 +4,7 @@ import { HeaderForm } from "../core/HeaderForm";
 import { SummaryForm } from "../core/SummaryForm";
 import { ExperienceForm } from "../core/ExperienceForm";
 import { ProjectsForm } from "../core/ProjectsForm";
+import { SkillsForm } from "../core/SkillsForm";
 
 export const CvForm: React.FC = () => {
   const { step, formData } = useFormStore();
@@ -18,6 +19,7 @@ export const CvForm: React.FC = () => {
       {step === 1 && <SummaryForm />}
       {step === 2 && <ExperienceForm />}
       {step === 3 && <ProjectsForm />}
+      {step === 4 && <SkillsForm />}
     </div>
   );
 };

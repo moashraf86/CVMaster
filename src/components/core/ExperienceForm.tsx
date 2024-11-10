@@ -28,6 +28,8 @@ import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
 import { Experience } from "../../types/types";
+import { FormNavigation } from "../layout/FormNavigation";
+import { useState } from "react";
 
 // Define a default experience form
 const experienceForm: Experience = {
@@ -83,8 +85,11 @@ const formSchema = z.object({
 });
 
 export const ExperienceForm: React.FC = () => {
-  const { formData, setData, prevStep, nextStep } = useFormStore();
-  const experienceList = formData.experience || [experienceForm];
+  const { formData, setData, nextStep } = useFormStore();
+  // const experienceList = formData.experience || [experienceForm];
+  const [experienceList, setExperienceList] = useState(
+    formData.experience || [experienceForm]
+  );
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -105,6 +110,18 @@ export const ExperienceForm: React.FC = () => {
     nextStep();
   }
 
+  // handle add experience
+  const addExperience = () => {
+    setExperienceList([...experienceList, experienceForm]);
+  };
+
+  // handle remove experience
+  const removeExperience = (index: number) => {
+    const newExperienceList = experienceList.filter((_, i) => i !== index);
+    setExperienceList(newExperienceList);
+    // update the form data with the experience list
+    form.reset({ experience: newExperienceList });
+  };
   // handle bullet points
   const handleBulletPoints = (
     e: React.KeyboardEvent<HTMLTextAreaElement>,
@@ -141,12 +158,12 @@ export const ExperienceForm: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <h2 className="text-2xl font-bold mb-4">Experience</h2>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="flex flex-col gap-4"
+          className="flex flex-col gap-4 grow"
         >
           {/* Map via exp list */}
           {experienceList.map((_: Experience, index: number) => (
@@ -390,14 +407,9 @@ export const ExperienceForm: React.FC = () => {
                 {/* add/remove experience list */}
                 {experienceList.length - 1 === index && (
                   <Button
-                    variant="default"
+                    variant="outline"
                     type="button"
-                    onClick={() => {
-                      setData({
-                        ...formData,
-                        experience: [...experienceList, experienceForm],
-                      });
-                    }}
+                    onClick={() => addExperience()}
                   >
                     Add Experience
                   </Button>
@@ -407,14 +419,7 @@ export const ExperienceForm: React.FC = () => {
                     variant="outline"
                     type="button"
                     className="flex ms-auto text-destructive border-destructive hover:text-primary-foreground hover:border-destructive hover:bg-destructive"
-                    onClick={() => {
-                      setData({
-                        ...formData,
-                        experience: experienceList.filter(
-                          (_: Experience, i: number) => i !== index
-                        ),
-                      });
-                    }}
+                    onClick={() => removeExperience(index)}
                   >
                     Remove
                   </Button>
@@ -422,14 +427,7 @@ export const ExperienceForm: React.FC = () => {
               </div>
             </div>
           ))}
-          <div className="flex items-center justify-between mt-6">
-            <Button variant="outline" type="button" onClick={prevStep}>
-              Prev
-            </Button>
-            <Button type="submit" className="self-end">
-              Next
-            </Button>
-          </div>
+          <FormNavigation />
         </form>
       </Form>
     </div>
