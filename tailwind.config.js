@@ -53,7 +53,9 @@ module.exports = {
       },
       fontFamily: {
         libre: ["Libre Baskerville", "serif"],
-        roboto: ["Roboto Slab", "serif"],
+        roboto: ["Roboto Slab Variable", "serif"],
+        space: ["Space Grotesk", "sans-serif"],
+        montserrat: ["Montserrat", "sans-serif"],
       },
     },
   },
