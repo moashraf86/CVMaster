@@ -1,8 +1,9 @@
 import { z } from "zod";
 import { Input } from "../ui/input";
-import { useFormStore } from "../../store/useFormStore";
-import { PersonalInfo } from "../../types/types";
+import { useResume } from "../../store/useResume";
+import { Basics } from "../../types/types";
 import { Label } from "../ui/label";
+import { UserRound } from "lucide-react";
 
 // schema
 const basicsSchema = z.object({
@@ -15,12 +16,11 @@ const basicsSchema = z.object({
   location: z.string(),
 });
 
-export const HeaderForm: React.FC = () => {
-  // destructure increment and decrement from usSteps
+export const BasicsInfo: React.FC = () => {
   const {
     setValue,
-    formData: { basics },
-  } = useFormStore();
+    resumeData: { basics },
+  } = useResume();
 
   // handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,9 +30,28 @@ export const HeaderForm: React.FC = () => {
     });
   };
 
+  // set default values for the form
+  const defaultValues: Basics = {
+    name: "John Doe",
+    title: "Software Developer",
+    email: "youremail@domain.com",
+    linkedin: "http://linkedin.com/in/johndoe",
+    website: "http://johndoe.com",
+    phone: "+010101010",
+    location: "Cairo, Egypt",
+  };
+
+  // set the default values to the form
+  if (!basics || Object.keys(basics).length === 0) {
+    setValue("basics", defaultValues);
+  }
+
   return (
-    <div className="flex flex-col h-full">
-      <h2 className="text-2xl font-bold mb-4">Personal Info</h2>
+    <section className="grid gap-y-6" id="basics">
+      <header className="flex items-center gap-x-4">
+        <UserRound />
+        <h2 className="text-2xl font-bold">Personal Info</h2>
+      </header>
       <main className="grid gap-4 sm:grid-col-2">
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="basics.name">Full Name</Label>
@@ -42,11 +61,6 @@ export const HeaderForm: React.FC = () => {
             id="basics.name"
             value={basics?.name}
             onChange={handleChange}
-            hasError={
-              !basicsSchema
-                .pick({ name: true })
-                .safeParse({ name: basics.name }).success
-            }
           />
         </div>
         <div className="space-y-2 sm:col-span-2">
@@ -70,9 +84,16 @@ export const HeaderForm: React.FC = () => {
             hasError={
               !basicsSchema
                 .pick({ email: true })
-                .safeParse({ email: basics.email }).success
+                .safeParse({ email: basics?.email }).success
             }
           />
+          {!basicsSchema
+            .pick({ email: true })
+            .safeParse({ email: basics?.email }).success && (
+            <p className="text-xs text-primary/65">
+              Use format: name@domain.com
+            </p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="basics.linkedin">LinkedIn</Label>
@@ -86,9 +107,16 @@ export const HeaderForm: React.FC = () => {
             hasError={
               !basicsSchema
                 .pick({ linkedin: true })
-                .safeParse({ linkedin: basics.linkedin }).success
+                .safeParse({ linkedin: basics?.linkedin }).success
             }
           />
+          {!basicsSchema
+            .pick({ linkedin: true })
+            .safeParse({ linkedin: basics?.linkedin }).success && (
+            <p className="text-xs text-primary/65">
+              URL must start with: https://
+            </p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="basics.linkedin">Website/Portfolio</Label>
@@ -98,7 +126,19 @@ export const HeaderForm: React.FC = () => {
             id="basics.website"
             value={basics?.website}
             onChange={handleChange}
+            hasError={
+              !basicsSchema
+                .pick({ website: true })
+                .safeParse({ website: basics?.website }).success
+            }
           />
+          {!basicsSchema
+            .pick({ website: true })
+            .safeParse({ website: basics?.website }).success && (
+            <p className="text-xs text-primary/65">
+              URL must start with: https://
+            </p>
+          )}
         </div>
         <div className="space-y-2">
           <Label htmlFor="basics.phone">Phone</Label>
@@ -111,7 +151,7 @@ export const HeaderForm: React.FC = () => {
             hasError={
               !basicsSchema
                 .pick({ phone: true })
-                .safeParse({ phone: basics.phone }).success
+                .safeParse({ phone: basics?.phone }).success
             }
           />
         </div>
@@ -126,6 +166,6 @@ export const HeaderForm: React.FC = () => {
           />
         </div>
       </main>
-    </div>
+    </section>
   );
 };

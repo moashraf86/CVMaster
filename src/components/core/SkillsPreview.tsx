@@ -1,9 +1,10 @@
-import { useFormStore } from "../../store/useFormStore";
+import { useResume } from "../../store/useResume";
 import { Skill } from "../../types/types";
 
 export const SKillsPreview: React.FC = () => {
-  const { formData } = useFormStore();
-  const skills = formData.skills || [];
+  const {
+    resumeData: { skills },
+  } = useResume();
 
   // check if there are no skills
   if (!skills || skills.length === 0) {

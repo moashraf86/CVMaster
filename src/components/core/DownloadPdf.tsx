@@ -1,11 +1,12 @@
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
-import { HeaderPreview } from "../core/HeaderPreview";
-import { SummaryPreview } from "../core/SummaryPreview";
-import { ExperiencePreview } from "../core/ExperiencePreview";
-import { ProjectsPreview } from "../core/ProjectsPreview";
-import { SKillsPreview } from "../core/SkillsPreview";
+import { HeaderPreview } from "./HeaderPreview";
+import { SummaryPreview } from "./SummaryPreview";
+import { ExperiencePreview } from "./ExperiencePreview";
+import { ProjectsPreview } from "./ProjectsPreview";
+import { SKillsPreview } from "./SkillsPreview";
 import { Button } from "../ui/button";
+import { Download } from "lucide-react";
 
 const div = document.createElement("div");
 const root = createRoot(div);
@@ -22,7 +23,7 @@ flushSync(() => {
 });
 console.log(div.innerHTML);
 
-export const DownloadBtn: React.FC = () => {
+export const DownloadPDF: React.FC = () => {
   const downloadPdf = async () => {
     // render CVPreview component to HTML
     const htmlContent = `<html>
@@ -63,8 +64,14 @@ export const DownloadBtn: React.FC = () => {
     document.body.removeChild(link);
   };
   return (
-    <Button variant="default" onClick={downloadPdf}>
-      Download
+    <Button
+      title="Download PDF"
+      variant="ghost"
+      size="icon"
+      className="rounded-full"
+      onClick={downloadPdf}
+    >
+      <Download />
     </Button>
   );
 };
