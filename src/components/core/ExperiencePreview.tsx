@@ -1,32 +1,33 @@
-import { useFormStore } from "../../store/useFormStore";
+import { useResume } from "../../store/useResume";
 import { Experience } from "../../types/types";
 
 export const ExperiencePreview: React.FC = () => {
-  const { formData } = useFormStore();
-  const experience = formData.experience || [];
+  const {
+    resumeData: { experience },
+  } = useResume();
 
   // helper function to extract moth and year from date string
-  const extractMonthYear = (date: Date) => {
-    const month = date.toLocaleString("default", { month: "short" });
-    const year = date.getFullYear();
-    return `${month} ${year}`;
-  };
+  // const extractMonthYear = (date: Date) => {
+  //   const month = date.toLocaleString("default", { month: "short" });
+  //   const year = date.getFullYear();
+  //   return `${month} ${year}`;
+  // };
 
   // remove bullets from the description
-  const removeBulletPoints = (description: string) => {
-    return description.replace(/• /g, "");
-  };
+  // const removeBulletPoints = (description: string) => {
+  //   return description.replace(/• /g, "");
+  // };
 
   // process experience data to display in the component
-  const processedExperience = experience.map((exp: Experience) => ({
-    ...exp,
-    description: removeBulletPoints(exp.description),
-    startDate: extractMonthYear(exp.startDate),
-    endDate:
-      exp.endDate && !exp.currentlyWorking
-        ? extractMonthYear(exp.endDate)
-        : "Present",
-  }));
+  // const processedExperience = experience.map((exp: Experience) => ({
+  //   ...exp,
+  //   description: removeBulletPoints(exp.description),
+  //   startDate: extractMonthYear(exp.startDate),
+  //   endDate:
+  //     exp.endDate && !exp.currentlyWorking
+  //       ? extractMonthYear(exp.endDate)
+  //       : "Present",
+  // }));
 
   if (!experience || experience.length === 0) {
     return null;
@@ -38,7 +39,7 @@ export const ExperiencePreview: React.FC = () => {
         Experience
       </h3>
       {/* // !Error frequently comes from here */}
-      {experience &&
+      {/* {experience &&
         processedExperience.map((exp: Experience, index: number) => (
           <div key={index} className="mb-2">
             <div className="flex items-center justify-between">
@@ -63,7 +64,7 @@ export const ExperiencePreview: React.FC = () => {
                 ))}
             </ul>
           </div>
-        ))}
+        ))} */}
     </section>
   );
 };

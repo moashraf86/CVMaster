@@ -1,9 +1,10 @@
-import { useFormStore } from "../../store/useFormStore";
+import { useResume } from "../../store/useResume";
 import { Project } from "../../types/types";
 
 export const ProjectsPreview: React.FC = () => {
-  const { formData } = useFormStore();
-  const projects = formData.projects || [];
+  const {
+    resumeData: { projects },
+  } = useResume();
 
   // remove bullets from the description
   const removeBulletPoints = (description: string) => {
@@ -32,16 +33,16 @@ export const ProjectsPreview: React.FC = () => {
           <div key={index} className="mb-2">
             <div className="flex items-center gap-2">
               <h4 className="text-lg font-bold underline">
-                <a href={project.link}>{project.title}</a>
+                <a href={project.website}>{project.name}</a>
               </h4>{" "}
               |
-              {project.skills && (
+              {project.keywords && (
                 <p className="text-sm italic">
-                  {project.skills.map((skill: string, index: number) => (
+                  {project.keywords.map((keyword: string, index: number) => (
                     <span>
-                      {index === project.skills.length - 1
-                        ? skill
-                        : `${skill}, `}
+                      {index === project.keywords.length - 1
+                        ? keyword
+                        : `${keyword}, `}
                     </span>
                   ))}
                 </p>

@@ -1,12 +1,14 @@
 import { Globe, MapPin, Phone, SendIcon } from "lucide-react";
-import { useFormStore } from "../../store/useFormStore";
+import { useResume } from "../../store/useResume";
 import { LinkedInLogoIcon } from "@radix-ui/react-icons";
 
 export const HeaderPreview: React.FC = () => {
   // get the data from the store
-  const { formData } = useFormStore();
+  const {
+    resumeData: { basics },
+  } = useResume();
   const { name, title, location, phone, email, linkedin, website } =
-    formData?.basics || {};
+    basics || {};
 
   return (
     <header className="text-start space-y-1.5">
