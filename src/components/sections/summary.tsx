@@ -2,11 +2,10 @@ import { Textarea } from "../ui/textarea";
 import { useResume } from "../../store/useResume";
 import { Summary } from "../../types/types";
 import { Text } from "lucide-react";
+import { useDebounce } from "@uidotdev/usehooks";
+import { useEffect, useState } from "react";
 
 // form default values
-const defaultValues: Summary = {
-  content: "",
-};
 
 export const SummaryForm: React.FC = () => {
   const {
@@ -14,16 +13,25 @@ export const SummaryForm: React.FC = () => {
     resumeData: { summary },
   } = useResume();
 
-  if (!summary || Object.keys(summary).length === 0) {
-    setValue("summary", defaultValues);
-  }
+  // set default values for the form
+  const defaultValues: Summary = summary;
+
+  const [content, setContent] = useState<string>(defaultValues.content || "");
+
+  const debouncedContent = useDebounce(content, 200);
+
+  useEffect(() => {
+    if (debouncedContent !== summary?.content) {
+      setValue("summary", {
+        ...summary,
+        content: debouncedContent,
+      });
+    }
+  }, [debouncedContent, setValue]);
 
   // handle input change
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue("summary", {
-      ...summary,
-      content: e.target.value,
-    });
+    setContent(e.target.value);
     e.currentTarget.style.height = "auto";
     e.currentTarget.style.height = e.currentTarget.scrollHeight + "px";
   };
@@ -37,7 +45,7 @@ export const SummaryForm: React.FC = () => {
       <Textarea
         rows={5}
         placeholder="I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks."
-        value={summary?.content}
+        value={content}
         onChange={handleChange}
       />
     </section>

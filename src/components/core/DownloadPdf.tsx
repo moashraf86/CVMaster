@@ -1,23 +1,15 @@
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
-import { HeaderPreview } from "./HeaderPreview";
-import { SummaryPreview } from "./SummaryPreview";
-import { ExperiencePreview } from "./ExperiencePreview";
-import { ProjectsPreview } from "./ProjectsPreview";
-import { SKillsPreview } from "./SkillsPreview";
 import { Button } from "../ui/button";
 import { Download } from "lucide-react";
+import { Preview } from "../preview";
 
 const div = document.createElement("div");
 const root = createRoot(div);
 flushSync(() => {
   root.render(
     <>
-      <HeaderPreview />
-      <SummaryPreview />
-      <ExperiencePreview />
-      <ProjectsPreview />
-      <SKillsPreview />
+      <Preview mode="print" />
     </>
   );
 });
@@ -33,10 +25,10 @@ export const DownloadPDF: React.FC = () => {
 		<style>
 			@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap');
 			body {
-				font-family: 'Space Grotesk', sans-serif
+				font-family: "Roboto Slab", serif;
 				}
 		</style>
-    <body class="p-6">
+    <body class="text-sm">
 			<!-- Add other dynamic sections here with Tailwind classes -->
 			${div.innerHTML}
     </body>

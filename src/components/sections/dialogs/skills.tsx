@@ -51,7 +51,7 @@ export const SkillsDialog: React.FC = () => {
     : {
         name: "",
         keyword: "",
-        keywords: [],
+        keywords: [""],
       };
 
   // define form

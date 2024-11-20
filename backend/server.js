@@ -47,7 +47,15 @@ app.post("/pdf", async (req, res) => {
     await page.setContent(htmlContent);
 
     // Generate a PDF from the HTML content
-    const pdfDocument = await page.pdf({});
+    const pdfDocument = await page.pdf({
+      format: "A4",
+      printBackground: true,
+      margin: {
+        top: "6mm",
+        bottom: "6mm",
+      },
+      scale: 1,
+    });
 
     // Close the browser instance after PDF generation
     await browser.close();
