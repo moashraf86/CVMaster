@@ -30,7 +30,7 @@ import { X } from "lucide-react";
 const projectsSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   description: z.string(),
-  date: z.string().min(1, { message: "Date range is required" }),
+  date: z.string(),
   website: z.literal("").or(z.string().url()),
   summary: z.string(),
   keyword: z.string(),
@@ -54,11 +54,13 @@ export const ProjectsDialog: React.FC = () => {
   const defaultValues = isEditMode
     ? projects[index]
     : {
+        // set to empty later
         name: "",
         description: "",
         date: "",
         website: "",
         summary: "",
+        keyword: "",
         keywords: [],
       };
 
@@ -148,7 +150,7 @@ export const ProjectsDialog: React.FC = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Company" {...field} />
+                      <Input placeholder="Project Name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -159,12 +161,9 @@ export const ProjectsDialog: React.FC = () => {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>description</FormLabel>
+                    <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="write project description.."
-                        {...field}
-                      />
+                      <Input placeholder="Ex: Full-stack web app" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -175,9 +174,9 @@ export const ProjectsDialog: React.FC = () => {
                 name="date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Date Range</FormLabel>
+                    <FormLabel>Date</FormLabel>
                     <FormControl>
-                      <Input placeholder="Jan 2020 - Present" {...field} />
+                      <Input placeholder="Ex:Jan 2020" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

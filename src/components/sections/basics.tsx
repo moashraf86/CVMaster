@@ -31,15 +31,7 @@ export const BasicsInfo: React.FC = () => {
   };
 
   // set default values for the form
-  const defaultValues: Basics = {
-    name: "John Doe",
-    title: "Software Developer",
-    email: "youremail@domain.com",
-    linkedin: "http://linkedin.com/in/johndoe",
-    website: "http://johndoe.com",
-    phone: "+010101010",
-    location: "Cairo, Egypt",
-  };
+  const defaultValues: Basics = basics;
 
   // set the default values to the form
   if (!basics || Object.keys(basics).length === 0) {

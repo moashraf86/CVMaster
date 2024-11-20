@@ -22,7 +22,7 @@ export interface Experience {
   location: string;
   employmentType: "Full-time" | "Part-time" | "Freelance" | "Internship";
   website: string;
-  description: string;
+  summary: string;
 }
 
 export interface Project {
@@ -45,8 +45,9 @@ export interface Education {
 }
 
 export interface Skill {
-  category: string | undefined;
-  name: string;
+  name: string | undefined;
+  keyword: string | undefined;
+  keywords: string[];
 }
 
 export interface Language {

@@ -1,5 +1,5 @@
 import { CvForm } from "./components/layout/CvForm";
-import { CvPreview } from "./components/layout/CvPreview";
+import { Preview } from "./components/preview";
 import { DialogProvider } from "./providers/DialogProvider";
 
 function App() {
@@ -8,7 +8,7 @@ function App() {
       <div className="container-fluid">
         <div className="flex gap-10">
           <CvForm />
-          <CvPreview />
+          <Preview mode="preview" />
         </div>
       </div>
     </DialogProvider>
