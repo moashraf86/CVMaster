@@ -42,13 +42,7 @@ export const ProjectsPreview: React.FC = () => {
           </div>
           {project.description && <span>{project.description}</span>}
           {project.summary && (
-            <ul className="whitespace-pre-line list-disc pl-4 ml-4">
-              {project.summary
-                .split("\n")
-                .map((point: string, index: number) => (
-                  <li key={index}>{point}</li>
-                ))}
-            </ul>
+            <div dangerouslySetInnerHTML={{ __html: project.summary }} />
           )}
         </div>
       ))}

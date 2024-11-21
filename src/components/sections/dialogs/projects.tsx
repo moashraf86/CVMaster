@@ -21,10 +21,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { Button } from "../../ui/button";
-import { Textarea } from "../../ui/textarea";
 import { useEffect, useState } from "react";
 import { Project } from "../../../types/types";
 import { X } from "lucide-react";
+import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define projects schema
 const projectsSchema = z.object({
@@ -203,10 +203,9 @@ export const ProjectsDialog: React.FC = () => {
                     <FormItem>
                       <FormLabel>Summary</FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={4}
-                          placeholder="Write a short summary about the project"
-                          {...field}
+                        <RichTextEditor
+                          content={field.value}
+                          handleChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

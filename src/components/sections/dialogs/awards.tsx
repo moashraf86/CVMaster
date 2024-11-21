@@ -20,9 +20,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { Button } from "../../ui/button";
-import { Textarea } from "../../ui/textarea";
 import { useEffect } from "react";
 import { Award } from "../../../types/types";
+import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define awards schema
 const awardsSchema = z.object({
@@ -157,10 +157,9 @@ export const AwardsDialog: React.FC = () => {
                     <FormItem>
                       <FormLabel>Summary</FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={4}
-                          placeholder="Write a short summary about the award"
-                          {...field}
+                        <RichTextEditor
+                          content={field.value}
+                          handleChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

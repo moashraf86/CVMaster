@@ -45,11 +45,7 @@ export const EducationPreview: React.FC = () => {
               <div className="text-right">{edu.date && <p>{edu.date}</p>}</div>
             </div>
             {edu.summary && (
-              <ul className="whitespace-pre-line list-disc pl-4 ml-4">
-                {edu.summary.split("\n").map((point: string, index: number) => (
-                  <li key={index}>{point}</li>
-                ))}
-              </ul>
+              <div dangerouslySetInnerHTML={{ __html: edu.summary }} />
             )}
           </div>
         ))}

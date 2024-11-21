@@ -39,7 +39,7 @@ export const Preview: React.FC<PreviewProps> = ({ mode }) => {
     >
       <div
         className={cn(
-          "flex-1 w-full space-y-4 font-roboto ",
+          "flex-1 w-full space-y-4 font-roboto preview",
           mode === "preview" ? "px-8 py-[23px]" : "px-8 py-0"
         )}
       >
@@ -51,12 +51,14 @@ export const Preview: React.FC<PreviewProps> = ({ mode }) => {
         <EducationPreview />
         <LanguagesPreview />
       </div>
-      <hr
-        className={`border-t border-dashed border-gray-400 absolute w-full left-0`}
-        style={{
-          top: `${1122 - 23 * 2}px`,
-        }}
-      />
+      {mode === "preview" && (
+        <hr
+          className={`border-t border-dashed border-gray-400 absolute w-full left-0`}
+          style={{
+            top: `${1122 - 23 * 2}px`,
+          }}
+        />
+      )}
     </div>
   );
 };

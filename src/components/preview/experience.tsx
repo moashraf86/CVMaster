@@ -48,11 +48,7 @@ export const ExperiencePreview: React.FC = () => {
               </div>
             </div>
             {exp.summary && (
-              <ul className="whitespace-pre-line list-disc pl-4 ml-4">
-                {exp.summary.split("\n").map((point: string, index: number) => (
-                  <li key={index}>{point}</li>
-                ))}
-              </ul>
+              <div dangerouslySetInnerHTML={{ __html: exp.summary }} />
             )}
           </div>
         ))}

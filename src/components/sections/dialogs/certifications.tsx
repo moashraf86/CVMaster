@@ -20,9 +20,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { Button } from "../../ui/button";
-import { Textarea } from "../../ui/textarea";
 import { useEffect } from "react";
 import { Certification } from "../../../types/types";
+import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define certifications schema
 const certificationSchema = z.object({
@@ -158,10 +158,9 @@ export const CertificationsDialog: React.FC = () => {
                     <FormItem>
                       <FormLabel>Summary</FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={4}
-                          placeholder="Write a short summary about the certification"
-                          {...field}
+                        <RichTextEditor
+                          content={field.value}
+                          handleChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

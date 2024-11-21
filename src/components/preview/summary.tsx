@@ -15,7 +15,7 @@ export const SummaryPreview: React.FC = () => {
       <h3 className="text-lg font-bold border-b border-primary mb-2">
         Summary
       </h3>
-      {summary && <p>{summary.content}</p>}
+      <div dangerouslySetInnerHTML={{ __html: summary.content }} />
     </section>
   );
 };

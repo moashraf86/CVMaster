@@ -13,7 +13,6 @@ flushSync(() => {
     </>
   );
 });
-console.log(div.innerHTML);
 
 export const DownloadPDF: React.FC = () => {
   const downloadPdf = async () => {
@@ -26,6 +25,22 @@ export const DownloadPDF: React.FC = () => {
 			@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@100..900&family=Space+Grotesk:wght@300..700&display=swap');
 			body {
 				font-family: "Roboto Slab", serif;
+				}
+				ul {
+					list-style-type: disc;
+					margin-top: .5rem;
+					margin-bottom: .5rem;
+					padding-left: 2rem;
+				}
+
+				ol {
+					list-style-type: decimal;
+					margin-top: .5rem;
+					margin-bottom: .5rem;
+					padding-left: 2rem;
+				}
+				a {
+					text-decoration: underline;
 				}
 		</style>
     <body class="text-sm">
