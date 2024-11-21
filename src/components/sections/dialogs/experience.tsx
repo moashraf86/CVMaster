@@ -26,10 +26,10 @@ import {
   SelectValue,
   SelectTrigger,
 } from "../../ui/select";
-import { Textarea } from "../../ui/textarea";
 import { useResume } from "../../../store/useResume";
 import { Experience } from "../../../types/types";
 import { useEffect } from "react";
+import { RichTextEditor } from "../../core/RichTextEditor";
 
 // Define schema
 const experienceSchema = z.object({
@@ -210,10 +210,9 @@ export const ExperienceDialog: React.FC = () => {
                     <FormItem>
                       <FormLabel>Summary</FormLabel>
                       <FormControl>
-                        <Textarea
-                          rows={4}
-                          placeholder="Write a short summary about your experience"
-                          {...field}
+                        <RichTextEditor
+                          content={field.value}
+                          handleChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

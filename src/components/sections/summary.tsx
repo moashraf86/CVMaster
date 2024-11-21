@@ -1,11 +1,9 @@
-import { Textarea } from "../ui/textarea";
 import { useResume } from "../../store/useResume";
 import { Summary } from "../../types/types";
 import { Text } from "lucide-react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useEffect, useState } from "react";
-
-// form default values
+import { RichTextEditor } from "../core/RichTextEditor";
 
 export const SummaryForm: React.FC = () => {
   const {
@@ -30,10 +28,9 @@ export const SummaryForm: React.FC = () => {
   }, [debouncedContent, setValue]);
 
   // handle input change
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setContent(e.target.value);
-    e.currentTarget.style.height = "auto";
-    e.currentTarget.style.height = e.currentTarget.scrollHeight + "px";
+  const handleChange = (content: string) => {
+    console.log(content);
+    setContent(content);
   };
 
   return (
@@ -42,12 +39,7 @@ export const SummaryForm: React.FC = () => {
         <Text />
         <h2 className="text-2xl font-bold">Summary</h2>
       </header>
-      <Textarea
-        rows={5}
-        placeholder="I am a software engineer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks."
-        value={content}
-        onChange={handleChange}
-      />
+      <RichTextEditor content={content} handleChange={handleChange} />
     </section>
   );
 };

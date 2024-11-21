@@ -129,3 +129,35 @@
     @apply bg-background text-foreground font-roboto;
   }
 }
+
+.preview ul {
+  @apply list-disc pl-8 my-2;
+}
+
+.preview ol {
+  @apply list-decimal pl-8 my-2;
+}
+
+.preview a {
+  @apply underline;
+}
+
+.tiptap {
+  @apply p-4 min-h-40 max-h-80 overflow-y-auto text-sm;
+}
+
+.tiptap ul {
+  @apply list-disc px-4 mb-4;
+}
+
+.tiptap ol {
+  @apply list-decimal px-4 mb-4;
+}
+
+.tiptap p + ul,
+.tiptap p + ol {
+  @apply mt-4;
+}
+.tiptap a {
+  @apply underline;
+}

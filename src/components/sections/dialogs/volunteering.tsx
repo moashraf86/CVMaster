@@ -22,6 +22,7 @@ import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { Volunteering } from "../../../types/types";
 import { useEffect } from "react";
+import { RichTextEditor } from "../../core/RichTextEditor";
 
 // Define schema
 const volunteeringSchema = z.object({
@@ -157,6 +158,24 @@ export const VolunteeringDialog: React.FC = () => {
                   </FormItem>
                 )}
               />
+              <div className="sm:col-span-2">
+                <FormField
+                  control={form.control}
+                  name="summary"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Summary</FormLabel>
+                      <FormControl>
+                        <RichTextEditor
+                          content={field.value}
+                          handleChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
             <Button type="submit" className="flex ms-auto">
               {isEditMode ? "Save Changes" : "Create"}

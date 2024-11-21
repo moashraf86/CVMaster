@@ -17,7 +17,7 @@ export const CvForm: React.FC = () => {
   return (
     <div className="flex max-h-screen overflow-hidden">
       <SidebarNavigation />
-      <ScrollArea>
+      <ScrollArea className="max-w-xl">
         <div className="grid gap-y-6 p-6">
           <BasicsInfo />
           <Separator />

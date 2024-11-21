@@ -54,7 +54,6 @@ app.post("/pdf", async (req, res) => {
         top: "6mm",
         bottom: "6mm",
       },
-      scale: 1,
     });
 
     // Close the browser instance after PDF generation
@@ -80,6 +79,7 @@ app.post("/pdf", async (req, res) => {
         .end(pdfDocument);
     });
     // send the source back to the client
+    console.log(resource);
     res.send({ resource });
   } catch (error) {
     console.error("PDF Generation error:", error);
