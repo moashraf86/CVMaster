@@ -107,3 +107,10 @@ export interface ResumeType {
   setValue: (key: string, value: any) => void;
   setData: (data: Record<string, any>) => void;
 }
+
+export interface PdfSettings {
+  pdfSettings: {
+    [key: string]: number | string;
+  };
+  setValue: (key: string, value: number | string) => void;
+}

@@ -190,6 +190,7 @@ export const DownloadPDF: React.FC = () => {
 
   return (
     <Button
+      type="button"
       title="Download PDF"
       variant="ghost"
       size="icon"
