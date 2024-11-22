@@ -6,10 +6,11 @@ import { SkillsPreview } from "./skills";
 import { SummaryPreview } from "./summary";
 import { LanguagesPreview } from "./languages";
 import { cn } from "../../lib/utils";
+import { usePdfSettings } from "../../store/useResume";
 
 const pageSizeMap = {
   width: 210,
-  height: 297,
+  height: 285, // 297 - 12mm padding top and bottom
 };
 
 // MM to PX conversion
@@ -20,7 +21,11 @@ interface PreviewProps {
   mode: "preview" | "print";
 }
 
-export const Preview: React.FC<PreviewProps> = ({ mode }) => {
+export const Page: React.FC<PreviewProps> = ({ mode }) => {
+  const {
+    pdfSettings: { fontSize, fontFamily },
+  } = usePdfSettings();
+
   // Page size in pixels
   const WIDTH = pageSizeMap.width * MM_TO_PX;
   const HEIGHT = pageSizeMap.height * MM_TO_PX;
@@ -28,18 +33,19 @@ export const Preview: React.FC<PreviewProps> = ({ mode }) => {
   return (
     <div
       className={cn(
-        "relative bg-background text-foreground text-sm",
-        mode === "preview" ? "shadow-2xl" : "shadow-none"
+        "relative bg-background text-foreground",
+        mode === "preview" ? "shadow-2xl" : "shadow-none",
+        `font-${fontFamily}`
       )}
       style={{
+        fontSize: `${fontSize || 14}px`,
         width: `${WIDTH}px`,
         minHeight: `${HEIGHT}px`,
-        transform: mode === "preview" ? "scale(.8)" : "scale(1)",
       }}
     >
       <div
         className={cn(
-          "flex-1 w-full space-y-4 font-roboto preview",
+          "flex-1 w-full space-y-4 preview",
           mode === "preview" ? "px-8 py-[23px]" : "px-8 py-0"
         )}
       >

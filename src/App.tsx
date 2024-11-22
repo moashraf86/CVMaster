@@ -1,14 +1,14 @@
+import { Preview } from "./components/layout/Preview";
 import { CvForm } from "./components/layout/CvForm";
-import { Preview } from "./components/preview";
 import { DialogProvider } from "./providers/DialogProvider";
 
 function App() {
   return (
     <DialogProvider>
-      <div className="container-fluid">
+      <div className="size-full overflow-hidden">
         <div className="flex gap-10">
           <CvForm />
-          <Preview mode="preview" />
+          <Preview />
         </div>
       </div>
     </DialogProvider>

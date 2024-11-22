@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { ResumeType } from "../types/types";
+import { PdfSettings, ResumeType } from "../types/types";
 
 // Create a store with zustand
 export const useResume = create<ResumeType>((set) => ({
@@ -75,4 +75,14 @@ export const useResume = create<ResumeType>((set) => ({
     set((state) => ({ resumeData: { ...state.resumeData, [key]: value } })),
   setData: (data) =>
     set((state) => ({ resumeData: { ...state.resumeData, ...data } })),
+}));
+
+// create PDF Settings store
+export const usePdfSettings = create<PdfSettings>((set) => ({
+  pdfSettings: {
+    fontSize: 14,
+    fontFamily: "inter",
+  },
+  setValue: (key, value) =>
+    set((state) => ({ pdfSettings: { ...state.pdfSettings, [key]: value } })),
 }));
