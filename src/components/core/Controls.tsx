@@ -72,8 +72,8 @@ export const Controls: React.FC = () => {
   };
 
   return (
-    <div className="flex absolute z-50 bottom-4 left-1/2 transform -translate-x-1/2 bg-background border border-border rounded-full shadow-xl px-1.5 py-2">
-      <div className="flex border-r px-1">
+    <div className="flex absolute z-20 lg:z-50 bottom-4 left-1/2 transform -translate-x-1/2 bg-card border border-border rounded-full shadow-xl px-1.5 py-2">
+      <div className="hidden md:flex border-r px-1">
         <Button
           title="Zoom In"
           type="button"
@@ -156,7 +156,7 @@ export const Controls: React.FC = () => {
             asChild
             type="button"
             variant="ghost"
-            className="focus:ring-0"
+            className="focus:ring-0 rounded-full"
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a font" />

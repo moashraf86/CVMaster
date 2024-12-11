@@ -83,6 +83,7 @@ export const usePdfSettings = create<PdfSettings>((set) => ({
     fontSize: 14,
     fontFamily: "inter",
     scale: 1,
+    showForm: false,
   },
   setValue: (key, value) =>
     set((state) => ({ pdfSettings: { ...state.pdfSettings, [key]: value } })),

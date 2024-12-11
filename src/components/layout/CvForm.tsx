@@ -1,23 +1,49 @@
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { BasicsInfo } from "../sections/basics";
 import { SummaryForm } from "../sections/summary";
 import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { SectionBase } from "../sections/shared/SectionBase";
 import { SidebarNavigation } from "../core/SidebarNavigation";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { cn } from "../../lib/utils";
+import { useLockBodyScroll, useWindowSize } from "@uidotdev/usehooks";
 
 export const CvForm: React.FC = () => {
   const { resumeData } = useResume();
+  const {
+    setValue,
+    pdfSettings: { showForm },
+  } = usePdfSettings();
+  const ref = useRef<HTMLDivElement>(null);
+  const windowSize = useWindowSize();
+  useLockBodyScroll();
 
   useEffect(() => {
-    console.log(resumeData);
-  }, [resumeData]);
+    // track the window inner width
+    console.log(windowSize);
+    if (windowSize.width !== null && windowSize.width < 1024 && showForm) {
+      setValue("showForm", false);
+    } else if (
+      windowSize.width !== null &&
+      windowSize.width >= 1024 &&
+      !showForm
+    ) {
+      setValue("showForm", true);
+    }
+    console.log(showForm);
+  }, [windowSize]);
 
   return (
-    <div className="flex max-h-screen overflow-hidden">
+    <div className="flex max-h-screen overflow-hidden bg-card border-r border-border ">
       <SidebarNavigation />
-      <ScrollArea className="max-w-2xl">
+      <ScrollArea
+        ref={ref}
+        className={cn(
+          "!absolute top-[60px] left-0 transform -translate-x-full w-full h-full z-50 lg:block lg:!static lg:translate-x-0 lg:w-auto bg-card transition-transform duration-300",
+          showForm && "translate-x-0"
+        )}
+      >
         <div className="grid gap-y-6 p-6">
           <BasicsInfo />
           <Separator />

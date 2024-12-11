@@ -4,6 +4,7 @@ import { Button } from "../ui/button";
 import { Circle, Download } from "lucide-react";
 import { Page } from "../preview";
 import { useState } from "react";
+import { toast } from "../../hooks/use-toast";
 
 const div = document.createElement("div");
 const root = createRoot(div);
@@ -182,7 +183,11 @@ export const DownloadPDF: React.FC = () => {
       link.click();
       document.body.removeChild(link);
     } catch (error) {
-      console.error(error);
+      toast({
+        title: "Error",
+        description: `${error}`,
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }

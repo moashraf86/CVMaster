@@ -33,13 +33,14 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
   return (
     <div
       className={cn(
-        "relative bg-background text-foreground",
+        "relative bg-white text-primary dark:text-primary-foreground scale-50 md:scale-100",
         mode === "preview" ? "shadow-2xl" : "shadow-none",
         `font-${fontFamily}`
       )}
       style={{
         fontSize: `${fontSize || 14}px`,
         width: `${WIDTH}px`,
+        minWidth: `${WIDTH}px`,
         minHeight: `${HEIGHT}px`,
       }}
     >

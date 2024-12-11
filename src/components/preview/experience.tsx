@@ -28,7 +28,7 @@ export const ExperiencePreview: React.FC = () => {
 
   return (
     <section className="space-y-2">
-      <h3 className="text-lg font-bold border-b border-primary mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
         Experience
       </h3>
       {experience &&

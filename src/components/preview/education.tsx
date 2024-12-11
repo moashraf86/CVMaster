@@ -29,7 +29,7 @@ export const EducationPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
         Education
       </h3>
       <div className="space-y-2">
