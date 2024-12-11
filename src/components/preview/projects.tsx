@@ -21,7 +21,9 @@ export const ProjectsPreview: React.FC = () => {
   }
   return (
     <section className="space-y-2">
-      <h3 className="text-lg font-bold border-b border-primary">Projects</h3>
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground">
+        Projects
+      </h3>
       {processedExperience.map((project: Project, index: number) => (
         <div key={index} className="space-y-2">
           <div className="flex items-center justify-between">

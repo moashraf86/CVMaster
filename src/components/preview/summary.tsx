@@ -12,7 +12,7 @@ export const SummaryPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
         Summary
       </h3>
       <div dangerouslySetInnerHTML={{ __html: summary.content }} />

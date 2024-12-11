@@ -17,7 +17,9 @@ export const SkillsPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary mb-2">Skills</h3>
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+        Skills
+      </h3>
       <div className="space-y-2">
         {skills.map((skill: Skill, index: number) => (
           <div key={index}>

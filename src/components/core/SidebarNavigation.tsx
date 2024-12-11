@@ -1,9 +1,14 @@
-import { Bot, Component, Target } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "../ui/button";
 import { SectionIcon } from "../sections/shared/SectionIcon";
-import { DownloadPDF } from "./DownloadPdf";
+import { ThemeToggler } from "./ThemeToggler";
+import { usePdfSettings } from "../../store/useResume";
 
 export const SidebarNavigation: React.FC = () => {
+  const {
+    setValue,
+    pdfSettings: { showForm },
+  } = usePdfSettings();
   // scroll into view
   const scrollIntoView = (id: string) => () => {
     const element = document.getElementById(id);
@@ -15,12 +20,24 @@ export const SidebarNavigation: React.FC = () => {
     }
   };
 
+  // toggle menu
+  const toggleMenu = () => {
+    setValue("showForm", !showForm);
+  };
+
   return (
-    <aside className="flex flex-col items-center gap-10 py-6 basis-12 shadow-md">
-      {/* Logo */}
-      <Target className="text-primary" />
+    <aside className="flex flex-auto flex-row lg:flex-col items-center justify-between lg:justify-center gap-10 py-3 lg:py-6 px-2 shadow-md lg:border-r border-border bg-card">
       {/* Navigation */}
-      <ul>
+      <Button
+        title="Menu"
+        variant="ghost"
+        size="icon"
+        className="rounded-full lg:hidden"
+        onClick={toggleMenu}
+      >
+        <Menu />
+      </Button>
+      <ul className="hidden lg:block">
         <li>
           <Button
             title="Basics"
@@ -132,24 +149,8 @@ export const SidebarNavigation: React.FC = () => {
           </Button>
         </li>
       </ul>
-      <div className="grid mt-auto">
-        <Button
-          title="Template"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-        >
-          <Component />
-        </Button>
-        <DownloadPDF />
-        <Button
-          title="AI Review"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-        >
-          <Bot />
-        </Button>
+      <div className="mt-auto">
+        <ThemeToggler />
       </div>
     </aside>
   );

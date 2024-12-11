@@ -110,7 +110,10 @@ export interface ResumeType {
 
 export interface PdfSettings {
   pdfSettings: {
-    [key: string]: number | string;
+    fontSize: number;
+    fontFamily: string;
+    scale: number;
+    showForm: boolean;
   };
-  setValue: (key: string, value: number | string) => void;
+  setValue: (key: string, value: number | string | boolean) => void;
 }
