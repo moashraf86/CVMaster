@@ -14,14 +14,15 @@ export const Preview: React.FC = () => {
     <TransformWrapper
       ref={ref}
       centerZoomedOut={true}
-      initialScale={1}
+      centerOnInit={true}
+      initialScale={0.7}
       maxScale={2}
       minScale={0.5}
       limitToBounds={false}
     >
       <>
         <TransformComponent
-          wrapperClass="relative !w-screen !h-screen content-end flex-auto min-w-[60%] xl:min-w-[65%]"
+          wrapperClass="relative !w-screen !h-screen flex-auto min-w-[60%] xl:min-w-[65%]"
           contentClass="items-start justify-center pointer-events-none"
           contentStyle={{ width: "100%", transition: "transform 0.1s" }}
         >
