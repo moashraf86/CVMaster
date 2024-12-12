@@ -153,6 +153,7 @@ export const Controls: React.FC = () => {
       <div className="flex border-r px-1">
         <Select defaultValue={fontFamily} onValueChange={changeFontType}>
           <Button
+            title="Select Font"
             asChild
             type="button"
             variant="ghost"

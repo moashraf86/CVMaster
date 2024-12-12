@@ -68,6 +68,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                 </div>
                 <div className="flex">
                   <Button
+                    title="Edit"
                     variant="ghost"
                     size="icon"
                     onClick={() => updateDialog(id, index)}
@@ -75,6 +76,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                     <Pencil />
                   </Button>
                   <Button
+                    title="Delete"
                     variant="ghost"
                     size="icon"
                     onClick={handleDelete(id, index)}
