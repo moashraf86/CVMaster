@@ -2,6 +2,8 @@
 
 An AI-powered resume builder created with React, TypeScript, and the Grok API for intelligent resume suggestions.
 
+![CVMaster ui](./src/assets/cvmaster-ui.png)
+
 ## Tech Stack
 
 - **React** - JavaScript library for building user interfaces.
