@@ -7,6 +7,8 @@ export const ThemeToggler: React.FC = () => {
 
   return (
     <Button
+      title="Toggle Theme"
+      side="right"
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}

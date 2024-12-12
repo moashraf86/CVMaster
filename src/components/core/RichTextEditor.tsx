@@ -67,6 +67,7 @@ const MenuBar: React.FC = () => {
   return (
     <div className="flex items-center gap-3 px-1 py-2 border-b border-border">
       <Button
+        title="Bold"
         type="button"
         variant="ghost"
         size="icon"
@@ -79,6 +80,7 @@ const MenuBar: React.FC = () => {
         <BoldIcon />
       </Button>
       <Button
+        title="Italic"
         type="button"
         variant="ghost"
         size="icon"
@@ -92,6 +94,7 @@ const MenuBar: React.FC = () => {
       </Button>
 
       <Button
+        title="Bullet List"
         type="button"
         variant="ghost"
         size="icon"
@@ -104,6 +107,7 @@ const MenuBar: React.FC = () => {
         <List />
       </Button>
       <Button
+        title="Ordered List"
         type="button"
         variant="ghost"
         size="icon"
@@ -116,6 +120,7 @@ const MenuBar: React.FC = () => {
         <ListOrdered />
       </Button>
       <Button
+        title="Link"
         type="button"
         variant="ghost"
         size="icon"
@@ -128,6 +133,7 @@ const MenuBar: React.FC = () => {
         <Link2 />
       </Button>
       <Button
+        title="Unset Link"
         type="button"
         variant="ghost"
         size="icon"

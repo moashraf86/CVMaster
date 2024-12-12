@@ -30,6 +30,7 @@ export const SidebarNavigation: React.FC = () => {
       {/* Navigation */}
       <Button
         title="Menu"
+        side="right"
         variant="ghost"
         size="icon"
         className="rounded-full lg:hidden"
@@ -40,7 +41,8 @@ export const SidebarNavigation: React.FC = () => {
       <ul className="hidden lg:block">
         <li>
           <Button
-            title="Basics"
+            title="personal information"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -52,6 +54,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Summary"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -63,6 +66,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Experience"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -74,6 +78,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Projects"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -85,6 +90,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Education"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -96,6 +102,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Skills"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -107,6 +114,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Languages"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -118,6 +126,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Certifications"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -129,6 +138,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Awards"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
@@ -140,6 +150,7 @@ export const SidebarNavigation: React.FC = () => {
         <li>
           <Button
             title="Volunteering"
+            side="right"
             variant="ghost"
             size="icon"
             className="rounded-full"
