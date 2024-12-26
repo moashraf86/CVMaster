@@ -11,6 +11,7 @@ export interface Basics {
 
 // [2] Define type for summary
 export interface Summary {
+  sectionTitle: string;
   content: string;
 }
 
@@ -56,10 +57,11 @@ export interface Language {
 }
 
 interface BaseAchievement {
-  title: string;
+  name: string;
   date: string;
   issuer: string;
   website: string;
+  summary: string;
 }
 
 export type Certification = BaseAchievement;
@@ -102,10 +104,10 @@ export interface ResumeType {
   resumeData: {
     [key: string]: any;
   };
+
   nextStep: () => void;
   prevStep: () => void;
-  setValue: (key: string, value: any) => void;
-  setData: (data: Record<string, any>) => void;
+  setData: (data: Record<string, unknown>) => void;
 }
 
 export interface PdfSettings {

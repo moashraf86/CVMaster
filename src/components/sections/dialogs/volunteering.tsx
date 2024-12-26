@@ -134,7 +134,7 @@ export const VolunteeringDialog: React.FC = () => {
               />
               <FormField
                 control={form.control}
-                name="location"
+                name="date"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Date or Date Range</FormLabel>

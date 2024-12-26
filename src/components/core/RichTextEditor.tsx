@@ -216,6 +216,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
           // all checks have passed
           return true;
         } catch (error) {
+          console.log(error);
           return false;
         }
       },
@@ -235,6 +236,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
 
           return !disallowedDomains.includes(domain);
         } catch (error) {
+          console.log(error);
           return false;
         }
       },

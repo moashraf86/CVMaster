@@ -211,7 +211,7 @@
 }
 
 .tiptap {
-  @apply p-4 min-h-40 max-h-80 overflow-y-auto text-sm;
+  @apply p-4 min-h-40 max-h-60 overflow-y-auto text-sm;
 }
 
 .tiptap ul {
@@ -220,6 +220,10 @@
 
 .tiptap ol {
   @apply list-decimal px-4 mb-4;
+}
+
+.tiptap ul li:not(:last-child) {
+  @apply mb-2;
 }
 
 .tiptap p + ul,
