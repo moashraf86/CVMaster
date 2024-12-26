@@ -18,16 +18,13 @@ const basicsSchema = z.object({
 
 export const BasicsInfo: React.FC = () => {
   const {
-    setValue,
+    setData,
     resumeData: { basics },
   } = useResume();
 
   // handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue("basics", {
-      ...basics,
-      [e.target.name]: e.target.value,
-    });
+    setData({ basics: { ...basics, [e.target.name]: e.target.value } });
   };
 
   // set default values for the form
@@ -35,7 +32,8 @@ export const BasicsInfo: React.FC = () => {
 
   // set the default values to the form
   if (!basics || Object.keys(basics).length === 0) {
-    setValue("basics", defaultValues);
+    // setValue("basics", defaultValues);
+    setData({ basics: defaultValues });
   }
 
   return (

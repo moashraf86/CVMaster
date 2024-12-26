@@ -3,7 +3,6 @@ import { Button } from "../../ui/button";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { SectionIcon } from "./SectionIcon";
-import { useEffect } from "react";
 import { Section, SectionItem, SectionName } from "../../../types/types";
 
 export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
@@ -19,9 +18,6 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
     setData({ [id]: newData });
   };
 
-  useEffect(() => {
-    console.log("resumeData", resumeData);
-  }, [resumeData]);
   return (
     <section className="grid gap-y-6" id={id}>
       <header className="flex items-center gap-4">

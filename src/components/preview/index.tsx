@@ -7,6 +7,9 @@ import { SummaryPreview } from "./summary";
 import { LanguagesPreview } from "./languages";
 import { cn } from "../../lib/utils";
 import { usePdfSettings } from "../../store/useResume";
+import { CertificationsPreview } from "./certifications";
+import { AwardsPreview } from "./awards";
+import { VolunteeringPreview } from "./volunteering";
 
 const pageSizeMap = {
   width: 210,
@@ -57,6 +60,9 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
         <SkillsPreview />
         <EducationPreview />
         <LanguagesPreview />
+        <CertificationsPreview />
+        <AwardsPreview />
+        <VolunteeringPreview />
       </div>
       {mode === "preview" && (
         <hr
