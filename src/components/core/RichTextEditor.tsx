@@ -15,12 +15,14 @@ import { Button } from "../ui/button";
 import { cn } from "../../lib/utils";
 import {
   BoldIcon,
+  Bot,
   ItalicIcon,
   Link2,
   Link2Off,
   List,
   ListOrdered,
 } from "lucide-react";
+import { rewriteContentWithAi } from "../../services/groqService";
 
 const MenuBar: React.FC = () => {
   const { editor } = useCurrentEditor();
@@ -41,7 +43,6 @@ const MenuBar: React.FC = () => {
     // empty
     if (url === "") {
       editor.chain().focus().extendMarkRange("link").unsetLink().run();
-
       return;
     }
 
@@ -149,9 +150,51 @@ const MenuBar: React.FC = () => {
   );
 };
 
+interface AiActionButtonsProps {
+  handleChange: (content: string) => void;
+  content: string;
+}
+
+const AiActionButtons: React.FC<AiActionButtonsProps> = ({
+  content,
+  handleChange,
+}) => {
+  const { editor } = useCurrentEditor();
+
+  // Handle regenerate
+  const handleRegenerate = async () => {
+    // run the AI model to rewrite the content
+    const regeneratedContent = await rewriteContentWithAi(content);
+    editor?.chain().focus().setContent(regeneratedContent).run();
+    handleChange(regeneratedContent);
+  };
+
+  // Trim the content to check if it's empty
+  const trimmedContent = content.replace(/<[^>]*>/g, "").trim();
+
+  if (!editor) {
+    return null;
+  }
+
+  return (
+    <div className="flex justify-end mr-2 mb-2">
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={handleRegenerate}
+        disabled={!trimmedContent}
+      >
+        <Bot />
+        Regenerate
+      </Button>
+    </div>
+  );
+};
+
 interface RichTextEditorProps {
   handleChange: (html: string) => void;
-  content: object | string;
+  content: string;
 }
 
 export const RichTextEditor: React.FC<RichTextEditorProps> = ({
@@ -247,6 +290,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     <div className=" border border-border rounded-sm">
       <EditorProvider
         slotBefore={<MenuBar />}
+        slotAfter={
+          <AiActionButtons content={content} handleChange={handleChange} />
+        }
         extensions={extensions}
         content={content}
         onUpdate={(content) => {

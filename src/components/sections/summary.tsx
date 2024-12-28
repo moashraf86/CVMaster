@@ -26,18 +26,6 @@ export const SummaryForm: React.FC = () => {
   const debouncedContent = useDebounce(content, 200);
   const debouncedSectionTitle = useDebounce(sectionTitle, 200);
 
-  useEffect(() => {
-    if (debouncedContent !== summary?.content) {
-      setData({ summary: { ...summary, content: debouncedContent } });
-    }
-  }, [debouncedContent]);
-
-  useEffect(() => {
-    if (debouncedSectionTitle !== summary?.sectionTitle) {
-      setData({ summary: { ...summary, sectionTitle: debouncedSectionTitle } });
-    }
-  }, [debouncedSectionTitle]);
-
   // handle input change
   const handleContentChange = (content: string) => {
     setContent(content);
@@ -53,9 +41,21 @@ export const SummaryForm: React.FC = () => {
     setTitleInputVisible(!titleInputVisible);
   };
 
+  useEffect(() => {
+    if (debouncedContent !== summary?.content) {
+      setData({ summary: { ...summary, content: debouncedContent } });
+    }
+  }, [debouncedContent]);
+
+  useEffect(() => {
+    if (debouncedSectionTitle !== summary?.sectionTitle) {
+      setData({ summary: { ...summary, sectionTitle: debouncedSectionTitle } });
+    }
+  }, [debouncedSectionTitle]);
+
   return (
-    <section className="grid gap-y-6" id="summary">
-      <header className="flex items-center gap-4">
+    <section className="grid" id="summary">
+      <header className="flex items-center gap-4 mb-6">
         <Text />
         <h2
           className={clsx(`text-2xl font-bold`, titleInputVisible && "hidden")}
