@@ -22,7 +22,7 @@ export const Preview: React.FC = () => {
     >
       <>
         <TransformComponent
-          wrapperClass="relative !w-screen !h-screen flex-auto min-w-[60%] xl:min-w-[65%] xl:!w-auto"
+          wrapperClass="relative !w-screen !h-screen flex-auto min-w-[60%] 2xl:min-w-[65%] xl:!w-auto"
           contentClass="items-start justify-center pointer-events-none"
           contentStyle={{ width: "100%", transition: "transform 0.1s" }}
         >
