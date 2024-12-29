@@ -211,7 +211,7 @@
 }
 
 .tiptap {
-  @apply p-4 min-h-40 max-h-60 overflow-y-auto text-sm focus:outline-none;
+  @apply p-4 min-h-28 max-h-60 overflow-y-auto text-sm focus:outline-none;
 }
 
 .tiptap ul {

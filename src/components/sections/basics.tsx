@@ -109,7 +109,7 @@ export const BasicsInfo: React.FC = () => {
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="basics.linkedin">Website/Portfolio</Label>
+          <Label htmlFor="basics.linkedin">Portfolio</Label>
           <Input
             placeholder="http://linkedin.com/in/johndeo"
             name="website"

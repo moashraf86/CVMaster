@@ -92,6 +92,11 @@ export const ExperienceDialog: React.FC = () => {
     form.reset();
   };
 
+  // Handle summary change
+  const handleSummaryChange = (html: string) => {
+    form.setValue("summary", html);
+  };
+
   useEffect(() => {
     // Reset the form if the index or experience changes
     form.reset(defaultValues);
@@ -212,7 +217,7 @@ export const ExperienceDialog: React.FC = () => {
                       <FormControl>
                         <RichTextEditor
                           content={field.value}
-                          handleChange={field.onChange}
+                          handleChange={handleSummaryChange}
                         />
                       </FormControl>
                       <FormMessage />

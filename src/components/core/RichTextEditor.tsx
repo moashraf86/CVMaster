@@ -10,7 +10,7 @@ import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
 
 import { useCurrentEditor } from "@tiptap/react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { Button } from "../ui/button";
 import { cn } from "../../lib/utils";
 import {
@@ -23,6 +23,8 @@ import {
   ListOrdered,
 } from "lucide-react";
 import { rewriteContentWithAi } from "../../services/groqService";
+import clsx from "clsx";
+import { Skeleton } from "../ui/Skeleton";
 
 const MenuBar: React.FC = () => {
   const { editor } = useCurrentEditor();
@@ -153,20 +155,35 @@ const MenuBar: React.FC = () => {
 interface AiActionButtonsProps {
   handleChange: (content: string) => void;
   content: string;
+  isRegenerating: boolean;
+  setIsRegenerating: (isRegenerating: boolean) => void;
 }
 
 const AiActionButtons: React.FC<AiActionButtonsProps> = ({
   content,
   handleChange,
+  isRegenerating,
+  setIsRegenerating,
 }) => {
   const { editor } = useCurrentEditor();
 
   // Handle regenerate
   const handleRegenerate = async () => {
-    // run the AI model to rewrite the content
-    const regeneratedContent = await rewriteContentWithAi(content);
-    editor?.chain().focus().setContent(regeneratedContent).run();
-    handleChange(regeneratedContent);
+    try {
+      // set isRegenerating to true
+      setIsRegenerating(true);
+      // run the AI model to rewrite the content
+      const regeneratedContent = await rewriteContentWithAi(content);
+      // set the content to the regenerated content
+      editor?.chain().focus().setContent(regeneratedContent).run();
+      // call the handleChange function to update the content
+      handleChange(regeneratedContent);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // set isRegenerating to false
+      setIsRegenerating(false);
+    }
   };
 
   // Trim the content to check if it's empty
@@ -183,10 +200,10 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
         variant="outline"
         size="sm"
         onClick={handleRegenerate}
-        disabled={!trimmedContent}
+        disabled={!trimmedContent || isRegenerating}
       >
         <Bot />
-        Regenerate
+        {isRegenerating ? "Regenerating..." : "Regenerate"}
       </Button>
     </div>
   );
@@ -201,6 +218,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   handleChange,
   content,
 }) => {
+  const [isRegenerating, setIsRegenerating] = useState(false);
   // Define extensions array
   const extensions = [
     Document,
@@ -289,10 +307,31 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   return (
     <div className=" border border-border rounded-sm">
       <EditorProvider
+        editorContainerProps={{
+          className: "editor-container relative min-h-28",
+          children: isRegenerating && (
+            <div className="absolute top-4 left-4 right-4 z-10 grid gap-2">
+              <Skeleton className="h-[10px] w-full" />
+              <Skeleton className="h-[10px] w-3/4" />
+              <Skeleton className="h-[10px] w-1/2" />
+            </div>
+          ),
+        }}
+        editorProps={{
+          attributes: { class: clsx(isRegenerating ? "opacity-0" : "") },
+        }}
         slotBefore={<MenuBar />}
         slotAfter={
-          <AiActionButtons content={content} handleChange={handleChange} />
+          <AiActionButtons
+            content={content}
+            handleChange={handleChange}
+            isRegenerating={isRegenerating}
+            setIsRegenerating={setIsRegenerating}
+          />
         }
+        onCreate={(editor) => {
+          console.log("editor created", editor);
+        }}
         extensions={extensions}
         content={content}
         onUpdate={(content) => {
