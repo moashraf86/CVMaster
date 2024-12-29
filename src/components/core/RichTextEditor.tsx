@@ -8,6 +8,7 @@ import Italic from "@tiptap/extension-italic";
 import ListItem from "@tiptap/extension-list-item";
 import BulletList from "@tiptap/extension-bullet-list";
 import OrderedList from "@tiptap/extension-ordered-list";
+import History from "@tiptap/extension-history";
 
 import { useCurrentEditor } from "@tiptap/react";
 import { useCallback, useState } from "react";
@@ -21,6 +22,7 @@ import {
   Link2Off,
   List,
   ListOrdered,
+  Undo,
 } from "lucide-react";
 import { rewriteContentWithAi } from "../../services/groqService";
 import clsx from "clsx";
@@ -68,7 +70,7 @@ const MenuBar: React.FC = () => {
   }
 
   return (
-    <div className="flex items-center gap-3 px-1 py-2 border-b border-border">
+    <div className="flex flex-wrap items-center gap-3 px-1 py-2 border-b border-border">
       <Button
         title="Bold"
         type="button"
@@ -95,7 +97,6 @@ const MenuBar: React.FC = () => {
       >
         <ItalicIcon />
       </Button>
-
       <Button
         title="Bullet List"
         type="button"
@@ -147,6 +148,34 @@ const MenuBar: React.FC = () => {
         )}
       >
         <Link2Off />
+      </Button>
+      <Button
+        title="Undo"
+        type="button"
+        variant="ghost"
+        size="icon"
+        onClick={() => editor.chain().focus().undo().run()}
+        disabled={!editor.can().undo()}
+        className={cn(
+          "hover:bg-muted hover:text-primary",
+          editor.isActive("undo") ? "bg-muted text-primary" : ""
+        )}
+      >
+        <Undo />
+      </Button>
+      <Button
+        title="Redo"
+        type="button"
+        variant="ghost"
+        size="icon"
+        onClick={() => editor.chain().focus().redo().run()}
+        disabled={!editor.can().redo()}
+        className={cn(
+          "hover:bg-muted hover:text-primary",
+          editor.isActive("redo") ? "bg-muted text-primary" : ""
+        )}
+      >
+        <Undo className="transform rotate-180" />
       </Button>
     </div>
   );
@@ -229,6 +258,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
     ListItem,
     BulletList,
     OrderedList,
+    History,
     Link.configure({
       openOnClick: false,
       autolink: true,
