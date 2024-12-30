@@ -1,11 +1,14 @@
 import { create } from "zustand";
 import { PdfSettings, ResumeType } from "../types/types";
 
-// Create a store with zustand
+// fetch data from local storage and set it to the store
+const localStorageData = JSON.parse(localStorage.getItem("resumeData") || "{}");
+
+// Create a store with Zustand for managing resume data
 export const useResume = create<ResumeType>((set) => ({
   step: 0,
   resumeData: {
-    basics: {
+    basics: localStorageData.basics || {
       name: "John Doe",
       title: "Software Developer",
       email: "youremail@domain.com",
@@ -15,11 +18,12 @@ export const useResume = create<ResumeType>((set) => ({
       location: "Cairo, Egypt",
     },
     summary: {
-      sectionTitle: "Summary",
+      sectionTitle: localStorageData.summary?.sectionTitle || "Summary",
       content:
+        localStorageData.summary?.content ||
         "Software Developer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks.",
     },
-    experience: [
+    experience: localStorageData.experience || [
       {
         name: "Google",
         position: "Software Developer",
@@ -31,44 +35,44 @@ export const useResume = create<ResumeType>((set) => ({
           "<ul><li><p>Collaborated with designers to translate design mockups and user stories into functional and responsive web pages.</p></li> <li><p>Ensured cross-browser compatibility and responsiveness across various devices for an optimal user experience.</p></li> <li><p>Utilized Storybook to showcase component variations, interactions, and usage examples, facilitating collaboration and maintainability.</p></li></ul>",
       },
     ],
-    projects: [
+    projects: localStorageData.projects || [
       {
         name: "Project Name",
         description: "Project Description",
         date: "Jan 2020 - Present",
-        website: "https://example.com",
+        website: "",
         summary:
-          "<ul> <li><p>Modern Blog Platform: A web app for creating, managing, and reading blog posts.</p></li> <li><p>User Authentication: Google login for full access; guest mode with limited features.</p></li> <li><p>Dynamic Data Handling: Efficient data fetching and updates using react-query.</p></li> <li><p> Custom Rich Text Editor: Built with react-md-editor for an enhanced writing experience.</p></li> <li><p> Post Engagement: Users can bookmark posts and participate in the comments section.</p></li></ul>",
-        keyword: "",
-        keywords: ["React", "Node.js", "MongoDB"],
+          "<ul><li><strong>Responsive Front-End Development</strong>: Designed and implemented a fully responsive web application using React, ensuring optimal performance across desktop, tablet, and mobile devices.</li><li><strong>Clean Architecture</strong>: Structured the codebase with reusable components, meaningful variable names, and concise documentation to maintain scalability and ease of collaboration.</li><li><strong>Modern Design Integration</strong>: Accurately translated UI/UX designs into interactive interfaces, focusing on accessibility, layout precision, and smooth user experience.</li></ul>",
+        keywords: ["React", "TypeScript", "Tailwind CSS"],
       },
     ],
-    education: [
+    education: localStorageData.education || [
       {
-        name: "School Name",
-        degree: "Bachelor's",
-        studyField: "Computer Science",
-        date: "Jan 2020 - Jan 2024",
-        website: "https://example.com",
-        summary: "",
+        name: "University of California, Berkeley",
+        degree: "Bachelor of Science",
+        studyField: "Electrical Engineering & Computer Sciences",
+        date: "2015 - 2019",
+        website: "https://berkeley.edu",
+        summary:
+          "<p>GPA: 4</p> <ul><li><strong>Relevant coursework:</strong> Data Structures, Algorithms, Machine Learning, Computer Networks, Operating Systems.<li></ul>",
       },
     ],
-    skills: [
+    skills: localStorageData.skills || [
       {
         name: "Languages",
         keyword: "",
-        keywords: ["React", "Node.js", "MongoDB"],
+        keywords: ["JavaScript", "TypeScript", "Python", "Java", "C++"],
       },
     ],
-    languages: [
+    languages: localStorageData.languages || [
       {
-        name: "English",
-        level: "Conversational",
+        name: "Arabic",
+        level: "Native or Bilingual",
       },
     ],
-    certifications: [],
-    awards: [],
-    volunteering: [],
+    certifications: localStorageData.certifications || [],
+    awards: localStorageData.awards || [],
+    volunteering: localStorageData.volunteering || [],
   },
   nextStep: () => set((state) => ({ step: state.step + 1 })),
   prevStep: () => set((state) => ({ step: state.step - 1 })),
@@ -81,7 +85,7 @@ export const useResume = create<ResumeType>((set) => ({
     })),
 }));
 
-// create PDF Settings store
+// Create a store for PDF settings
 export const usePdfSettings = create<PdfSettings>((set) => ({
   pdfSettings: {
     fontSize: 14,

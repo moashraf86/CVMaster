@@ -49,21 +49,33 @@ export const ExperienceDialog: React.FC = () => {
     resumeData: { experience },
   } = useResume();
 
+  // get the data from the local storage
+  const localStorageData = JSON.parse(
+    localStorage.getItem("resumeData") || "{}"
+  );
+
   //check if experience exists and index is not null
-  const isEditMode = experience && index !== null && experience[index];
+  // const isEditMode = experience && index !== null && experience[index];
+  const isEditMode =
+    (localStorageData.experience &&
+      index !== null &&
+      localStorageData.experience[index]) ||
+    (experience && index !== null && experience[index]);
   /**
    * 	Define the default values for the form
    * If the experience exists and the index is not null then get the experience at the index
    * Otherwise, set the default values to an empty object
    */
   const defaultValues = isEditMode
-    ? experience[index]
+    ? localStorageData.experience
+      ? localStorageData.experience[index]
+      : experience[index]
     : {
         name: "",
         position: "",
-        dateRange: "",
         location: "",
         employmentType: "",
+        dateRange: "",
         website: "",
         summary: "",
       };
@@ -77,19 +89,24 @@ export const ExperienceDialog: React.FC = () => {
   // Handle submit logic
   const onSubmit = (data: z.infer<typeof experienceSchema>) => {
     // update the data in the store
-    const updatedExperience = experience
-      ? index !== null
-        ? experience.map((exp: Experience, i: number) =>
-            i === index ? data : exp
-          )
-        : [...experience, data]
-      : [data];
-
-    setData({
-      experience: updatedExperience,
-    });
+    const currentExperience = localStorageData.experience || experience || [];
+    const updatedExperience = isEditMode
+      ? currentExperience.map((exp: Experience, i: number) =>
+          i === index ? data : exp
+        )
+      : [...currentExperience, data];
+    setData({ experience: updatedExperience });
     closeDialog();
     form.reset();
+
+    // save the data to the local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({
+        ...localStorageData,
+        experience: updatedExperience,
+      })
+    );
   };
 
   // Handle summary change

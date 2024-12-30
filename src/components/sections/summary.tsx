@@ -14,8 +14,13 @@ export const SummaryForm: React.FC = () => {
     resumeData: { summary },
   } = useResume();
 
+  // get the data from the local storage
+  const localStorageData = JSON.parse(
+    localStorage.getItem("resumeData") || "{}"
+  );
+
   // set default values for the form
-  const defaultValues: Summary = summary;
+  const defaultValues: Summary = localStorageData.summary || summary;
 
   const [content, setContent] = useState<string>(defaultValues.content || "");
   const [sectionTitle, setSectionTitle] = useState<string>(
@@ -45,12 +50,28 @@ export const SummaryForm: React.FC = () => {
     if (debouncedContent !== summary?.content) {
       setData({ summary: { ...summary, content: debouncedContent } });
     }
+    // save the data to the local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({
+        ...localStorageData,
+        summary: { ...summary, content: debouncedContent },
+      })
+    );
   }, [debouncedContent]);
 
   useEffect(() => {
     if (debouncedSectionTitle !== summary?.sectionTitle) {
       setData({ summary: { ...summary, sectionTitle: debouncedSectionTitle } });
     }
+    // save the data to the local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({
+        ...localStorageData,
+        summary: { ...summary, sectionTitle: debouncedSectionTitle },
+      })
+    );
   }, [debouncedSectionTitle]);
 
   return (

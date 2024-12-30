@@ -28,9 +28,13 @@ export const ProjectsPreview: React.FC = () => {
         <div key={index} className="space-y-2">
           <div className="flex items-center justify-between">
             <div className="text-left flex items-center gap-2">
-              <a href={project.website} className="underline">
+              {project.website ? (
+                <a href={project.website} className="underline">
+                  <span className="font-bold">{project.name}</span>
+                </a>
+              ) : (
                 <span className="font-bold">{project.name}</span>
-              </a>
+              )}
               {project.keywords.length > 0 && (
                 <div className="flex items-center gap-1">
                   |&nbsp;

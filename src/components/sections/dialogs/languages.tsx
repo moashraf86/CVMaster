@@ -44,12 +44,23 @@ export const LanguagesDialog: React.FC = () => {
     resumeData: { languages },
   } = useResume();
 
+  // get the data from the local storage
+  const localStorageData = JSON.parse(
+    localStorage.getItem("resumeData") || "{}"
+  );
+
   // check if user is in edit mode
-  const isEditMode = languages && index !== null && languages[index];
+  const isEditMode =
+    (localStorageData.languages &&
+      index !== null &&
+      localStorageData.languages[index]) ||
+    (languages && index !== null && languages[index]);
 
   // define default values for the form
   const defaultValues = isEditMode
-    ? languages[index]
+    ? localStorageData.languages
+      ? localStorageData.languages[index]
+      : languages[index]
     : {
         name: "",
         level: "",
@@ -63,18 +74,22 @@ export const LanguagesDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof languageSchema>) {
-    const updatedLanguages = languages
-      ? index !== null
-        ? languages.map((lang: Language, i: number) =>
-            i === index ? data : lang
-          )
-        : [...languages, data]
-      : [data];
+    const currentLanguages = localStorageData.languages || languages;
+    const updatedLanguages = isEditMode
+      ? currentLanguages.map((lang: Language, i: number) =>
+          i === index ? data : lang
+        )
+      : [...currentLanguages, data];
     setData({
       languages: updatedLanguages,
     });
     closeDialog();
     form.reset();
+    // save the data to local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({ ...localStorageData, languages: updatedLanguages })
+    );
   }
 
   useEffect(() => {

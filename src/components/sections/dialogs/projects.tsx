@@ -47,12 +47,24 @@ export const ProjectsDialog: React.FC = () => {
   const [keywords, setKeywords] = useState<string[]>(
     projects && index !== null ? projects[index].keywords : []
   );
+
+  // get the data from the local storage
+  const localStorageData = JSON.parse(
+    localStorage.getItem("resumeData") || "{}"
+  );
+
   // check if user is in edit mode
-  const isEditMode = projects && index !== null && projects[index];
+  const isEditMode =
+    (localStorageData.projects &&
+      index !== null &&
+      localStorageData.projects[index]) ||
+    (projects && index !== null && projects[index]);
 
   // define default values for the form
   const defaultValues = isEditMode
-    ? projects[index]
+    ? localStorageData.projects
+      ? localStorageData.projects[index]
+      : projects[index]
     : {
         // set to empty later
         name: "",
@@ -72,18 +84,25 @@ export const ProjectsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof projectsSchema>) {
-    const updatedExperience = projects
-      ? index !== null
-        ? projects.map((project: Project, i: number) =>
-            i === index ? data : project
-          )
-        : [...projects, data]
-      : [data];
+    const currentProjects = localStorageData.projects || projects;
+    const updatedProjects = isEditMode
+      ? currentProjects.map((project: Project, i: number) =>
+          i === index ? data : project
+        )
+      : [...currentProjects, data];
     setData({
-      projects: updatedExperience,
+      projects: updatedProjects,
     });
     closeDialog();
     form.reset();
+    // save the data to the local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({
+        ...localStorageData,
+        projects: updatedProjects,
+      })
+    );
   }
 
   // handle keywords

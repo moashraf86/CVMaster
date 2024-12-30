@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { Input } from "../ui/input";
 import { useResume } from "../../store/useResume";
-import { Basics } from "../../types/types";
 import { Label } from "../ui/label";
 import { UserRound } from "lucide-react";
 
@@ -22,19 +21,23 @@ export const BasicsInfo: React.FC = () => {
     resumeData: { basics },
   } = useResume();
 
+  // get the data from the local storage
+  const localStorageData = JSON.parse(
+    localStorage.getItem("resumeData") || "{}"
+  );
+
   // handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setData({ basics: { ...basics, [e.target.name]: e.target.value } });
+    // save the data to the local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({
+        ...localStorageData,
+        basics: { ...basics, [e.target.name]: e.target.value },
+      })
+    );
   };
-
-  // set default values for the form
-  const defaultValues: Basics = basics;
-
-  // set the default values to the form
-  if (!basics || Object.keys(basics).length === 0) {
-    // setValue("basics", defaultValues);
-    setData({ basics: defaultValues });
-  }
 
   return (
     <section className="grid gap-y-6" id="basics">
