@@ -26,10 +26,10 @@ import { Skill } from "../../../types/types";
 import { X } from "lucide-react";
 
 // define skills schema
-const projectsSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
+const skillsSchema = z.object({
+  name: z.string(),
   keyword: z.string(),
-  keywords: z.array(z.string()),
+  keywords: z.array(z.string()).min(1, { message: "Keywords are required" }),
 });
 
 // Define the form
@@ -39,39 +39,64 @@ export const SkillsDialog: React.FC = () => {
     setData,
     resumeData: { skills },
   } = useResume();
+
+  // get the data from the local storage
+  const localStorageData = JSON.parse(
+    localStorage.getItem("resumeData") || "{}"
+  );
+
   const [keywords, setKeywords] = useState<string[]>(
-    skills && index !== null ? skills[index].keywords : []
+    localStorageData.skills && index !== null
+      ? localStorageData.skills[index].keywords
+      : skills && index !== null
+      ? skills[index].keywords
+      : []
   );
   // check if user is in edit mode
-  const isEditMode = skills && index !== null && skills[index];
+  const isEditMode =
+    (localStorageData.skills &&
+      index !== null &&
+      localStorageData.skills[index]) ||
+    (skills && index !== null && skills[index]);
 
   // define default values for the form
   const defaultValues = isEditMode
-    ? skills[index]
+    ? localStorageData.skills
+      ? localStorageData.skills[index]
+      : skills[index]
     : {
         name: "",
         keyword: "",
-        keywords: [""],
+        keywords: [],
       };
 
   // define form
-  const form = useForm<z.infer<typeof projectsSchema>>({
-    resolver: zodResolver(projectsSchema),
+  const form = useForm<z.infer<typeof skillsSchema>>({
+    resolver: zodResolver(skillsSchema),
     defaultValues,
   });
 
   // on submit function
-  function onSubmit(data: z.infer<typeof projectsSchema>) {
-    const updatedSkills = skills
-      ? index !== null
-        ? skills.map((skill: Skill, i: number) => (i === index ? data : skill))
-        : [...skills, data]
-      : [data];
+  function onSubmit(data: z.infer<typeof skillsSchema>) {
+    const currentSkills = localStorageData.skills || skills;
+    const updatedSkills = isEditMode
+      ? currentSkills.map((skill: Skill, i: number) =>
+          i === index ? data : skill
+        )
+      : [...currentSkills, data];
     setData({
       skills: updatedSkills,
     });
     closeDialog();
     form.reset();
+    // save the data to the local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({
+        ...localStorageData,
+        skills: updatedSkills,
+      })
+    );
   }
 
   // handle keywords
@@ -80,6 +105,8 @@ export const SkillsDialog: React.FC = () => {
     // add new keyword to the keywords array in the form state and reset the input field
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
+      // check  if the keyword is not empty
+      if (!form.getValues("keyword").trim()) return;
       setKeywords([...keywords, form.getValues("keyword")]);
       form.setValue("keywords", [
         ...form.getValues("keywords"),
@@ -87,6 +114,8 @@ export const SkillsDialog: React.FC = () => {
       ]);
       form.setValue("keyword", "");
     }
+    // clear the error message
+    form.clearErrors("keywords");
   };
 
   // handle paste
@@ -112,7 +141,14 @@ export const SkillsDialog: React.FC = () => {
 
   useEffect(() => {
     // set the keywords to the keywords in the form state
-    setKeywords(isEditMode ? skills[index].keywords : []);
+    setKeywords(
+      isEditMode
+        ? localStorageData.skills && index !== null
+          ? localStorageData.skills[index].keywords
+          : skills[index].keywords
+        : []
+    );
+
     form.reset(defaultValues);
   }, [index, skills]);
 
@@ -154,13 +190,16 @@ export const SkillsDialog: React.FC = () => {
                         onPaste={pasteKeywords}
                         placeholder="React, Node.js, MongoDB"
                         {...field}
+                        hasError={form.formState.errors.keywords !== undefined}
                       />
                     </FormControl>
                     <FormDescription>
                       You can add multiple keywords by separating them with a
                       comma or pressing enter.
                     </FormDescription>
-                    <FormMessage />
+                    <FormMessage>
+                      {form.formState.errors.keywords?.message}
+                    </FormMessage>
                     {/* display keywords here */}
                     <div className="flex items-center flex-wrap gap-2">
                       {keywords.map((keyword, index) => (

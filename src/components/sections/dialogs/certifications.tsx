@@ -41,12 +41,23 @@ export const CertificationsDialog: React.FC = () => {
     resumeData: { certifications },
   } = useResume();
 
+  // get the data from the local storage
+  const localStorageData = JSON.parse(
+    localStorage.getItem("resumeData") || "{}"
+  );
+
   // check if user is in edit mode
-  const isEditMode = certifications && index !== null && certifications[index];
+  const isEditMode =
+    (localStorageData.certifications &&
+      index !== null &&
+      localStorageData.certifications[index]) ||
+    (certifications && index !== null && certifications[index]);
 
   // define default values for the form
   const defaultValues = isEditMode
-    ? certifications[index]
+    ? localStorageData.certifications
+      ? localStorageData.certifications[index]
+      : certifications[index]
     : {
         name: "",
         issuer: "",
@@ -63,18 +74,26 @@ export const CertificationsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof certificationSchema>) {
-    const updatedCertifications = certifications
-      ? index !== null
-        ? certifications.map((certification: Certification, i: number) =>
-            i === index ? data : certification
-          )
-        : [...certifications, data]
-      : [data];
+    const currentCetifications =
+      localStorageData.certifications || certifications;
+    const updatedCertifications = isEditMode
+      ? currentCetifications.map((certification: Certification, i: number) =>
+          i === index ? data : certification
+        )
+      : [...currentCetifications, data];
     setData({
       certifications: updatedCertifications,
     });
     closeDialog();
     form.reset();
+    // save the data to the local storage
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({
+        ...localStorageData,
+        certifications: updatedCertifications,
+      })
+    );
   }
 
   useEffect(() => {

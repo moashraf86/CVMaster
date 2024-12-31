@@ -21,7 +21,6 @@ export const CvForm: React.FC = () => {
 
   useEffect(() => {
     // track the window inner width
-    console.log(windowSize);
     if (windowSize.width !== null && windowSize.width < 1024 && showForm) {
       setValue("showForm", false);
     } else if (
@@ -31,7 +30,6 @@ export const CvForm: React.FC = () => {
     ) {
       setValue("showForm", true);
     }
-    console.log(showForm);
   }, [windowSize]);
 
   return (

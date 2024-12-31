@@ -8,6 +8,18 @@ import { Section, SectionItem, SectionName } from "../../../types/types";
 export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const { openDialog, updateDialog } = useDialog();
   const { resumeData, setData } = useResume();
+  // get the data from the local storage or the resumeData
+  let data;
+  try {
+    data = JSON.parse(localStorage.getItem("resumeData") || "{}");
+  } catch (error) {
+    console.log(error);
+
+    data = resumeData;
+  }
+
+  // get the section data from the local storage or the resumeData
+  const sectionData = data[id] || resumeData[id] || [];
 
   // handle delete function for each item in the section
   const handleDelete = (id: string, index: number) => () => {
@@ -16,6 +28,12 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
     );
     // update the experience data
     setData({ [id]: newData });
+
+    // update the local storage data
+    localStorage.setItem(
+      "resumeData",
+      JSON.stringify({ ...data, [id]: newData })
+    );
   };
 
   return (
@@ -31,33 +49,33 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <h3 className="text-base font-bold">
-                    {resumeData[id][index].name}
+                    {sectionData[index].name}
                   </h3>
                   {
                     // check if the section has a position or description or keywords
-                    resumeData[id][index].position ? (
+                    sectionData[index].position ? (
                       <p className="text-sm text-text-muted">
-                        {resumeData[id][index].position}
+                        {sectionData[index].position}
                       </p>
-                    ) : resumeData[id][index].description ? (
+                    ) : sectionData[index].description ? (
                       <p className="text-sm text-text-muted">
-                        {resumeData[id][index].description}
+                        {sectionData[index].description}
                       </p>
-                    ) : resumeData[id][index].keywords ? (
+                    ) : sectionData[index].keywords ? (
                       <p className="text-sm text-text-muted">
-                        {resumeData[id][index].keywords.length} keywords
+                        {sectionData[index].keywords.length} keywords
                       </p>
-                    ) : resumeData[id][index].studyField ? (
+                    ) : sectionData[index].studyField ? (
                       <p className="text-sm text-text-muted">
-                        {resumeData[id][index].studyField}
+                        {sectionData[index].studyField}
                       </p>
-                    ) : resumeData[id][index].level ? (
+                    ) : sectionData[index].level ? (
                       <p className="text-sm text-text-muted">
-                        {resumeData[id][index].level}
+                        {sectionData[index].level}
                       </p>
-                    ) : resumeData[id][index].issuer ? (
+                    ) : sectionData[index].issuer ? (
                       <p className="text-sm text-text-muted">
-                        {resumeData[id][index].issuer}
+                        {sectionData[index].issuer}
                       </p>
                     ) : null
                   }
