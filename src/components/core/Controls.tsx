@@ -32,19 +32,45 @@ export const Controls: React.FC = () => {
   const handleZoomIn = () => {
     zoomIn(0.25);
     setValue("scale", Math.min(pdfScale + 0.25, 2));
+    // save to local storage
+    localStorage.setItem(
+      "pdfSetting",
+      JSON.stringify({
+        fontSize,
+        fontFamily,
+        scale: Math.min(pdfScale + 0.25, 2),
+      })
+    );
   };
 
   // handle zoom out
   const handleZoomOut = () => {
     zoomOut(0.25);
-    setValue("scale", Math.max(pdfScale - 0.2, 0.5));
+    setValue("scale", Math.max(pdfScale - 0.25, 0.5));
+    // save to local storage
+    localStorage.setItem(
+      "pdfSetting",
+      JSON.stringify({
+        fontSize,
+        fontFamily,
+        scale: Math.max(pdfScale - 0.25, 0.5),
+      })
+    );
   };
 
   // reset transform
   const resetZoom = () => {
     resetTransform();
-    instance.setCenter();
     setValue("scale", 1);
+    // save to local storage
+    localStorage.setItem(
+      "pdfSetting",
+      JSON.stringify({
+        fontSize,
+        fontFamily,
+        scale: 1,
+      })
+    );
   };
 
   // set center
@@ -54,21 +80,57 @@ export const Controls: React.FC = () => {
   // increase font size
   const increaseFontSize = () => {
     setValue("fontSize", Math.min(fontSize + 1, 18));
+    // save to local storage
+    localStorage.setItem(
+      "pdfSetting",
+      JSON.stringify({
+        fontSize: Math.min(fontSize + 1, 18),
+        fontFamily,
+        scale: pdfScale,
+      })
+    );
   };
 
   // decrease font size
   const decreaseFontSize = () => {
     setValue("fontSize", Math.max(fontSize - 1, 12));
+    // save to local storage
+    localStorage.setItem(
+      "pdfSetting",
+      JSON.stringify({
+        fontSize: Math.max(fontSize - 1, 12),
+        fontFamily,
+        scale: pdfScale,
+      })
+    );
   };
 
   // reset font size
   const resetFontSize = () => {
     setValue("fontSize", 14);
+    // save to local storage
+    localStorage.setItem(
+      "pdfSetting",
+      JSON.stringify({
+        fontSize: 14,
+        fontFamily,
+        scale: pdfScale,
+      })
+    );
   };
 
   // change font type
   const changeFontType = (value: string) => {
     setValue("fontFamily", value);
+    // save to local storage
+    localStorage.setItem(
+      "pdfSetting",
+      JSON.stringify({
+        fontSize,
+        fontFamily: value,
+        scale: pdfScale,
+      })
+    );
   };
 
   return (
@@ -81,6 +143,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={handleZoomIn}
+          disabled={pdfScale === 2}
         >
           <ZoomIn />
         </Button>
@@ -91,6 +154,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={handleZoomOut}
+          disabled={pdfScale === 0.5}
         >
           <ZoomOut />
         </Button>
@@ -101,6 +165,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={resetZoom}
+          disabled={pdfScale === 1}
         >
           <History />
         </Button>

@@ -2,13 +2,13 @@ import { create } from "zustand";
 import { PdfSettings, ResumeType } from "../types/types";
 
 // fetch data from local storage and set it to the store
-const localStorageData = JSON.parse(localStorage.getItem("resumeData") || "{}");
-
+const localResumeData = JSON.parse(localStorage.getItem("resumeData") || "{}");
+const localPdfSetting = JSON.parse(localStorage.getItem("pdfSetting") || "{}");
 // Create a store with Zustand for managing resume data
 export const useResume = create<ResumeType>((set) => ({
   step: 0,
   resumeData: {
-    basics: localStorageData.basics || {
+    basics: localResumeData.basics || {
       name: "John Doe",
       title: "Software Developer",
       email: "youremail@domain.com",
@@ -18,12 +18,12 @@ export const useResume = create<ResumeType>((set) => ({
       location: "Cairo, Egypt",
     },
     summary: {
-      sectionTitle: localStorageData.summary?.sectionTitle || "Summary",
+      sectionTitle: localResumeData.summary?.sectionTitle || "Summary",
       content:
-        localStorageData.summary?.content ||
+        localResumeData.summary?.content ||
         "Software Developer with 5 years of experience in building web applications. I have a strong understanding of web technologies and have worked with various front-end and back-end frameworks.",
     },
-    experience: localStorageData.experience || [
+    experience: localResumeData.experience || [
       {
         name: "Google",
         position: "Software Developer",
@@ -35,7 +35,7 @@ export const useResume = create<ResumeType>((set) => ({
           "<ul><li><p>Collaborated with designers to translate design mockups and user stories into functional and responsive web pages.</p></li> <li><p>Ensured cross-browser compatibility and responsiveness across various devices for an optimal user experience.</p></li> <li><p>Utilized Storybook to showcase component variations, interactions, and usage examples, facilitating collaboration and maintainability.</p></li></ul>",
       },
     ],
-    projects: localStorageData.projects || [
+    projects: localResumeData.projects || [
       {
         name: "Project Name",
         description: "Project Description",
@@ -46,7 +46,7 @@ export const useResume = create<ResumeType>((set) => ({
         keywords: ["React", "TypeScript", "Tailwind CSS"],
       },
     ],
-    education: localStorageData.education || [
+    education: localResumeData.education || [
       {
         name: "University of California, Berkeley",
         degree: "Bachelor of Science",
@@ -57,22 +57,22 @@ export const useResume = create<ResumeType>((set) => ({
           "<p>GPA: 4</p> <ul><li><strong>Relevant coursework:</strong> Data Structures, Algorithms, Machine Learning, Computer Networks, Operating Systems.<li></ul>",
       },
     ],
-    skills: localStorageData.skills || [
+    skills: localResumeData.skills || [
       {
         name: "Languages",
         keyword: "",
         keywords: ["JavaScript", "TypeScript", "Python", "Java", "C++"],
       },
     ],
-    languages: localStorageData.languages || [
+    languages: localResumeData.languages || [
       {
         name: "Arabic",
         level: "Native or Bilingual",
       },
     ],
-    certifications: localStorageData.certifications || [],
-    awards: localStorageData.awards || [],
-    volunteering: localStorageData.volunteering || [],
+    certifications: localResumeData.certifications || [],
+    awards: localResumeData.awards || [],
+    volunteering: localResumeData.volunteering || [],
   },
   nextStep: () => set((state) => ({ step: state.step + 1 })),
   prevStep: () => set((state) => ({ step: state.step - 1 })),
@@ -88,9 +88,9 @@ export const useResume = create<ResumeType>((set) => ({
 // Create a store for PDF settings
 export const usePdfSettings = create<PdfSettings>((set) => ({
   pdfSettings: {
-    fontSize: 14,
-    fontFamily: "inter",
-    scale: 1,
+    fontSize: localPdfSetting.fontSize || 14,
+    fontFamily: localPdfSetting.fontFamily || "inter",
+    scale: localPdfSetting.scale || 1,
     showForm: false,
   },
   setValue: (key, value) =>
