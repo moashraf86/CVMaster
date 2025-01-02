@@ -26,7 +26,7 @@ import {
 } from "lucide-react";
 import { rewriteContentWithAi } from "../../services/groqService";
 import clsx from "clsx";
-import { Skeleton } from "../ui/Skeleton";
+import { Skeleton } from "../ui/skeleton";
 
 const MenuBar: React.FC = () => {
   const { editor } = useCurrentEditor();
