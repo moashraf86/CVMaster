@@ -100,14 +100,12 @@ export type SectionName =
 
 // DEfine ResumeData type
 export interface ResumeType {
-  step: number;
+  sectionOrder: SectionName[];
   resumeData: {
     [key: string]: any;
   };
-
-  nextStep: () => void;
-  prevStep: () => void;
   setData: (data: Record<string, unknown>) => void;
+  setSectionOrder: (order: SectionName[]) => void;
 }
 
 export interface PdfSettings {
