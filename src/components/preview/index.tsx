@@ -6,7 +6,7 @@ import { SkillsPreview } from "./skills";
 import { SummaryPreview } from "./summary";
 import { LanguagesPreview } from "./languages";
 import { cn } from "../../lib/utils";
-import { usePdfSettings } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { CertificationsPreview } from "./certifications";
 import { AwardsPreview } from "./awards";
 import { VolunteeringPreview } from "./volunteering";
@@ -28,6 +28,8 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
   const {
     pdfSettings: { fontSize, fontFamily },
   } = usePdfSettings();
+
+  const { sectionOrder } = useResume();
 
   // Page size in pixels
   const WIDTH = pageSizeMap.width * MM_TO_PX;
@@ -54,15 +56,30 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
         )}
       >
         <BasicsPreview />
-        <SummaryPreview />
-        <ExperiencePreview />
-        <ProjectsPreview />
-        <SkillsPreview />
-        <EducationPreview />
-        <LanguagesPreview />
-        <CertificationsPreview />
-        <AwardsPreview />
-        <VolunteeringPreview />
+        {sectionOrder.map((sectionId) => {
+          switch (sectionId) {
+            case "summary":
+              return <SummaryPreview />;
+            case "experience":
+              return <ExperiencePreview />;
+            case "projects":
+              return <ProjectsPreview />;
+            case "skills":
+              return <SkillsPreview />;
+            case "education":
+              return <EducationPreview />;
+            case "languages":
+              return <LanguagesPreview />;
+            case "certifications":
+              return <CertificationsPreview />;
+            case "awards":
+              return <AwardsPreview />;
+            case "volunteering":
+              return <VolunteeringPreview />;
+            default:
+              return null;
+          }
+        })}
       </div>
       {mode === "preview" && (
         <hr

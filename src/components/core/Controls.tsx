@@ -1,6 +1,7 @@
 import {
   AArrowDown,
   AArrowUp,
+  GalleryVertical,
   History,
   SquareSquare,
   ZoomIn,
@@ -19,6 +20,8 @@ import {
   SelectValue,
 } from "../ui/select";
 import { DownloadPDF } from "./DownloadPdf";
+import { useState } from "react";
+import { DragAndDropMenu } from "./DragAndDropMenu";
 
 export const Controls: React.FC = () => {
   const { zoomIn, zoomOut, resetTransform, instance } = useControls();
@@ -27,6 +30,9 @@ export const Controls: React.FC = () => {
     setValue,
     pdfSettings: { fontSize, fontFamily, scale: pdfScale },
   } = usePdfSettings();
+
+  // state for the drag-and-drop menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // handle zoom in
   const handleZoomIn = () => {
@@ -215,14 +221,14 @@ export const Controls: React.FC = () => {
           <History />
         </Button>
       </div>
-      <div className="flex border-r px-1">
+      <div className="flex px-1 gap-1">
         <Select defaultValue={fontFamily} onValueChange={changeFontType}>
           <Button
             title="Select Font"
             asChild
             type="button"
             variant="ghost"
-            className="focus:ring-0 rounded-full"
+            className="focus:ring-0 rounded-full w-auto"
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a font" />
@@ -240,10 +246,22 @@ export const Controls: React.FC = () => {
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>
-      <div className="flex px-1">
+        <Button
+          title="Reorder Sections"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full flex-1"
+          onClick={() => setIsMenuOpen(true)}
+        >
+          <GalleryVertical className="w-4 h-4" />
+        </Button>
         <DownloadPDF />
       </div>
+      <DragAndDropMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+      />
       <div className="fonts" hidden>
         <div className="font-lora"></div>
         <div className="font-inter"></div>

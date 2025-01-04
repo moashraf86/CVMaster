@@ -91,16 +91,26 @@ const getLocalStorageData = (key: string, defaultValue = {}) => {
 // Get data from localStorage
 const localResumeData = getLocalStorageData("resumeData");
 const localPdfSetting = getLocalStorageData("pdfSetting");
+const localSectionOrder = getLocalStorageData("sectionOrder");
 
 // Create resume store
 export const useResume = create<ResumeType>((set) => ({
-  step: 0,
+  sectionOrder: [
+    "summary",
+    "experience",
+    "projects",
+    "education",
+    "skills",
+    "languages",
+    "certifications",
+    "awards",
+    "volunteering",
+  ],
+  ...localSectionOrder,
   resumeData: {
     ...DEFAULT_RESUME_DATA,
     ...localResumeData,
   },
-  nextStep: () => set((state) => ({ step: state.step + 1 })),
-  prevStep: () => set((state) => ({ step: state.step - 1 })),
   setData: (data) => {
     set((state) => ({
       resumeData: {
@@ -110,6 +120,13 @@ export const useResume = create<ResumeType>((set) => ({
     }));
     // Save to localStorage whenever data changes
     localStorage.setItem("resumeData", JSON.stringify(data));
+  },
+  setSectionOrder: (order) => {
+    set(() => ({ sectionOrder: order }));
+    localStorage.setItem(
+      "sectionOrder",
+      JSON.stringify({ sectionOrder: order })
+    );
   },
 }));
 
