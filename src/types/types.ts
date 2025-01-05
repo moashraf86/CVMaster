@@ -21,7 +21,7 @@ export interface Experience {
   position: string;
   dateRange: string;
   location: string;
-  employmentType: "Full-time" | "Part-time" | "Freelance" | "Internship";
+  employmentType: "Full-time" | "Part-time" | "Freelance" | "Internship" | "";
   website: string;
   summary: string;
 }
@@ -68,7 +68,7 @@ export type Certification = BaseAchievement;
 export type Award = BaseAchievement;
 
 export interface Volunteering {
-  name: number;
+  name: string;
   position: string;
   date: string;
   location: string;
@@ -102,7 +102,16 @@ export type SectionName =
 export interface ResumeType {
   sectionOrder: SectionName[];
   resumeData: {
-    [key: string]: any;
+    basics: Basics;
+    summary: Summary;
+    experience: Experience[];
+    projects: Project[];
+    education: Education[];
+    skills: Skill[];
+    languages: Language[];
+    certifications: Certification[];
+    awards: Award[];
+    volunteering: Volunteering[];
   };
   setData: (data: Record<string, unknown>) => void;
   setSectionOrder: (order: SectionName[]) => void;

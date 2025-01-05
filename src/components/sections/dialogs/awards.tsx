@@ -26,11 +26,11 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define awards schema
 const awardsSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  issuer: z.string().min(1, { message: "Issuer is required" }),
-  date: z.string(),
+  name: z.string().trim().min(1, { message: "Name is required" }),
+  issuer: z.string().trim().min(1, { message: "Issuer is required" }),
+  date: z.string().trim(),
   website: z.literal("").or(z.string().url()),
-  summary: z.string(),
+  summary: z.string().trim(),
 });
 
 // Define the form
@@ -45,7 +45,7 @@ export const AwardsDialog: React.FC = () => {
   const isEditMode = awards && index !== null && awards[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
+  const defaultValues: Award = isEditMode
     ? awards[index]
     : {
         name: "",

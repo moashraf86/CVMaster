@@ -28,9 +28,9 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define projects schema
 const projectsSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  description: z.string(),
-  date: z.string(),
+  name: z.string().trim().min(1, { message: "Name is required" }),
+  description: z.string().trim(),
+  date: z.string().trim(),
   website: z.literal("").or(z.string().url()),
   summary: z.string(),
   keyword: z.string(),
@@ -52,7 +52,7 @@ export const ProjectsDialog: React.FC = () => {
   const isEditMode = projects && index !== null && projects[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
+  const defaultValues: Project = isEditMode
     ? projects[index]
     : {
         // set to empty later
@@ -92,6 +92,8 @@ export const ProjectsDialog: React.FC = () => {
     // add new keyword to the keywords array in the form state and reset the input field
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
+      // check if the keyword is not empty
+      if (!form.getValues("keyword").trim()) return;
       setKeywords([...keywords, form.getValues("keyword")]);
       form.setValue("keywords", [
         ...form.getValues("keywords"),

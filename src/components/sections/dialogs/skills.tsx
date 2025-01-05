@@ -27,8 +27,8 @@ import { X } from "lucide-react";
 
 // define skills schema
 const skillsSchema = z.object({
-  name: z.string(),
-  keyword: z.string(),
+  name: z.string().trim(),
+  keyword: z.string().trim(),
   keywords: z.array(z.string()).min(1, { message: "Keywords are required" }),
 });
 
@@ -47,7 +47,7 @@ export const SkillsDialog: React.FC = () => {
   const isEditMode = skills && index !== null && skills[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
+  const defaultValues: Skill = isEditMode
     ? skills[index]
     : {
         name: "",

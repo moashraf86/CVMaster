@@ -26,12 +26,12 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define education schema
 const educationSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  degree: z.string(),
-  studyField: z.string().min(1, { message: "studyField is required" }),
-  date: z.string().min(1, { message: "Date range is required" }),
+  name: z.string().trim().min(1, { message: "Name is required" }),
+  degree: z.string().trim(),
+  studyField: z.string().trim().min(1, { message: "Study Field is required" }),
+  date: z.string().trim().min(1, { message: "Date range is required" }),
   website: z.literal("").or(z.string().url()),
-  summary: z.string(),
+  summary: z.string().trim(),
 });
 
 // Define the form
@@ -46,7 +46,7 @@ export const EducationDialog: React.FC = () => {
   const isEditMode = education && index !== null && education[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
+  const defaultValues: Education = isEditMode
     ? education[index]
     : {
         name: "",
