@@ -48,23 +48,12 @@ export const ProjectsDialog: React.FC = () => {
     projects && index !== null ? projects[index].keywords : []
   );
 
-  // get the data from the local storage
-  const localStorageData = JSON.parse(
-    localStorage.getItem("resumeData") || "{}"
-  );
-
   // check if user is in edit mode
-  const isEditMode =
-    (localStorageData.projects &&
-      index !== null &&
-      localStorageData.projects[index]) ||
-    (projects && index !== null && projects[index]);
+  const isEditMode = projects && index !== null && projects[index];
 
   // define default values for the form
   const defaultValues = isEditMode
-    ? localStorageData.projects
-      ? localStorageData.projects[index]
-      : projects[index]
+    ? projects[index]
     : {
         // set to empty later
         name: "",
@@ -84,7 +73,7 @@ export const ProjectsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof projectsSchema>) {
-    const currentProjects = localStorageData.projects || projects;
+    const currentProjects = projects;
     const updatedProjects = isEditMode
       ? currentProjects.map((project: Project, i: number) =>
           i === index ? data : project
@@ -95,14 +84,6 @@ export const ProjectsDialog: React.FC = () => {
     });
     closeDialog();
     form.reset();
-    // save the data to the local storage
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({
-        ...localStorageData,
-        projects: updatedProjects,
-      })
-    );
   }
 
   // handle keywords

@@ -41,23 +41,12 @@ export const AwardsDialog: React.FC = () => {
     resumeData: { awards },
   } = useResume();
 
-  // get the data from the local storage
-  const localStorageData = JSON.parse(
-    localStorage.getItem("resumeData") || "{}"
-  );
-
   // check if user is in edit mode
-  const isEditMode =
-    (localStorageData.awards &&
-      index !== null &&
-      localStorageData.awards[index]) ||
-    (awards && index !== null && awards[index]);
+  const isEditMode = awards && index !== null && awards[index];
 
   // define default values for the form
   const defaultValues = isEditMode
-    ? localStorageData.awards
-      ? localStorageData.awards[index]
-      : awards[index]
+    ? awards[index]
     : {
         name: "",
         issuer: "",
@@ -74,7 +63,7 @@ export const AwardsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof awardsSchema>) {
-    const currentAwards = localStorageData.awards || awards;
+    const currentAwards = awards;
     const updatedAwards = isEditMode
       ? currentAwards.map((award: Award, i: number) =>
           i === index ? data : award
@@ -85,11 +74,6 @@ export const AwardsDialog: React.FC = () => {
     });
     closeDialog();
     form.reset();
-    // save the data to the local storage
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({ ...localStorageData, awards: updatedAwards })
-    );
   }
 
   useEffect(() => {

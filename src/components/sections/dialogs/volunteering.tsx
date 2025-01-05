@@ -40,26 +40,15 @@ export const VolunteeringDialog: React.FC = () => {
     resumeData: { volunteering },
   } = useResume();
 
-  // get the data from the local storage
-  const localStorageData = JSON.parse(
-    localStorage.getItem("resumeData") || "{}"
-  );
-
   //check if volunteering exists and index is not null
-  const isEditMode =
-    (localStorageData.volunteering &&
-      index !== null &&
-      localStorageData.volunteering[index]) ||
-    (volunteering && index !== null && volunteering[index]);
+  const isEditMode = volunteering && index !== null && volunteering[index];
   /**
    * 	Define the default values for the form
    * If the volunteering exists and the index is not null then get the volunteering at the index
    * Otherwise, set the default values to an empty object
    */
   const defaultValues = isEditMode
-    ? localStorageData.volunteering
-      ? localStorageData.volunteering[index]
-      : volunteering[index]
+    ? volunteering[index]
     : {
         name: "",
         position: "",
@@ -76,7 +65,7 @@ export const VolunteeringDialog: React.FC = () => {
 
   // Handle submit logic
   const onSubmit = (data: z.infer<typeof volunteeringSchema>) => {
-    const currentVolunteering = localStorageData.volunteering || volunteering;
+    const currentVolunteering = volunteering;
     // update the data in the store
     const updatedVolunteering = isEditMode
       ? currentVolunteering.map((vol: Volunteering, i: number) =>
@@ -88,14 +77,6 @@ export const VolunteeringDialog: React.FC = () => {
     });
     closeDialog();
     form.reset();
-    // save the data to the local storage
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({
-        ...localStorageData,
-        volunteering: updatedVolunteering,
-      })
-    );
   };
 
   useEffect(() => {

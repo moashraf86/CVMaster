@@ -42,23 +42,12 @@ export const EducationDialog: React.FC = () => {
     resumeData: { education },
   } = useResume();
 
-  // get the data from the local storage
-  const localStorageData = JSON.parse(
-    localStorage.getItem("resumeData") || "{}"
-  );
-
   // check if user is in edit mode
-  const isEditMode =
-    (localStorageData.education &&
-      index !== null &&
-      localStorageData.education[index]) ||
-    (education && index !== null && education[index]);
+  const isEditMode = education && index !== null && education[index];
 
   // define default values for the form
   const defaultValues = isEditMode
-    ? localStorageData.education
-      ? localStorageData.education[index]
-      : education[index]
+    ? education[index]
     : {
         name: "",
         degree: "",
@@ -76,7 +65,7 @@ export const EducationDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof educationSchema>) {
-    const currentEducation = localStorageData.education || education;
+    const currentEducation = education;
     const updatedEducation = isEditMode
       ? currentEducation.map((edu: Education, i: number) =>
           i === index ? data : edu
@@ -87,11 +76,6 @@ export const EducationDialog: React.FC = () => {
     });
     closeDialog();
     form.reset();
-    // save the data to the local storage
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({ ...localStorageData, education: updatedEducation })
-    );
   }
 
   useEffect(() => {
