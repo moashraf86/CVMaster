@@ -4,17 +4,20 @@ import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { SectionIcon } from "./SectionIcon";
 import { Section, SectionName } from "../../../types/types";
+import { useState } from "react";
+import { DeleteConfirmation } from "../../core/DeleteConfirmation";
 
 export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const { openDialog, updateDialog } = useDialog();
   const { resumeData, setData } = useResume();
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   // get the data from the local storage or the resumeData
   let data;
   try {
     data = JSON.parse(localStorage.getItem("resumeData") || "{}");
   } catch (error) {
     console.log(error);
-
     data = resumeData;
   }
 
@@ -93,7 +96,10 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                     title="Delete"
                     variant="ghost"
                     size="icon"
-                    onClick={handleDelete(id, index)}
+                    onClick={() => {
+                      setIsOpen(true);
+                      setSelectedIndex(index);
+                    }}
                   >
                     <Trash />
                   </Button>
@@ -125,6 +131,13 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
           </Button>
         </footer>
       )}
+      <DeleteConfirmation
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        handleDelete={() =>
+          selectedIndex !== null && handleDelete(id, selectedIndex)()
+        }
+      />
     </section>
   );
 };
