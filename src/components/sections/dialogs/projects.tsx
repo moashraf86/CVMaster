@@ -244,7 +244,7 @@ export const ProjectsDialog: React.FC = () => {
                             key={index}
                             size="sm"
                             variant="outline"
-                            className="inline-flex gap-2 items-center px-3 py-0.5 rounded-full text-sm cursor-pointer"
+                            className="inline-flex gap-2 items-center px-3 py-0.5 rounded-full text-sm cursor-pointer animate-in slide-in-from-top duration-100"
                             onClick={deleteKeyword(index)}
                           >
                             {keyword}

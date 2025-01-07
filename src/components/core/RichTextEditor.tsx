@@ -16,12 +16,13 @@ import { Button } from "../ui/button";
 import { cn } from "../../lib/utils";
 import {
   BoldIcon,
-  Bot,
   ItalicIcon,
   Link2,
   Link2Off,
   List,
   ListOrdered,
+  LoaderPinwheel,
+  Sparkles,
   Undo,
 } from "lucide-react";
 import { rewriteContentWithAi } from "../../services/groqService";
@@ -239,14 +240,19 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
   return (
     <div className="flex justify-end mr-2 mb-2">
       <Button
+        shiny
+        title="AI Regenerate"
+        variant="ghost"
         type="button"
-        variant="outline"
-        size="sm"
         onClick={handleRegenerate}
         disabled={!trimmedContent || isRegenerating}
       >
-        <Bot />
-        {isRegenerating ? "Regenerating..." : "Regenerate"}
+        {isRegenerating ? (
+          <LoaderPinwheel className="animate-spin size-4" />
+        ) : (
+          <Sparkles className="size-4" />
+        )}
+        Regenerate
       </Button>
     </div>
   );

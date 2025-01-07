@@ -223,17 +223,9 @@ export const Controls: React.FC = () => {
       </div>
       <div className="flex px-1 gap-1">
         <Select defaultValue={fontFamily} onValueChange={changeFontType}>
-          <Button
-            title="Select Font"
-            asChild
-            type="button"
-            variant="ghost"
-            className="focus:ring-0 rounded-full w-auto"
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a font" />
-            </SelectTrigger>
-          </Button>
+          <SelectTrigger className="rounded-full w-auto gap-2">
+            <SelectValue placeholder="Select a font" />
+          </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Fonts</SelectLabel>

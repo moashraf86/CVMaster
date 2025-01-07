@@ -1,9 +1,10 @@
+"use client";
+
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "../../lib/utils";
-
+import { motion, type AnimationProps } from "framer-motion";
 import {
   Tooltip,
   TooltipTrigger,
@@ -43,20 +44,101 @@ const buttonVariants = cva(
   }
 );
 
+const shinyAnimationProps = {
+  initial: { "--x": "100%", scale: 0.8 },
+  animate: { "--x": "-100%", scale: 1 },
+  whileTap: { scale: 0.95 },
+  transition: {
+    repeat: Infinity,
+    repeatType: "loop",
+    repeatDelay: 1,
+    type: "spring",
+    stiffness: 20,
+    damping: 15,
+    mass: 2,
+    scale: {
+      type: "spring",
+      stiffness: 200,
+      damping: 5,
+      mass: 0.5,
+    },
+  },
+} as AnimationProps;
+
 export interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   title?: string;
   side?: "top" | "right" | "bottom" | "left";
+  shiny?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
-    { className, title, side, variant, size, asChild = false, ...props },
+    {
+      className,
+      title,
+      side,
+      variant,
+      size,
+      asChild = false,
+      shiny = false,
+      ...props
+    },
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
+
+    // Shiny Button Logic
+    if (shiny) {
+      const shinyButton = (
+        <motion.button
+          ref={ref}
+          {...shinyAnimationProps}
+          {...props}
+          className={cn(
+            "relative rounded-lg font-medium backdrop-blur-xl transition-shadow duration-300 ease-in-out hover:shadow dark:bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/10%)_0%,transparent_60%)] dark:hover:shadow-[0_0_20px_hsl(var(--primary)/10%)] disabled:opacity-50 disabled:cursor-not-allowed",
+            buttonVariants({ variant, size, className })
+          )}
+        >
+          <span
+            className="relative flex items-center justify-center gap-2 size-full text-sm  tracking-wide text-[rgb(0,0,0,65%)] dark:font-normal dark:text-[rgb(255,255,255,90%)]"
+            style={{
+              maskImage:
+                "linear-gradient(-75deg,hsl(var(--primary)) calc(var(--x) + 20%),transparent calc(var(--x) + 30%),hsl(var(--primary)) calc(var(--x) + 100%))",
+            }}
+          >
+            {props.children}
+          </span>
+          <span
+            style={{
+              mask: "linear-gradient(rgb(0,0,0), rgb(0,0,0)) content-box,linear-gradient(rgb(0,0,0), rgb(0,0,0))",
+              maskComposite: "exclude",
+            }}
+            className="absolute inset-0 z-10 block rounded-[inherit] bg-[linear-gradient(-75deg,hsl(var(--primary)/10%)_calc(var(--x)+20%),hsl(var(--primary)/50%)_calc(var(--x)+25%),hsl(var(--primary)/10%)_calc(var(--x)+100%))] p-px"
+          ></span>
+        </motion.button>
+      );
+
+      return title && !isMobile ? (
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger asChild>{shinyButton}</TooltipTrigger>
+            <TooltipContent
+              className="bg-primary-foreground text-primary rounded-md text-xs border border-border capitalize"
+              side={side}
+            >
+              {title}
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
+      ) : (
+        shinyButton
+      );
+    }
+
+    // Regular Button Logic
     const btnElement = (
       <Comp
         tabIndex={0}
@@ -65,6 +147,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       />
     );
+
     return title && !isMobile ? (
       <TooltipProvider delayDuration={100}>
         <Tooltip>
@@ -82,6 +165,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     );
   }
 );
+
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
