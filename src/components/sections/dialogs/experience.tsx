@@ -33,13 +33,13 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // Define schema
 const experienceSchema = z.object({
-  name: z.string().min(1, { message: "Company is required" }),
-  position: z.string().min(1, { message: "Position is required" }),
-  dateRange: z.string().min(1, { message: "Date range is required" }),
-  location: z.string(),
-  employmentType: z.string(),
+  name: z.string().trim().min(1, { message: "Company is required" }),
+  position: z.string().trim().min(1, { message: "Position is required" }),
+  dateRange: z.string().trim().min(1, { message: "Date range is required" }),
+  location: z.string().trim(),
+  employmentType: z.string().min(1, { message: "Employment Type is required" }),
   website: z.literal("").or(z.string().url()),
-  summary: z.string(),
+  summary: z.string().trim(),
 });
 
 export const ExperienceDialog: React.FC = () => {
@@ -49,27 +49,16 @@ export const ExperienceDialog: React.FC = () => {
     resumeData: { experience },
   } = useResume();
 
-  // get the data from the local storage
-  const localStorageData = JSON.parse(
-    localStorage.getItem("resumeData") || "{}"
-  );
-
   //check if experience exists and index is not null
   // const isEditMode = experience && index !== null && experience[index];
-  const isEditMode =
-    (localStorageData.experience &&
-      index !== null &&
-      localStorageData.experience[index]) ||
-    (experience && index !== null && experience[index]);
+  const isEditMode = experience && index !== null && experience[index];
   /**
    * 	Define the default values for the form
    * If the experience exists and the index is not null then get the experience at the index
    * Otherwise, set the default values to an empty object
    */
-  const defaultValues = isEditMode
-    ? localStorageData.experience
-      ? localStorageData.experience[index]
-      : experience[index]
+  const defaultValues: Experience = isEditMode
+    ? experience[index]
     : {
         name: "",
         position: "",
@@ -89,7 +78,7 @@ export const ExperienceDialog: React.FC = () => {
   // Handle submit logic
   const onSubmit = (data: z.infer<typeof experienceSchema>) => {
     // update the data in the store
-    const currentExperience = localStorageData.experience || experience || [];
+    const currentExperience = experience;
     const updatedExperience = isEditMode
       ? currentExperience.map((exp: Experience, i: number) =>
           i === index ? data : exp
@@ -98,20 +87,6 @@ export const ExperienceDialog: React.FC = () => {
     setData({ experience: updatedExperience });
     closeDialog();
     form.reset();
-
-    // save the data to the local storage
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({
-        ...localStorageData,
-        experience: updatedExperience,
-      })
-    );
-  };
-
-  // Handle summary change
-  const handleSummaryChange = (html: string) => {
-    form.setValue("summary", html);
   };
 
   useEffect(() => {
@@ -126,8 +101,10 @@ export const ExperienceDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Experience" : "Add Experience"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit your professional experience to your resume
+          <DialogDescription>
+            {isEditMode
+              ? "Edit your professional experience to your resume"
+              : "Add your professional experience to your resume"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -234,7 +211,7 @@ export const ExperienceDialog: React.FC = () => {
                       <FormControl>
                         <RichTextEditor
                           content={field.value}
-                          handleChange={handleSummaryChange}
+                          handleChange={field.onChange}
                         />
                       </FormControl>
                       <FormMessage />

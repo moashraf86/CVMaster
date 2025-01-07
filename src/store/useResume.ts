@@ -48,7 +48,7 @@ const DEFAULT_RESUME_DATA = {
       date: "2015 - 2019",
       website: "https://berkeley.edu",
       summary:
-        "<p>GPA: 4</p> <ul><li><strong>Relevant coursework:</strong> Data Structures, Algorithms, Machine Learning, Computer Networks, Operating Systems.<li></ul>",
+        "<p>GPA: 4</p> <ul><li><strong>Relevant coursework:</strong> Data Structures, Algorithms, Machine Learning, Computer Networks, Operating Systems.</li></ul>",
     },
   ],
   skills: [

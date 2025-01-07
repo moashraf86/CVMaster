@@ -5,8 +5,11 @@ export const SummaryPreview: React.FC = () => {
     resumeData: { summary },
   } = useResume();
 
+  // convert summary from html to text
+  const summaryContent = summary.content.replace(/<[^>]*>?/gm, "");
+
   // IF there is no summary, return null
-  if (!summary || !summary.content) {
+  if (!summary || summaryContent.length === 0) {
     return null;
   }
 

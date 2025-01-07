@@ -29,7 +29,7 @@ export const ProjectsPreview: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="text-left flex items-center gap-2">
               {project.website ? (
-                <a href={project.website} className="underline">
+                <a href={project.website} className="underline" target="_blank">
                   <span className="font-bold">{project.name}</span>
                 </a>
               ) : (

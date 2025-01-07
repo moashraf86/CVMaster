@@ -28,9 +28,9 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define projects schema
 const projectsSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  description: z.string(),
-  date: z.string(),
+  name: z.string().trim().min(1, { message: "Name is required" }),
+  description: z.string().trim(),
+  date: z.string().trim(),
   website: z.literal("").or(z.string().url()),
   summary: z.string(),
   keyword: z.string(),
@@ -48,23 +48,12 @@ export const ProjectsDialog: React.FC = () => {
     projects && index !== null ? projects[index].keywords : []
   );
 
-  // get the data from the local storage
-  const localStorageData = JSON.parse(
-    localStorage.getItem("resumeData") || "{}"
-  );
-
   // check if user is in edit mode
-  const isEditMode =
-    (localStorageData.projects &&
-      index !== null &&
-      localStorageData.projects[index]) ||
-    (projects && index !== null && projects[index]);
+  const isEditMode = projects && index !== null && projects[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
-    ? localStorageData.projects
-      ? localStorageData.projects[index]
-      : projects[index]
+  const defaultValues: Project = isEditMode
+    ? projects[index]
     : {
         // set to empty later
         name: "",
@@ -84,7 +73,7 @@ export const ProjectsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof projectsSchema>) {
-    const currentProjects = localStorageData.projects || projects;
+    const currentProjects = projects;
     const updatedProjects = isEditMode
       ? currentProjects.map((project: Project, i: number) =>
           i === index ? data : project
@@ -95,14 +84,6 @@ export const ProjectsDialog: React.FC = () => {
     });
     closeDialog();
     form.reset();
-    // save the data to the local storage
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({
-        ...localStorageData,
-        projects: updatedProjects,
-      })
-    );
   }
 
   // handle keywords
@@ -111,6 +92,8 @@ export const ProjectsDialog: React.FC = () => {
     // add new keyword to the keywords array in the form state and reset the input field
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
+      // check if the keyword is not empty
+      if (!form.getValues("keyword").trim()) return;
       setKeywords([...keywords, form.getValues("keyword")]);
       form.setValue("keywords", [
         ...form.getValues("keywords"),
@@ -154,9 +137,10 @@ export const ProjectsDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Project" : "Add Project"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit a project you have worked on in the past or currently
-            working on
+          <DialogDescription>
+            {isEditMode
+              ? "Edit a project you have worked on in the past or currently working on"
+              : "Add a project you have worked on in the past or currently working on"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -255,14 +239,17 @@ export const ProjectsDialog: React.FC = () => {
                       {/* display keywords here */}
                       <div className="flex items-center flex-wrap gap-2">
                         {keywords.map((keyword, index) => (
-                          <span
-                            onClick={deleteKeyword(index)}
+                          <Button
+                            type="button"
                             key={index}
-                            className="inline-flex gap-2 items-center px-3 py-0.5 bg-primary text-primary-foreground rounded-full text-sm cursor-pointer"
+                            size="sm"
+                            variant="outline"
+                            className="inline-flex gap-2 items-center px-3 py-0.5 rounded-full text-sm cursor-pointer animate-in slide-in-from-top duration-100"
+                            onClick={deleteKeyword(index)}
                           >
                             {keyword}
                             <X size={16} />
-                          </span>
+                          </Button>
                         ))}
                       </div>
                     </FormItem>

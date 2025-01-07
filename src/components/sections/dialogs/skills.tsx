@@ -27,8 +27,8 @@ import { X } from "lucide-react";
 
 // define skills schema
 const skillsSchema = z.object({
-  name: z.string(),
-  keyword: z.string(),
+  name: z.string().trim(),
+  keyword: z.string().trim(),
   keywords: z.array(z.string()).min(1, { message: "Keywords are required" }),
 });
 
@@ -40,30 +40,15 @@ export const SkillsDialog: React.FC = () => {
     resumeData: { skills },
   } = useResume();
 
-  // get the data from the local storage
-  const localStorageData = JSON.parse(
-    localStorage.getItem("resumeData") || "{}"
-  );
-
   const [keywords, setKeywords] = useState<string[]>(
-    localStorageData.skills && index !== null
-      ? localStorageData.skills[index].keywords
-      : skills && index !== null
-      ? skills[index].keywords
-      : []
+    skills && index !== null ? skills[index].keywords : []
   );
   // check if user is in edit mode
-  const isEditMode =
-    (localStorageData.skills &&
-      index !== null &&
-      localStorageData.skills[index]) ||
-    (skills && index !== null && skills[index]);
+  const isEditMode = skills && index !== null && skills[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
-    ? localStorageData.skills
-      ? localStorageData.skills[index]
-      : skills[index]
+  const defaultValues: Skill = isEditMode
+    ? skills[index]
     : {
         name: "",
         keyword: "",
@@ -78,7 +63,7 @@ export const SkillsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof skillsSchema>) {
-    const currentSkills = localStorageData.skills || skills;
+    const currentSkills = skills;
     const updatedSkills = isEditMode
       ? currentSkills.map((skill: Skill, i: number) =>
           i === index ? data : skill
@@ -89,14 +74,6 @@ export const SkillsDialog: React.FC = () => {
     });
     closeDialog();
     form.reset();
-    // save the data to the local storage
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({
-        ...localStorageData,
-        skills: updatedSkills,
-      })
-    );
   }
 
   // handle keywords
@@ -141,14 +118,8 @@ export const SkillsDialog: React.FC = () => {
 
   useEffect(() => {
     // set the keywords to the keywords in the form state
-    setKeywords(
-      isEditMode
-        ? localStorageData.skills && index !== null
-          ? localStorageData.skills[index].keywords
-          : skills[index].keywords
-        : []
-    );
-
+    setKeywords(isEditMode ? skills[index].keywords : []);
+    // reset the form
     form.reset(defaultValues);
   }, [index, skills]);
 
@@ -157,8 +128,10 @@ export const SkillsDialog: React.FC = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEditMode ? "Edit Skill" : "Add Skill"}</DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit your skills and keywords
+          <DialogDescription>
+            {isEditMode
+              ? "Edit your skills and keywords"
+              : "Add your skills and keywords"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
