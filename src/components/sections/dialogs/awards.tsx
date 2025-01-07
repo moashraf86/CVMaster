@@ -85,8 +85,10 @@ export const AwardsDialog: React.FC = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEditMode ? "Edit Award" : "Add Award"}</DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit a awards you have received
+          <DialogDescription>
+            {isEditMode
+              ? "Edit a award you have received"
+              : "Add a award you have received"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

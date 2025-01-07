@@ -3,7 +3,7 @@ import { Button } from "../../ui/button";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { SectionIcon } from "./SectionIcon";
-import { Section, SectionItem, SectionName } from "../../../types/types";
+import { Section, SectionName } from "../../../types/types";
 
 export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const { openDialog, updateDialog } = useDialog();
@@ -22,18 +22,11 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const sectionData = data[id] || resumeData[id] || [];
 
   // handle delete function for each item in the section
-  const handleDelete = (id: string, index: number) => () => {
-    const newData = resumeData[id].filter(
-      (_: SectionItem, i: number) => i !== index
-    );
-    // update the experience data
+  const handleDelete = (id: SectionName, index: number) => () => {
+    const sectionData = resumeData[id];
+    if (!Array.isArray(sectionData)) return;
+    const newData = sectionData.filter((_, i) => i !== index);
     setData({ [id]: newData });
-
-    // update the local storage data
-    localStorage.setItem(
-      "resumeData",
-      JSON.stringify({ ...data, [id]: newData })
-    );
   };
 
   return (
@@ -42,10 +35,15 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
         <SectionIcon section={id as SectionName} />
         <h2 className="text-2xl font-bold">{name}</h2>
       </header>
-      <main className="grid gap-4 sm:grid-col-2">
+      <main className="grid gap-4 sm:grid-col-2" role="list">
         {itemsCount > 0 &&
           Array.from({ length: itemsCount }).map((_, index) => (
-            <div key={index} className="border border-border p-4">
+            <div
+              key={index}
+              className="border border-border p-4"
+              role="listitem"
+              aria-label={`${sectionData[index].name} - ${sectionData[index].position}`}
+            >
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <h3 className="text-base font-bold">
@@ -82,6 +80,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                 </div>
                 <div className="flex">
                   <Button
+                    aria-label={`Edit ${sectionData[index].name}`}
                     title="Edit"
                     variant="ghost"
                     size="icon"
@@ -90,6 +89,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                     <Pencil />
                   </Button>
                   <Button
+                    aria-label={`Delete ${sectionData[index].name}`}
                     title="Delete"
                     variant="ghost"
                     size="icon"
@@ -103,6 +103,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
           ))}
         {itemsCount === 0 && (
           <Button
+            aria-label={`add new item to ${name}`}
             variant="outline"
             size="lg"
             className="border-dashed h-12"
@@ -115,6 +116,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
       {itemsCount > 0 && (
         <footer>
           <Button
+            aria-label={`Add new item to ${name}`}
             variant="outline"
             className="flex ms-auto"
             onClick={() => openDialog(id)}

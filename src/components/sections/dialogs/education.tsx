@@ -89,8 +89,10 @@ export const EducationDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Education" : "Add Education"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit your education history, including your degree, major, and
+          <DialogDescription>
+            {isEditMode
+              ? "Edit your education history"
+              : "Add your education history"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

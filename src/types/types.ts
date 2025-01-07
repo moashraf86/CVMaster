@@ -79,7 +79,7 @@ export interface Volunteering {
 export type Section = {
   name: string;
   itemsCount: number;
-  id: string;
+  id: SectionName;
 };
 
 export type SectionItem = {

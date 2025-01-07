@@ -128,8 +128,10 @@ export const SkillsDialog: React.FC = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEditMode ? "Edit Skill" : "Add Skill"}</DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit your skills and keywords
+          <DialogDescription>
+            {isEditMode
+              ? "Edit your skills and keywords"
+              : "Add your skills and keywords"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

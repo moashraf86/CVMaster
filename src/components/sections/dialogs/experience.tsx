@@ -101,8 +101,10 @@ export const ExperienceDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Experience" : "Add Experience"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit your professional experience to your resume
+          <DialogDescription>
+            {isEditMode
+              ? "Edit your professional experience to your resume"
+              : "Add your professional experience to your resume"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

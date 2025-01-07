@@ -72,7 +72,7 @@ const MenuBar: React.FC = () => {
   return (
     <div className="flex flex-wrap items-center gap-3 px-1 py-2 border-b border-border">
       <Button
-        title="Bold"
+        title="Bold (Ctrl/⌘ + B)"
         type="button"
         variant="ghost"
         size="icon"
@@ -81,11 +81,13 @@ const MenuBar: React.FC = () => {
           "hover:bg-muted hover:text-primary",
           editor.isActive("bold") ? "bg-muted text-primary" : ""
         )}
+        aria-pressed={editor.isActive("bold")}
       >
         <BoldIcon />
+        <span className="sr-only">Bold</span>
       </Button>
       <Button
-        title="Italic"
+        title="Italic (Ctrl/⌘ + I)"
         type="button"
         variant="ghost"
         size="icon"
@@ -94,11 +96,13 @@ const MenuBar: React.FC = () => {
           "hover:bg-muted hover:text-primary",
           editor.isActive("italic") ? "bg-muted text-primary" : ""
         )}
+        aria-pressed={editor.isActive("italic")}
       >
         <ItalicIcon />
+        <span className="sr-only">Italic</span>
       </Button>
       <Button
-        title="Bullet List"
+        title="Bullet List (Ctrl/⌘ + Shift + 8)"
         type="button"
         variant="ghost"
         size="icon"
@@ -107,11 +111,13 @@ const MenuBar: React.FC = () => {
           "hover:bg-muted hover:text-primary",
           editor.isActive("bulletList") ? "bg-muted text-primary" : ""
         )}
+        aria-pressed={editor.isActive("bulletList")}
       >
         <List />
+        <span className="sr-only">Bullet List</span>
       </Button>
       <Button
-        title="Ordered List"
+        title="Ordered List (Ctrl/⌘ + Shift + 7)"
         type="button"
         variant="ghost"
         size="icon"
@@ -120,11 +126,13 @@ const MenuBar: React.FC = () => {
           "hover:bg-muted hover:text-primary",
           editor.isActive("orderedList") ? "bg-muted text-primary" : ""
         )}
+        aria-pressed={editor.isActive("orderedList")}
       >
         <ListOrdered />
+        <span className="sr-only">Ordered List</span>
       </Button>
       <Button
-        title="Link"
+        title="Add Link"
         type="button"
         variant="ghost"
         size="icon"
@@ -133,8 +141,10 @@ const MenuBar: React.FC = () => {
           "hover:bg-muted hover:text-primary",
           editor.isActive("link") ? "bg-muted text-primary" : ""
         )}
+        aria-pressed={editor.isActive("link")}
       >
         <Link2 />
+        <span className="sr-only">Link</span>
       </Button>
       <Button
         title="Unset Link"
@@ -146,11 +156,13 @@ const MenuBar: React.FC = () => {
           "hover:bg-muted hover:text-primary",
           editor.isActive("unsetLink") ? "bg-muted text-primary" : ""
         )}
+        aria-pressed={editor.isActive("unsetLink")}
       >
         <Link2Off />
+        <span className="sr-only">Unset Link</span>
       </Button>
       <Button
-        title="Undo"
+        title="Undo (Ctrl/⌘ + Z)"
         type="button"
         variant="ghost"
         size="icon"
@@ -162,9 +174,10 @@ const MenuBar: React.FC = () => {
         )}
       >
         <Undo />
+        <span className="sr-only">Undo</span>
       </Button>
       <Button
-        title="Redo"
+        title="Redo (Ctrl/⌘ + Y)"
         type="button"
         variant="ghost"
         size="icon"
@@ -176,6 +189,7 @@ const MenuBar: React.FC = () => {
         )}
       >
         <Undo className="transform rotate-180" />
+        <span className="sr-only">Redo</span>
       </Button>
     </div>
   );
@@ -335,12 +349,20 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   ];
 
   return (
-    <div className=" border border-border rounded-sm">
+    <div
+      className=" border border-border rounded-sm"
+      role="textbox"
+      aria-label="Rich Text Editor"
+    >
       <EditorProvider
         editorContainerProps={{
           className: "editor-container relative min-h-28",
           children: isRegenerating && (
-            <div className="absolute top-4 left-4 right-4 z-10 grid gap-2">
+            <div
+              className="absolute top-4 left-4 right-4 z-10 grid gap-2"
+              role="status"
+              aria-label="Regenerating content"
+            >
               <Skeleton className="h-[10px] w-full" />
               <Skeleton className="h-[10px] w-3/4" />
               <Skeleton className="h-[10px] w-1/2" />

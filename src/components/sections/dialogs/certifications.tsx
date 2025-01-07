@@ -87,8 +87,10 @@ export const CertificationsDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Certification" : "Add Certification"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit a certification you have received
+          <DialogDescription>
+            {isEditMode
+              ? "Edit a certification you have received"
+              : "Add a certification you have received"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

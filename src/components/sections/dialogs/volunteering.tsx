@@ -91,8 +91,10 @@ export const VolunteeringDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Volunteering" : "Add Volunteering"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit a volunteering experience you have participated in
+          <DialogDescription>
+            {isEditMode
+              ? "Edit a volunteering experience you have participated in"
+              : "Add a volunteering experience you have participated in"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

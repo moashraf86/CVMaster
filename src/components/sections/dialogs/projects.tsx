@@ -137,9 +137,10 @@ export const ProjectsDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Project" : "Add Project"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit a project you have worked on in the past or currently
-            working on
+          <DialogDescription>
+            {isEditMode
+              ? "Edit a project you have worked on in the past or currently working on"
+              : "Add a project you have worked on in the past or currently working on"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -238,14 +239,17 @@ export const ProjectsDialog: React.FC = () => {
                       {/* display keywords here */}
                       <div className="flex items-center flex-wrap gap-2">
                         {keywords.map((keyword, index) => (
-                          <span
-                            onClick={deleteKeyword(index)}
+                          <Button
+                            type="button"
                             key={index}
-                            className="inline-flex gap-2 items-center px-3 py-0.5 bg-primary text-primary-foreground rounded-full text-sm cursor-pointer"
+                            size="sm"
+                            variant="outline"
+                            className="inline-flex gap-2 items-center px-3 py-0.5 rounded-full text-sm cursor-pointer"
+                            onClick={deleteKeyword(index)}
                           >
                             {keyword}
                             <X size={16} />
-                          </span>
+                          </Button>
                         ))}
                       </div>
                     </FormItem>
