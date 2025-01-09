@@ -16,18 +16,32 @@ import { Button } from "../ui/button";
 import { cn } from "../../lib/utils";
 import {
   BoldIcon,
+  Check,
   ItalicIcon,
   Link2,
   Link2Off,
   List,
   ListOrdered,
   LoaderPinwheel,
+  Pencil,
+  SlidersHorizontal,
   Sparkles,
   Undo,
 } from "lucide-react";
-import { rewriteContentWithAi } from "../../services/groqService";
+import {
+  customizeContent,
+  fixTypos,
+  improveContent,
+} from "../../services/groqService";
 import clsx from "clsx";
 import { Skeleton } from "../ui/skeleton";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 const MenuBar: React.FC = () => {
   const { editor } = useCurrentEditor();
@@ -71,7 +85,7 @@ const MenuBar: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 px-1 py-2 border-b border-border">
+    <div className="flex flex-wrap items-center gap-3 px-1 py-2 border border-b-0 border-border rounded-t-sm">
       <Button
         title="Bold (Ctrl/⌘ + B)"
         type="button"
@@ -201,6 +215,10 @@ interface AiActionButtonsProps {
   content: string;
   isRegenerating: boolean;
   setIsRegenerating: (isRegenerating: boolean) => void;
+  isFixingTypos: boolean;
+  setIsFixingTypos: (isFixingTypos: boolean) => void;
+  isCustomizing: boolean;
+  setIsCustomizing: (isCustomizing: boolean) => void;
 }
 
 const AiActionButtons: React.FC<AiActionButtonsProps> = ({
@@ -208,16 +226,21 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
   handleChange,
   isRegenerating,
   setIsRegenerating,
+  isFixingTypos,
+  setIsFixingTypos,
+  isCustomizing,
+  setIsCustomizing,
 }) => {
   const { editor } = useCurrentEditor();
+  const [isOpen, setIsOpen] = useState(false);
 
   // Handle regenerate
-  const handleRegenerate = async () => {
+  const handleRewrite = async () => {
     try {
       // set isRegenerating to true
       setIsRegenerating(true);
       // run the AI model to rewrite the content
-      const regeneratedContent = await rewriteContentWithAi(content);
+      const regeneratedContent = await improveContent(content);
       // set the content to the regenerated content
       editor?.chain().focus().setContent(regeneratedContent).run();
       // call the handleChange function to update the content
@@ -230,6 +253,44 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
     }
   };
 
+  // Handle fix typos
+  const handleFixTypos = async () => {
+    try {
+      // set isRegenerating to true
+      setIsFixingTypos(true);
+      // run the AI model to rewrite the content
+      const fixedContent = await fixTypos(content);
+      // set the content to the regenerated content
+      editor?.chain().focus().setContent(fixedContent).run();
+      // call the handleChange function to update the content
+      handleChange(fixedContent);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // set isRegenerating to false
+      setIsFixingTypos(false);
+    }
+  };
+
+  // Handle customize
+  const handleCustomize = async (prompt: string) => {
+    try {
+      // set isCustomizing to true
+      setIsCustomizing(true);
+      // run the AI model to customize the content
+      const customizedContent = await customizeContent(content, prompt);
+      // set the content to the customized content
+      editor?.chain().focus().setContent(customizedContent).run();
+      // call the handleChange function to update the content
+      handleChange(customizedContent);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      // set isCustomizing to false
+      setIsCustomizing(false);
+    }
+  };
+
   // Trim the content to check if it's empty
   const trimmedContent = content.replace(/<[^>]*>/g, "").trim();
 
@@ -238,13 +299,13 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
   }
 
   return (
-    <div className="flex justify-end mr-2 mb-2">
+    <div className="relative flex justify-center flex-wrap gap-2 mt-4">
       <Button
         shiny
-        title="AI Regenerate"
+        title="Rewrite Content"
         variant="ghost"
         type="button"
-        onClick={handleRegenerate}
+        onClick={handleRewrite}
         disabled={!trimmedContent || isRegenerating}
       >
         {isRegenerating ? (
@@ -252,8 +313,68 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
         ) : (
           <Sparkles className="size-4" />
         )}
-        Regenerate
+        Improve Writing
       </Button>
+      <Button
+        shiny
+        title="Fix Spelling & Grammar"
+        variant="ghost"
+        type="button"
+        onClick={handleFixTypos}
+        disabled={!trimmedContent || isFixingTypos}
+      >
+        {isFixingTypos ? (
+          <LoaderPinwheel className="animate-spin size-4" />
+        ) : (
+          <Check className="size-4" />
+        )}
+        Fix Typos
+      </Button>
+      <Select
+        open={isOpen}
+        onOpenChange={setIsOpen}
+        onValueChange={(value) => handleCustomize(value)}
+      >
+        <Button
+          asChild
+          shiny
+          variant="ghost"
+          type="button"
+          className="px-0"
+          onClick={() => setIsOpen(!isOpen)}
+          disabled={!trimmedContent || isCustomizing}
+        >
+          <SelectTrigger className="rounded-md w-auto gap-2">
+            {isCustomizing ? (
+              <LoaderPinwheel className="animate-spin size-4" />
+            ) : (
+              <SlidersHorizontal className="size-4" />
+            )}
+            <SelectValue placeholder="Customize" />
+          </SelectTrigger>
+        </Button>
+
+        <SelectContent>
+          <SelectItem value="Make the response shorter by removing unnecessary information, focusing only on key points.">
+            Shorter
+          </SelectItem>
+          <SelectItem value="Make the response longer by adding more information, focusing on key points and details.">
+            Longer
+          </SelectItem>
+          <SelectItem value="Make the response more formal by using more professional language and tone.">
+            More Formal
+          </SelectItem>
+          <SelectItem value="Make the response more informal by using more casual language and tone.">
+            More Informal
+          </SelectItem>
+          <SelectItem value="Make the response more creative by using more creative language and tone.">
+            More Creative
+          </SelectItem>
+          <SelectItem value="Make the response more technical by using more technical language and tone.">
+            More Technical
+          </SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 };
@@ -268,6 +389,8 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   content,
 }) => {
   const [isRegenerating, setIsRegenerating] = useState(false);
+  const [isFixingTypos, setIsFixingTypos] = useState(false);
+  const [isCustomizing, setIsCustomizing] = useState(false);
   // Define extensions array
   const extensions = [
     Document,
@@ -355,28 +478,28 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   ];
 
   return (
-    <div
-      className=" border border-border rounded-sm"
-      role="textbox"
-      aria-label="Rich Text Editor"
-    >
+    <div role="textbox" aria-label="Rich Text Editor">
       <EditorProvider
         editorContainerProps={{
-          className: "editor-container relative min-h-28",
-          children: isRegenerating && (
-            <div
-              className="absolute top-4 left-4 right-4 z-10 grid gap-2"
-              role="status"
-              aria-label="Regenerating content"
-            >
-              <Skeleton className="h-[10px] w-full" />
-              <Skeleton className="h-[10px] w-3/4" />
-              <Skeleton className="h-[10px] w-1/2" />
-            </div>
-          ),
+          className:
+            "editor-container relative border border-border rounded-b-sm min-h-28",
+          children:
+            isRegenerating || isCustomizing ? (
+              <div
+                className="absolute top-4 left-4 right-4 z-10 grid gap-2"
+                role="status"
+                aria-label="Regenerating content"
+              >
+                <Skeleton className="h-[10px] w-full" />
+                <Skeleton className="h-[10px] w-3/4" />
+                <Skeleton className="h-[10px] w-1/2" />
+              </div>
+            ) : null,
         }}
         editorProps={{
-          attributes: { class: clsx(isRegenerating ? "opacity-0" : "") },
+          attributes: {
+            class: clsx(isRegenerating || isCustomizing ? "opacity-0" : ""),
+          },
         }}
         slotBefore={<MenuBar />}
         slotAfter={
@@ -385,6 +508,10 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             handleChange={handleChange}
             isRegenerating={isRegenerating}
             setIsRegenerating={setIsRegenerating}
+            isFixingTypos={isFixingTypos}
+            setIsFixingTypos={setIsFixingTypos}
+            isCustomizing={isCustomizing}
+            setIsCustomizing={setIsCustomizing}
           />
         }
         onCreate={(editor) => {
