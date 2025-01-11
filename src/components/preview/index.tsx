@@ -51,8 +51,8 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
     >
       <div
         className={cn(
-          "flex-1 w-full space-y-4 preview",
-          mode === "preview" ? "px-8 py-[23px]" : "px-8 py-0"
+          "flex-1 w-full space-y-1 preview",
+          mode === "preview" ? "px-8 py-[23px]" : "px-8 py-[23px]"
         )}
       >
         <BasicsPreview />
@@ -85,7 +85,7 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
         <hr
           className={`border-t border-dashed border-gray-400 absolute w-full left-0`}
           style={{
-            top: `${1122 - 23 * 2}px`,
+            top: `${pageSizeMap.height * MM_TO_PX}px`,
           }}
         />
       )}

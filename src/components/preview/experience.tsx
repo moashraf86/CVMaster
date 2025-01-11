@@ -19,7 +19,7 @@ export const ExperiencePreview: React.FC = () => {
   }));
 
   useEffect(() => {
-    console.log(processedExperience);
+    console.log("EXP", processedExperience);
   }, [experience]);
 
   if (!experience || experience.length === 0) {
@@ -27,13 +27,13 @@ export const ExperiencePreview: React.FC = () => {
   }
 
   return (
-    <section className="space-y-2">
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+    <section className="space-y-0.5">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Experience
       </h3>
       {experience &&
         processedExperience.map((exp: Experience, index: number) => (
-          <div key={index} className="space-y-2">
+          <div key={index}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{exp.name}</span>

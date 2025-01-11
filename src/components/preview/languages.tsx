@@ -17,10 +17,10 @@ export const LanguagesPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Languages
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-1">
         {languages.map((lang: Language, index: number) => (
           <div key={index}>
             <span className="font-bold">{lang.name}</span>: {lang.level}

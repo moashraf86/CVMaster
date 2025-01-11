@@ -17,10 +17,10 @@ export const SkillsPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Skills
       </h3>
-      <div className="space-y-2">
+      <div>
         {skills.map((skill: Skill, index: number) => (
           <div key={index}>
             {skill.name && <span className="font-bold">{skill.name}: </span>}

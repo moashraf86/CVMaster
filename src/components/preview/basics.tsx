@@ -11,7 +11,7 @@ export const BasicsPreview: React.FC = () => {
     basics || {};
 
   return (
-    <header className="text-start space-y-1.5">
+    <header className="text-start space-y-1">
       <h1 className="text-2xl font-bold">{name}</h1>
       <p className="text-base">{title}</p>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">

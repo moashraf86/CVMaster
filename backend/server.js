@@ -37,7 +37,6 @@ app.post("/pdf", async (req, res) => {
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
-      margin: { top: "6mm", bottom: "6mm" },
     });
 
     await browser.close();

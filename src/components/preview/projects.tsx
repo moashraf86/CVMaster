@@ -20,12 +20,12 @@ export const ProjectsPreview: React.FC = () => {
     return null;
   }
   return (
-    <section className="space-y-2">
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground">
+    <section className="space-y-0.5">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Projects
       </h3>
       {processedExperience.map((project: Project, index: number) => (
-        <div key={index} className="space-y-2">
+        <div key={index}>
           <div className="flex items-center justify-between">
             <div className="text-left flex items-center gap-2">
               {project.website ? (
@@ -38,7 +38,7 @@ export const ProjectsPreview: React.FC = () => {
               {project.keywords.length > 0 && (
                 <div className="flex items-center gap-1">
                   |&nbsp;
-                  <span>{project.keywords.join(", ")}</span>
+                  <span className="italic">{project.keywords.join(", ")}</span>
                 </div>
               )}
             </div>

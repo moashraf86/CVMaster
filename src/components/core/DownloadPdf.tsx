@@ -135,16 +135,14 @@ export const DownloadPDF: React.FC = () => {
 
 					ul {
 						list-style-type: disc;
-						margin-top: .5rem;
-						margin-bottom: .5rem;
 						padding-left: 2rem;
+						line-height: inherit;
 					}
 
 					ol {
 						list-style-type: decimal;
-						margin-top: .5rem;
-						margin-bottom: .5rem;
 						padding-left: 2rem;
+						line-height: inherit;
 					}
 					a {
 						text-decoration: underline;

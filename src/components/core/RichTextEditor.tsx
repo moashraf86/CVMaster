@@ -23,7 +23,6 @@ import {
   List,
   ListOrdered,
   LoaderPinwheel,
-  Pencil,
   SlidersHorizontal,
   Sparkles,
   Undo,

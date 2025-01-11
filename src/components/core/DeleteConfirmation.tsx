@@ -34,7 +34,7 @@ export const DeleteConfirmation: React.FC<DeleteConfirmationProps> = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <Button asChild variant="destructive" onClick={handleDelete}>
-            <AlertDialogAction>Continue</AlertDialogAction>
+            <AlertDialogAction>Delete</AlertDialogAction>
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>
