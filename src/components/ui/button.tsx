@@ -12,6 +12,8 @@ import {
   TooltipProvider,
 } from "./tooltip";
 
+import type { HTMLMotionProps } from "framer-motion";
+
 const isMobile = window.innerWidth < 768;
 
 const buttonVariants = cva(
@@ -66,7 +68,7 @@ const shinyAnimationProps = {
 } as AnimationProps;
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+  extends Omit<HTMLMotionProps<"button">, "ref">,
     VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   title?: string;
@@ -109,7 +111,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
                 "linear-gradient(-75deg,hsl(var(--primary)) calc(var(--x) + 20%),transparent calc(var(--x) + 30%),hsl(var(--primary)) calc(var(--x) + 100%))",
             }}
           >
-            {props.children}
+            {props.children as React.ReactNode}
           </span>
           <span
             style={{
@@ -144,7 +146,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         tabIndex={0}
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        {...props}
+        {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
       />
     );
 

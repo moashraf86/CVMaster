@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { Project } from "../../../types/types";
 import { X } from "lucide-react";
 import { RichTextEditor } from "../../core/RichTextEditor";
+import { cn } from "../../../lib/utils";
 
 // define projects schema
 const projectsSchema = z.object({
@@ -47,7 +48,7 @@ export const ProjectsDialog: React.FC = () => {
   const [keywords, setKeywords] = useState<string[]>(
     projects && index !== null ? projects[index].keywords : []
   );
-
+  const [toDeleteKeyword, setToDeleteKeyword] = useState<number | null>(null);
   // check if user is in edit mode
   const isEditMode = projects && index !== null && projects[index];
 
@@ -73,12 +74,16 @@ export const ProjectsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof projectsSchema>) {
+    // Remove duplicate keywords
+    const uniqueKeywords = [...new Set(data.keywords)];
+    const cleanedData = { ...data, keywords: uniqueKeywords };
+
     const currentProjects = projects;
     const updatedProjects = isEditMode
       ? currentProjects.map((project: Project, i: number) =>
-          i === index ? data : project
+          i === index ? cleanedData : project
         )
-      : [...currentProjects, data];
+      : [...currentProjects, cleanedData];
     setData({
       projects: updatedProjects,
     });
@@ -92,15 +97,15 @@ export const ProjectsDialog: React.FC = () => {
     // add new keyword to the keywords array in the form state and reset the input field
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
-      // check if the keyword is not empty
-      if (!form.getValues("keyword").trim()) return;
-      setKeywords([...keywords, form.getValues("keyword")]);
-      form.setValue("keywords", [
-        ...form.getValues("keywords"),
-        form.getValues("keyword"),
-      ]);
+      // check if the keyword is not empty or duplicate
+      const newKeyword = form.getValues("keyword").trim();
+      if (!newKeyword || keywords.includes(newKeyword)) return;
+      setKeywords([...keywords, newKeyword]);
+      form.setValue("keywords", [...form.getValues("keywords"), newKeyword]);
       form.setValue("keyword", "");
     }
+    // clear the error message
+    form.clearErrors("keywords");
   };
 
   // handle paste
@@ -108,7 +113,11 @@ export const ProjectsDialog: React.FC = () => {
     // if user pastes text, split the text by comma and add to the keywords array
     e.preventDefault();
     const clipboardData = e.clipboardData.getData("text");
-    const clipboardKeywords = clipboardData.split(",");
+    // remove duplicated keywords
+    const clipboardKeywords = clipboardData
+      .split(",")
+      .map((keyword) => keyword.trim())
+      .filter((keyword) => keyword && !keywords.includes(keyword));
     setKeywords([...keywords, ...clipboardKeywords]);
     form.setValue("keywords", [
       ...form.getValues("keywords"),
@@ -119,9 +128,13 @@ export const ProjectsDialog: React.FC = () => {
 
   // delete keyword
   const deleteKeyword = (index: number) => () => {
-    const newKeywords = keywords.filter((_, i) => i !== index);
-    setKeywords(newKeywords);
-    form.setValue("keywords", newKeywords);
+    setToDeleteKeyword(index);
+    setTimeout(() => {
+      const newKeywords = keywords.filter((_, i) => i !== index);
+      setKeywords(newKeywords);
+      form.setValue("keywords", newKeywords);
+      setToDeleteKeyword(null);
+    }, 300);
   };
 
   useEffect(() => {
@@ -237,21 +250,26 @@ export const ProjectsDialog: React.FC = () => {
                       </FormDescription>
                       <FormMessage />
                       {/* display keywords here */}
-                      <div className="flex items-center flex-wrap gap-2">
-                        {keywords.map((keyword, index) => (
-                          <Button
-                            type="button"
-                            key={index}
-                            size="sm"
-                            variant="outline"
-                            className="inline-flex gap-2 items-center px-3 py-0.5 rounded-full text-sm cursor-pointer animate-in slide-in-from-top duration-100"
-                            onClick={deleteKeyword(index)}
+                      <ul
+                        className="flex items-center flex-wrap gap-2"
+                        role="list"
+                      >
+                        {keywords.map((keyword, idx) => (
+                          <li
+                            key={keyword}
+                            role="listitem"
+                            onClick={deleteKeyword(idx)}
+                            className={cn(
+                              "inline-flex gap-2 items-center px-3 py-0.5 bg-primary text-primary-foreground rounded-full text-sm cursor-pointer animate-in slide-in-from-top fade-in duration-300",
+                              toDeleteKeyword === idx &&
+                                "animate-out slide-out-to-left fade-out duration-300"
+                            )}
                           >
                             {keyword}
                             <X size={16} />
-                          </Button>
+                          </li>
                         ))}
-                      </div>
+                      </ul>
                     </FormItem>
                   )}
                 />

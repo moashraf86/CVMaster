@@ -29,12 +29,12 @@ export const EducationPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Education
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-1">
         {processedEducation.map((edu: Education, index: number) => (
-          <div key={index} className="space-y-2">
+          <div key={index} className="space-y-1">
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{edu.name}</span>

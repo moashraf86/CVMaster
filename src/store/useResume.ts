@@ -112,14 +112,15 @@ export const useResume = create<ResumeType>((set) => ({
     ...localResumeData,
   },
   setData: (data) => {
-    set((state) => ({
-      resumeData: {
+    set((state) => {
+      const newResumeData = {
         ...state.resumeData,
         ...(data as ResumeType["resumeData"]),
-      },
-    }));
-    // Save to localStorage whenever data changes
-    localStorage.setItem("resumeData", JSON.stringify(data));
+      };
+      // Save the complete merged state to localStorage
+      localStorage.setItem("resumeData", JSON.stringify(newResumeData));
+      return { resumeData: newResumeData };
+    });
   },
   setSectionOrder: (order) => {
     set(() => ({ sectionOrder: order }));

@@ -29,12 +29,12 @@ export const CertificationsPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Certifications
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-0.5">
         {processedEducation.map((cert: Certification, index: number) => (
-          <div key={index} className="space-y-2">
+          <div key={index}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 {cert.website ? (

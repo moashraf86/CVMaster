@@ -199,11 +199,11 @@
 }
 
 .preview ul {
-  @apply list-disc pl-8 my-2;
+  @apply list-disc pl-8 leading-[inherit];
 }
 
 .preview ol {
-  @apply list-decimal pl-8 my-2;
+  @apply list-decimal pl-8 leading-[inherit];
 }
 
 .preview a {
