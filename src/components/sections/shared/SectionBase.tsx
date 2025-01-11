@@ -3,33 +3,41 @@ import { Button } from "../../ui/button";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
 import { SectionIcon } from "./SectionIcon";
-import { Section, SectionName } from "../../../types/types";
-import { useState } from "react";
+import { Section, SectionItem, SectionName } from "../../../types/types";
+import { useState, useMemo } from "react";
 import { DeleteConfirmation } from "../../core/DeleteConfirmation";
+import { cn } from "../../../lib/utils";
 
 export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const { openDialog, updateDialog } = useDialog();
   const { resumeData, setData } = useResume();
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
-  // get the data from the local storage or the resumeData
-  let data;
-  try {
-    data = JSON.parse(localStorage.getItem("resumeData") || "{}");
-  } catch (error) {
-    console.log(error);
-    data = resumeData;
-  }
+  const [deleteDialog, setDeleteDialog] = useState<{
+    isOpen: boolean;
+    index: number | null;
+  }>({
+    isOpen: false,
+    index: null,
+  });
+  const [itemToDelete, setItemToDelete] = useState<number | null>(null);
 
   // get the section data from the local storage or the resumeData
-  const sectionData = data[id] || resumeData[id] || [];
+  const sectionData = useMemo(() => {
+    try {
+      const localData = JSON.parse(localStorage.getItem("resumeData") || "{}");
+      return localData[id] || resumeData[id] || [];
+    } catch {
+      return resumeData[id] || [];
+    }
+  }, [id, resumeData]);
 
   // handle delete function for each item in the section
   const handleDelete = (id: SectionName, index: number) => () => {
-    const sectionData = resumeData[id];
-    if (!Array.isArray(sectionData)) return;
-    const newData = sectionData.filter((_, i) => i !== index);
-    setData({ [id]: newData });
+    setItemToDelete(index);
+    setTimeout(() => {
+      const newData = [...sectionData].filter((_, i) => i !== index);
+      setData({ [id]: newData });
+      setItemToDelete(null);
+    }, 300);
   };
 
   return (
@@ -38,52 +46,46 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
         <SectionIcon section={id as SectionName} />
         <h2 className="text-2xl font-bold">{name}</h2>
       </header>
-      <main className="grid gap-4 sm:grid-col-2" role="list">
+      <ul className="grid gap-4 sm:grid-col-2">
         {itemsCount > 0 &&
-          Array.from({ length: itemsCount }).map((_, index) => (
-            <div
-              key={index}
-              className="border border-border p-4"
-              role="listitem"
-              aria-label={`${sectionData[index].name} - ${sectionData[index].position}`}
+          sectionData.map((item: SectionItem, index: number) => (
+            <li
+              key={item.id as string}
+              className={cn(
+                "border border-border p-4 duration-300",
+                itemToDelete === index &&
+                  "animate-out slide-out-to-left fade-out duration-300"
+              )}
             >
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
-                  <h3 className="text-base font-bold">
-                    {sectionData[index].name}
-                  </h3>
+                  <h3 className="text-base font-bold">{item.name}</h3>
                   {
                     // check if the section has a position or description or keywords
-                    sectionData[index].position ? (
+                    item.position ? (
+                      <p className="text-sm text-text-muted">{item.position}</p>
+                    ) : item.description ? (
                       <p className="text-sm text-text-muted">
-                        {sectionData[index].position}
+                        {item.description}
                       </p>
-                    ) : sectionData[index].description ? (
+                    ) : item.keywords ? (
                       <p className="text-sm text-text-muted">
-                        {sectionData[index].description}
+                        {item.keywords.length} keywords
                       </p>
-                    ) : sectionData[index].keywords ? (
+                    ) : item.studyField ? (
                       <p className="text-sm text-text-muted">
-                        {sectionData[index].keywords.length} keywords
+                        {item.studyField}
                       </p>
-                    ) : sectionData[index].studyField ? (
-                      <p className="text-sm text-text-muted">
-                        {sectionData[index].studyField}
-                      </p>
-                    ) : sectionData[index].level ? (
-                      <p className="text-sm text-text-muted">
-                        {sectionData[index].level}
-                      </p>
-                    ) : sectionData[index].issuer ? (
-                      <p className="text-sm text-text-muted">
-                        {sectionData[index].issuer}
-                      </p>
+                    ) : item.level ? (
+                      <p className="text-sm text-text-muted">{item.level}</p>
+                    ) : item.issuer ? (
+                      <p className="text-sm text-text-muted">{item.issuer}</p>
                     ) : null
                   }
                 </div>
                 <div className="flex">
                   <Button
-                    aria-label={`Edit ${sectionData[index].name}`}
+                    aria-label={`Edit ${item.name}`}
                     title="Edit"
                     variant="ghost"
                     size="icon"
@@ -92,20 +94,19 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                     <Pencil />
                   </Button>
                   <Button
-                    aria-label={`Delete ${sectionData[index].name}`}
+                    aria-label={`Delete ${item.name}`}
                     title="Delete"
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      setIsOpen(true);
-                      setSelectedIndex(index);
+                      setDeleteDialog({ isOpen: true, index: index });
                     }}
                   >
                     <Trash />
                   </Button>
                 </div>
               </div>
-            </div>
+            </li>
           ))}
         {itemsCount === 0 && (
           <Button
@@ -118,7 +119,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
             Add new item
           </Button>
         )}
-      </main>
+      </ul>
       {itemsCount > 0 && (
         <footer>
           <Button
@@ -132,10 +133,12 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
         </footer>
       )}
       <DeleteConfirmation
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
+        isOpen={deleteDialog.isOpen}
+        setIsOpen={(open) =>
+          setDeleteDialog((prev) => ({ ...prev, isOpen: open }))
+        }
         handleDelete={() =>
-          selectedIndex !== null && handleDelete(id, selectedIndex)()
+          deleteDialog.index !== null && handleDelete(id, deleteDialog.index)()
         }
       />
     </section>
