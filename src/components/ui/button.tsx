@@ -155,7 +155,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Tooltip>
           <TooltipTrigger asChild>{btnElement}</TooltipTrigger>
           <TooltipContent
-            className="bg-primary-foreground text-primary rounded-md text-xs border border-border capitalize"
+            className="bg-primary text-primary-foreground rounded-md text-xs capitalize"
             side={side}
           >
             {title}

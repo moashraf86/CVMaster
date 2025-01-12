@@ -74,6 +74,7 @@ const DEFAULT_PDF_SETTINGS = {
   fontSize: 14,
   fontFamily: "inter",
   scale: 1,
+  lineHeight: 6,
   showForm: false,
 };
 
@@ -138,16 +139,14 @@ export const usePdfSettings = create<PdfSettings>((set) => ({
     ...localPdfSetting,
   },
   setValue: (key, value) => {
-    set((state) => ({
-      pdfSettings: { ...state.pdfSettings, [key]: value },
-    }));
-    // Save to localStorage whenever settings change
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        ...localPdfSetting,
+    set((state) => {
+      const newPdfSettings = {
+        ...state.pdfSettings,
         [key]: value,
-      })
-    );
+      };
+      // Save to localStorage with the complete updated settings
+      localStorage.setItem("pdfSetting", JSON.stringify(newPdfSettings));
+      return { pdfSettings: newPdfSettings };
+    });
   },
 }));

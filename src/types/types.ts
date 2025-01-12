@@ -122,6 +122,7 @@ export interface PdfSettings {
     fontSize: number;
     fontFamily: string;
     scale: number;
+    lineHeight: number;
     showForm: boolean;
   };
   setValue: (key: string, value: number | string | boolean) => void;

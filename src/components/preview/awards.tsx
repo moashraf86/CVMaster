@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Award } from "../../types/types";
 
 export const AwardsPreview: React.FC = () => {
   const {
     resumeData: { awards },
   } = useResume();
+
+  const {
+    pdfSettings: { lineHeight },
+  } = usePdfSettings();
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -56,7 +60,10 @@ export const AwardsPreview: React.FC = () => {
               </div>
             </div>
             {award.summary && (
-              <div dangerouslySetInnerHTML={{ __html: award.summary }} />
+              <div
+                className={`leading-${lineHeight}`}
+                dangerouslySetInnerHTML={{ __html: award.summary }}
+              />
             )}
           </div>
         ))}
