@@ -117,3 +117,9 @@ The backend server is responsible for generating and downloading the PDF resumes
    ```
 
    The backend server will run on [http://localhost:5000](http://localhost:5000).
+
+## Credits
+
+The design and certain features of **CVMaster** were inspired by the open-source project [Reactive Resume](https://rxresu.me). While we drew inspiration from their user-friendly interface, **CVMaster** was implemented using a different technology stack and approach to suit the unique goals of this project.
+
+We appreciate the efforts of the [Reactive Resume](https://rxresu.me) community for their inspiring work.
