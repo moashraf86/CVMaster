@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Experience } from "../../types/types";
 
 export const ExperiencePreview: React.FC = () => {
   const {
     resumeData: { experience },
   } = useResume();
+
+  const {
+    pdfSettings: { lineHeight },
+  } = usePdfSettings();
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -48,7 +52,10 @@ export const ExperiencePreview: React.FC = () => {
               </div>
             </div>
             {exp.summary && (
-              <div dangerouslySetInnerHTML={{ __html: exp.summary }} />
+              <div
+                className={`leading-${lineHeight}`}
+                dangerouslySetInnerHTML={{ __html: exp.summary }}
+              />
             )}
           </div>
         ))}

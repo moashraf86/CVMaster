@@ -1,9 +1,11 @@
 import {
   AArrowDown,
   AArrowUp,
+  FoldVertical,
   GalleryVertical,
   History,
   SquareSquare,
+  UnfoldVertical,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
@@ -28,7 +30,7 @@ export const Controls: React.FC = () => {
 
   const {
     setValue,
-    pdfSettings: { fontSize, fontFamily, scale: pdfScale },
+    pdfSettings: { fontSize, fontFamily, scale: pdfScale, lineHeight },
   } = usePdfSettings();
 
   // state for the drag-and-drop menu
@@ -83,46 +85,35 @@ export const Controls: React.FC = () => {
   const setCenter = () => {
     instance.setCenter();
   };
+
   // increase font size
   const increaseFontSize = () => {
     setValue("fontSize", Math.min(fontSize + 1, 18));
-    // save to local storage
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        fontSize: Math.min(fontSize + 1, 18),
-        fontFamily,
-        scale: pdfScale,
-      })
-    );
   };
 
   // decrease font size
   const decreaseFontSize = () => {
     setValue("fontSize", Math.max(fontSize - 1, 12));
-    // save to local storage
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        fontSize: Math.max(fontSize - 1, 12),
-        fontFamily,
-        scale: pdfScale,
-      })
-    );
   };
 
   // reset font size
   const resetFontSize = () => {
     setValue("fontSize", 14);
-    // save to local storage
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        fontSize: 14,
-        fontFamily,
-        scale: pdfScale,
-      })
-    );
+  };
+
+  // increase line height
+  const increaseLineHeight = () => {
+    setValue("lineHeight", Math.min(lineHeight + 1, 10));
+  };
+
+  // decrease line height
+  const decreaseLineHeight = () => {
+    setValue("lineHeight", Math.max(lineHeight - 1, 3));
+  };
+
+  // reset line height
+  const resetLineHeight = () => {
+    setValue("lineHeight", 6);
   };
 
   // change font type
@@ -221,6 +212,41 @@ export const Controls: React.FC = () => {
           <History />
         </Button>
       </div>
+      <div className="flex border-r px-1">
+        <Button
+          title="Increase Line Height"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={increaseLineHeight}
+          disabled={lineHeight === 10}
+        >
+          <UnfoldVertical />
+        </Button>
+        <Button
+          title="Decrease Line Height"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={decreaseLineHeight}
+          disabled={lineHeight === 3}
+        >
+          <FoldVertical />
+        </Button>
+        <Button
+          title="Reset Line Height"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={resetLineHeight}
+          disabled={lineHeight === 6}
+        >
+          <History />
+        </Button>
+      </div>
       <div className="flex px-1 gap-1">
         <Select defaultValue={fontFamily} onValueChange={changeFontType}>
           <SelectTrigger className="rounded-full w-auto gap-2">
@@ -255,12 +281,14 @@ export const Controls: React.FC = () => {
         onClose={() => setIsMenuOpen(false)}
       />
       <div className="fonts" hidden>
-        <div className="font-lora"></div>
-        <div className="font-inter"></div>
-        <div className="font-roboto"></div>
-        <div className="font-open"></div>
-        <div className="font-nunito"></div>
-        <div className="font-playfair"></div>
+        <div className="font-lora leading-3"></div>
+        <div className="font-inter leading-4"></div>
+        <div className="font-roboto leading-5"></div>
+        <div className="font-open leading-6"></div>
+        <div className="font-nunito leading-7"></div>
+        <div className="font-playfair leading-8"></div>
+        <div className="font-inter leading-9"></div>
+        <div className="font-inter leading-10"></div>
       </div>
     </div>
   );

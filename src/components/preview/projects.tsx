@@ -1,10 +1,14 @@
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Project } from "../../types/types";
 
 export const ProjectsPreview: React.FC = () => {
   const {
     resumeData: { projects },
   } = useResume();
+
+  const {
+    pdfSettings: { lineHeight },
+  } = usePdfSettings();
 
   // remove bullet points from the summary
   const removeBulletPoints = (summary: string) => {
@@ -48,7 +52,10 @@ export const ProjectsPreview: React.FC = () => {
           </div>
           {project.description && <span>{project.description}</span>}
           {project.summary && (
-            <div dangerouslySetInnerHTML={{ __html: project.summary }} />
+            <div
+              className={`leading-${lineHeight}`}
+              dangerouslySetInnerHTML={{ __html: project.summary }}
+            />
           )}
         </div>
       ))}
