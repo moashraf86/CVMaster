@@ -25,6 +25,27 @@ import { DownloadPDF } from "./DownloadPdf";
 import { useState } from "react";
 import { DragAndDropMenu } from "./DragAndDropMenu";
 
+const PDF_SETTINGS = {
+  SCALE: {
+    MIN: 0.5,
+    MAX: 2,
+    STEP: 0.25,
+    INITIAL: 0.75,
+  },
+  FONTSIZE: {
+    MIN: 12,
+    MAX: 18,
+    INITIAL: 14,
+    STEP: 1,
+  },
+  LINEHEIGHT: {
+    MIN: 3,
+    MAX: 10,
+    INITIAL: 6,
+    STEP: 1,
+  },
+};
+
 export const Controls: React.FC = () => {
   const { zoomIn, zoomOut, resetTransform, instance } = useControls();
 
@@ -38,47 +59,26 @@ export const Controls: React.FC = () => {
 
   // handle zoom in
   const handleZoomIn = () => {
-    zoomIn(0.25);
-    setValue("scale", Math.min(pdfScale + 0.25, 2));
-    // save to local storage
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        fontSize,
-        fontFamily,
-        scale: Math.min(pdfScale + 0.25, 2),
-      })
+    zoomIn(PDF_SETTINGS.SCALE.STEP);
+    setValue(
+      "scale",
+      Math.min(pdfScale + PDF_SETTINGS.SCALE.STEP, PDF_SETTINGS.SCALE.MAX)
     );
   };
 
   // handle zoom out
   const handleZoomOut = () => {
-    zoomOut(0.25);
-    setValue("scale", Math.max(pdfScale - 0.25, 0.5));
-    // save to local storage
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        fontSize,
-        fontFamily,
-        scale: Math.max(pdfScale - 0.25, 0.5),
-      })
+    zoomOut(PDF_SETTINGS.SCALE.STEP);
+    setValue(
+      "scale",
+      Math.max(pdfScale - PDF_SETTINGS.SCALE.STEP, PDF_SETTINGS.SCALE.MIN)
     );
   };
 
   // reset transform
   const resetZoom = () => {
     resetTransform();
-    setValue("scale", 1);
-    // save to local storage
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        fontSize,
-        fontFamily,
-        scale: 1,
-      })
-    );
+    setValue("scale", PDF_SETTINGS.SCALE.INITIAL);
   };
 
   // set center
@@ -88,46 +88,55 @@ export const Controls: React.FC = () => {
 
   // increase font size
   const increaseFontSize = () => {
-    setValue("fontSize", Math.min(fontSize + 1, 18));
+    setValue(
+      "fontSize",
+      Math.min(fontSize + PDF_SETTINGS.FONTSIZE.STEP, PDF_SETTINGS.FONTSIZE.MAX)
+    );
   };
 
   // decrease font size
   const decreaseFontSize = () => {
-    setValue("fontSize", Math.max(fontSize - 1, 12));
+    setValue(
+      "fontSize",
+      Math.max(fontSize - PDF_SETTINGS.FONTSIZE.STEP, PDF_SETTINGS.FONTSIZE.MIN)
+    );
   };
 
   // reset font size
   const resetFontSize = () => {
-    setValue("fontSize", 14);
+    setValue("fontSize", PDF_SETTINGS.FONTSIZE.INITIAL);
   };
 
   // increase line height
   const increaseLineHeight = () => {
-    setValue("lineHeight", Math.min(lineHeight + 1, 10));
+    setValue(
+      "lineHeight",
+      Math.min(
+        lineHeight + PDF_SETTINGS.LINEHEIGHT.STEP,
+        PDF_SETTINGS.LINEHEIGHT.MAX
+      )
+    );
   };
 
   // decrease line height
   const decreaseLineHeight = () => {
-    setValue("lineHeight", Math.max(lineHeight - 1, 3));
+    setValue(
+      "lineHeight",
+      Math.max(
+        lineHeight - PDF_SETTINGS.LINEHEIGHT.STEP,
+        PDF_SETTINGS.LINEHEIGHT.MIN
+      )
+    );
   };
 
   // reset line height
   const resetLineHeight = () => {
-    setValue("lineHeight", 6);
+    setValue("lineHeight", PDF_SETTINGS.LINEHEIGHT.INITIAL);
   };
 
   // change font type
   const changeFontType = (value: string) => {
     setValue("fontFamily", value);
-    // save to local storage
-    localStorage.setItem(
-      "pdfSetting",
-      JSON.stringify({
-        fontSize,
-        fontFamily: value,
-        scale: pdfScale,
-      })
-    );
   };
 
   return (
@@ -140,7 +149,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={handleZoomIn}
-          disabled={pdfScale === 2}
+          disabled={pdfScale === PDF_SETTINGS.SCALE.MAX}
         >
           <ZoomIn />
         </Button>
@@ -151,7 +160,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={handleZoomOut}
-          disabled={pdfScale === 0.5}
+          disabled={pdfScale === PDF_SETTINGS.SCALE.MIN}
         >
           <ZoomOut />
         </Button>
@@ -162,7 +171,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={resetZoom}
-          disabled={pdfScale === 1}
+          disabled={pdfScale === PDF_SETTINGS.SCALE.INITIAL}
         >
           <History />
         </Button>
@@ -185,7 +194,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={increaseFontSize}
-          disabled={fontSize === 18}
+          disabled={fontSize === PDF_SETTINGS.FONTSIZE.MAX}
         >
           <AArrowUp />
         </Button>
@@ -196,7 +205,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={decreaseFontSize}
-          disabled={fontSize === 12}
+          disabled={fontSize === PDF_SETTINGS.FONTSIZE.MIN}
         >
           <AArrowDown />
         </Button>
@@ -207,7 +216,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={resetFontSize}
-          disabled={fontSize === 14}
+          disabled={fontSize === PDF_SETTINGS.FONTSIZE.INITIAL}
         >
           <History />
         </Button>
@@ -220,7 +229,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={increaseLineHeight}
-          disabled={lineHeight === 10}
+          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.MAX}
         >
           <UnfoldVertical />
         </Button>
@@ -231,7 +240,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={decreaseLineHeight}
-          disabled={lineHeight === 3}
+          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.MIN}
         >
           <FoldVertical />
         </Button>
@@ -242,7 +251,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={resetLineHeight}
-          disabled={lineHeight === 6}
+          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.INITIAL}
         >
           <History />
         </Button>

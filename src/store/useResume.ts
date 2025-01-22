@@ -73,7 +73,7 @@ const DEFAULT_RESUME_DATA = {
 const DEFAULT_PDF_SETTINGS = {
   fontSize: 14,
   fontFamily: "inter",
-  scale: 1,
+  scale: 0.75,
   lineHeight: 6,
   showForm: false,
 };
