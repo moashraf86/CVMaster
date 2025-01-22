@@ -15,7 +15,7 @@ export const Preview: React.FC = () => {
       ref={ref}
       centerZoomedOut={true}
       centerOnInit={true}
-      initialScale={0.7}
+      initialScale={0.75}
       maxScale={2}
       minScale={0.5}
       limitToBounds={false}
