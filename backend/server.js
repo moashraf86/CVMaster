@@ -13,11 +13,18 @@ cloudinary.config({
 });
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
+// Middlewares here to handle CORS and JSON parsing
 app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json({ limit: "50mb" }));
 
+// Define routes here
+app.get("/", (req, res) => {
+  res.send("Server is running");
+});
+
+// POST /pdf route to generate PDF from HTML content
 app.post("/pdf", async (req, res) => {
   const { htmlContent } = req.body;
 
@@ -67,6 +74,11 @@ app.post("/pdf", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on PORT ${PORT}`);
-});
+// check server does not run in serverless environment
+if (process.env.NODE_ENV !== "prod") {
+  app.listen(PORT, () => {
+    console.log(`Server is running on PORT ${PORT}`);
+  });
+} else {
+  module.exports = app;
+}
