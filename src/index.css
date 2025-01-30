@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ... */
-
 @layer base {
   /*
 		FONT FACES
@@ -192,9 +190,24 @@
 @layer base {
   * {
     @apply border-border;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground font-inter;
+  }
+
+  ::selection {
+    @apply bg-primary/20;
+  }
+
+  a {
+    @apply transition-colors duration-200;
   }
 }
 
