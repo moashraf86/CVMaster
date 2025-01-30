@@ -54,7 +54,7 @@ export const SidebarNavigation: React.FC = () => {
         >
           <li role="none">
             <Button
-              title="Navigate to personal information section"
+              title="Personal Information"
               aria-label="Personal information"
               role="menuitem"
               variant="ghost"
