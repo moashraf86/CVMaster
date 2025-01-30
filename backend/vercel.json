@@ -9,7 +9,13 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "/server.js"
     }
-  ]
+  ],
+  "env": {
+    "CLOUD_NAME": "@cloud_name",
+    "API_KEY": "@api_key",
+    "API_SECRET": "@api_secret",
+    "CLIENT_URL": "@client_url"
+  }
 }
