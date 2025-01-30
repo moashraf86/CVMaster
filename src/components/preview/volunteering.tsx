@@ -1,11 +1,14 @@
-import { useEffect } from "react";
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Volunteering } from "../../types/types";
 
 export const VolunteeringPreview: React.FC = () => {
   const {
     resumeData: { volunteering },
   } = useResume();
+
+  const {
+    pdfSettings: { lineHeight },
+  } = usePdfSettings();
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -18,10 +21,6 @@ export const VolunteeringPreview: React.FC = () => {
     summary: removeBulletPoints(vol.summary),
   }));
 
-  useEffect(() => {
-    console.log(volunteering);
-  }, [volunteering]);
-
   // IF there are no volunteering, return null
   if (!volunteering || volunteering.length === 0) {
     return null;
@@ -29,12 +28,12 @@ export const VolunteeringPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Volunteering
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-.5">
         {processedEducation.map((vol: Volunteering, index: number) => (
-          <div key={index} className="space-y-2">
+          <div key={index}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{vol.name}</span>
@@ -46,7 +45,10 @@ export const VolunteeringPreview: React.FC = () => {
               </div>
             </div>
             {vol.summary && (
-              <div dangerouslySetInnerHTML={{ __html: vol.summary }} />
+              <div
+                className={`leading-${lineHeight}`}
+                dangerouslySetInnerHTML={{ __html: vol.summary }}
+              />
             )}
           </div>
         ))}

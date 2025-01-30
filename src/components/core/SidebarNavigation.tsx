@@ -26,140 +26,156 @@ export const SidebarNavigation: React.FC = () => {
   };
 
   return (
-    <aside className="flex flex-auto flex-row lg:flex-col items-center justify-between lg:justify-center gap-10 py-3 lg:py-6 px-2 shadow-md lg:border-r border-border bg-card">
-      {/* Navigation */}
+    <aside
+      className="flex flex-auto flex-row lg:flex-col items-center justify-between lg:justify-center gap-10 py-3 lg:py-6 px-2 shadow-md lg:border-r border-border bg-card"
+      role="navigation"
+      aria-label="Main navigation"
+    >
+      {/* Mobile Menu Button */}
       <Button
-        title="Menu"
-        side="right"
+        title="Toggle menu"
+        aria-expanded={showForm}
+        aria-controls="navigation-menu"
         variant="ghost"
         size="icon"
         className="rounded-full lg:hidden"
         onClick={toggleMenu}
       >
-        <Menu />
+        <Menu aria-hidden="true" />
+        <span className="sr-only">Toggle Menu</span>
       </Button>
-      <ul className="hidden lg:block">
-        <li>
-          <Button
-            title="personal information"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("basics")}
-          >
-            <SectionIcon section="basics" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Summary"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("summary")}
-          >
-            <SectionIcon section="summary" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Experience"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("experience")}
-          >
-            <SectionIcon section="experience" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Projects"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("projects")}
-          >
-            <SectionIcon section="projects" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Education"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("education")}
-          >
-            <SectionIcon section="education" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Skills"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("skills")}
-          >
-            <SectionIcon section="skills" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Languages"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("languages")}
-          >
-            <SectionIcon section="languages" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Certifications"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("certifications")}
-          >
-            <SectionIcon section="certifications" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Awards"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("awards")}
-          >
-            <SectionIcon section="awards" />
-          </Button>
-        </li>
-        <li>
-          <Button
-            title="Volunteering"
-            side="right"
-            variant="ghost"
-            size="icon"
-            className="rounded-full"
-            onClick={scrollIntoView("volunteering")}
-          >
-            <SectionIcon section="volunteering" />
-          </Button>
-        </li>
-      </ul>
+
+      {/* Navigation List */}
+      <nav>
+        <ul
+          className="hidden lg:flex flex-col gap-4"
+          id="navigation-menu"
+          role="menubar"
+        >
+          <li role="none">
+            <Button
+              title="Personal Information"
+              aria-label="Personal information"
+              role="menuitem"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("basics")}
+            >
+              <SectionIcon section="basics" aria-hidden="true" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Summary"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("summary")}
+            >
+              <SectionIcon section="summary" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Experience"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("experience")}
+            >
+              <SectionIcon section="experience" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Projects"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("projects")}
+            >
+              <SectionIcon section="projects" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Education"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("education")}
+            >
+              <SectionIcon section="education" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Skills"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("skills")}
+            >
+              <SectionIcon section="skills" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Languages"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("languages")}
+            >
+              <SectionIcon section="languages" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Certifications"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("certifications")}
+            >
+              <SectionIcon section="certifications" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Awards"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("awards")}
+            >
+              <SectionIcon section="awards" />
+            </Button>
+          </li>
+          <li>
+            <Button
+              title="Volunteering"
+              side="right"
+              variant="ghost"
+              size="icon"
+              className="rounded-full"
+              onClick={scrollIntoView("volunteering")}
+            >
+              <SectionIcon section="volunteering" />
+            </Button>
+          </li>
+        </ul>
+      </nav>
+
       <div className="mt-auto">
         <ThemeToggler />
       </div>

@@ -1,10 +1,12 @@
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { Button } from "../ui/button";
-import { Circle, Download } from "lucide-react";
+import { Download, LoaderCircle } from "lucide-react";
 import { Page } from "../preview";
 import { useState } from "react";
 import { toast } from "../../hooks/use-toast";
+import { Basics } from "../../types/types";
+import { useResume } from "../../store/useResume";
 
 const div = document.createElement("div");
 const root = createRoot(div);
@@ -18,6 +20,9 @@ flushSync(() => {
 
 export const DownloadPDF: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
+  const {
+    resumeData: { basics },
+  } = useResume();
 
   // render CVPreview component to HTML
   const getHtmlContent = () => {
@@ -130,16 +135,14 @@ export const DownloadPDF: React.FC = () => {
 
 					ul {
 						list-style-type: disc;
-						margin-top: .5rem;
-						margin-bottom: .5rem;
 						padding-left: 2rem;
+						line-height: inherit;
 					}
 
 					ol {
 						list-style-type: decimal;
-						margin-top: .5rem;
-						margin-bottom: .5rem;
 						padding-left: 2rem;
+						line-height: inherit;
 					}
 					a {
 						text-decoration: underline;
@@ -152,10 +155,36 @@ export const DownloadPDF: React.FC = () => {
 		</html>`;
   };
 
+  // validate the basics
+  const validateBasics = (basics: Basics) => {
+    const { name, title, email } = basics;
+    if (!name || !title || name.length === 0 || title.length === 0) {
+      throw new Error("Name and title are required");
+    }
+    // check if email is valid
+    if (!email || !email.includes("@")) {
+      throw new Error("Email is required and must be valid");
+    }
+  };
+
   const downloadPdf = async () => {
     try {
       setIsLoading(true);
+
+      // check if user is offline
+      if (!navigator.onLine) {
+        throw new Error(
+          "You are offline. Please check your internet connection."
+        );
+      }
+
+      // validate the basics
+      validateBasics(basics);
+
+      // get the html content
       const htmlContent = getHtmlContent();
+
+      // send the html content to the server
       const res = await fetch("http://localhost:5000/pdf", {
         method: "POST",
         headers: {
@@ -164,14 +193,16 @@ export const DownloadPDF: React.FC = () => {
         body: JSON.stringify({ htmlContent }),
       });
 
+      // check if the response is ok
       if (!res.ok) {
-        throw new Error("Failed to generate PDF");
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to generate PDF.");
       }
 
+      // get the data from the server
       const data = await res.json();
-
       if (!data.url) {
-        throw new Error("Failed to generate PDF");
+        throw new Error("Invalid response from server. Please try again.");
       }
 
       // Create a link element and trigger the download
@@ -183,9 +214,14 @@ export const DownloadPDF: React.FC = () => {
       link.click();
       document.body.removeChild(link);
     } catch (error) {
+      // show the error message to the user
       toast({
         title: "Error",
-        description: `${error}`,
+        description: `${
+          error instanceof Error
+            ? error.message
+            : "An unexpected error occurred"
+        }`,
         variant: "destructive",
       });
     } finally {
@@ -202,7 +238,7 @@ export const DownloadPDF: React.FC = () => {
       className="rounded-full"
       onClick={downloadPdf}
     >
-      {isLoading ? <Circle className="animate-spin" /> : <Download />}
+      {isLoading ? <LoaderCircle className="animate-spin" /> : <Download />}
     </Button>
   );
 };

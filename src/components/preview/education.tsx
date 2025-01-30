@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Education } from "../../types/types";
 
 export const EducationPreview: React.FC = () => {
   const {
     resumeData: { education },
   } = useResume();
+
+  const {
+    pdfSettings: { lineHeight },
+  } = usePdfSettings();
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -29,12 +33,12 @@ export const EducationPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Education
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-1">
         {processedEducation.map((edu: Education, index: number) => (
-          <div key={index} className="space-y-2">
+          <div key={index} className="space-y-1">
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{edu.name}</span>
@@ -45,7 +49,10 @@ export const EducationPreview: React.FC = () => {
               <div className="text-right">{edu.date && <p>{edu.date}</p>}</div>
             </div>
             {edu.summary && (
-              <div dangerouslySetInnerHTML={{ __html: edu.summary }} />
+              <div
+                className={`leading-${lineHeight}`}
+                dangerouslySetInnerHTML={{ __html: edu.summary }}
+              />
             )}
           </div>
         ))}

@@ -32,7 +32,7 @@ import {
 
 // define languages schema
 const languageSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
+  name: z.string().trim().min(1, { message: "Name is required" }),
   level: z.string().min(1, { message: "Level is required" }),
 });
 
@@ -48,7 +48,7 @@ export const LanguagesDialog: React.FC = () => {
   const isEditMode = languages && index !== null && languages[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
+  const defaultValues: Language = isEditMode
     ? languages[index]
     : {
         name: "",
@@ -63,13 +63,12 @@ export const LanguagesDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof languageSchema>) {
-    const updatedLanguages = languages
-      ? index !== null
-        ? languages.map((lang: Language, i: number) =>
-            i === index ? data : lang
-          )
-        : [...languages, data]
-      : [data];
+    const currentLanguages = languages;
+    const updatedLanguages = isEditMode
+      ? currentLanguages.map((lang: Language, i: number) =>
+          i === index ? data : lang
+        )
+      : [...currentLanguages, data];
     setData({
       languages: updatedLanguages,
     });

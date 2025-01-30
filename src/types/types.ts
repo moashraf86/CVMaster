@@ -21,7 +21,7 @@ export interface Experience {
   position: string;
   dateRange: string;
   location: string;
-  employmentType: "Full-time" | "Part-time" | "Freelance" | "Internship";
+  employmentType: "Full-time" | "Part-time" | "Freelance" | "Internship" | "";
   website: string;
   summary: string;
 }
@@ -68,7 +68,7 @@ export type Certification = BaseAchievement;
 export type Award = BaseAchievement;
 
 export interface Volunteering {
-  name: number;
+  name: string;
   position: string;
   date: string;
   location: string;
@@ -79,7 +79,7 @@ export interface Volunteering {
 export type Section = {
   name: string;
   itemsCount: number;
-  id: string;
+  id: SectionName;
 };
 
 export type SectionItem = {
@@ -100,14 +100,21 @@ export type SectionName =
 
 // DEfine ResumeData type
 export interface ResumeType {
-  step: number;
+  sectionOrder: SectionName[];
   resumeData: {
-    [key: string]: any;
+    basics: Basics;
+    summary: Summary;
+    experience: Experience[];
+    projects: Project[];
+    education: Education[];
+    skills: Skill[];
+    languages: Language[];
+    certifications: Certification[];
+    awards: Award[];
+    volunteering: Volunteering[];
   };
-
-  nextStep: () => void;
-  prevStep: () => void;
   setData: (data: Record<string, unknown>) => void;
+  setSectionOrder: (order: SectionName[]) => void;
 }
 
 export interface PdfSettings {
@@ -115,6 +122,7 @@ export interface PdfSettings {
     fontSize: number;
     fontFamily: string;
     scale: number;
+    lineHeight: number;
     showForm: boolean;
   };
   setValue: (key: string, value: number | string | boolean) => void;

@@ -1,15 +1,14 @@
 import { z } from "zod";
 import { Input } from "../ui/input";
 import { useResume } from "../../store/useResume";
-import { Basics } from "../../types/types";
 import { Label } from "../ui/label";
 import { UserRound } from "lucide-react";
 
 // schema
 const basicsSchema = z.object({
-  name: z.string(),
-  title: z.string(),
-  email: z.literal("").or(z.string().email()), // empty string or valid email
+  name: z.string().trim().min(1, { message: "Name is required" }),
+  title: z.string().trim().min(1, { message: "Title is required" }),
+  email: z.string().email(), // empty string or valid email
   linkedin: z.literal("").or(z.string().url()),
   website: z.literal("").or(z.string().url()),
   phone: z.string(),
@@ -27,20 +26,17 @@ export const BasicsInfo: React.FC = () => {
     setData({ basics: { ...basics, [e.target.name]: e.target.value } });
   };
 
-  // set default values for the form
-  const defaultValues: Basics = basics;
-
-  // set the default values to the form
-  if (!basics || Object.keys(basics).length === 0) {
-    // setValue("basics", defaultValues);
-    setData({ basics: defaultValues });
-  }
-
   return (
-    <section className="grid gap-y-6" id="basics">
+    <section
+      className="grid gap-y-6"
+      id="basics"
+      aria-labelledby="basics-title"
+    >
       <header className="flex items-center gap-x-4">
         <UserRound />
-        <h2 className="text-2xl font-bold">Personal Info</h2>
+        <h2 className="text-2xl font-bold" id="basics-title">
+          Personal Info
+        </h2>
       </header>
       <main className="grid gap-4 sm:grid-col-2">
         <div className="space-y-2 sm:col-span-2">
@@ -51,6 +47,11 @@ export const BasicsInfo: React.FC = () => {
             id="basics.name"
             value={basics?.name}
             onChange={handleChange}
+            hasError={
+              !basicsSchema
+                .pick({ name: true })
+                .safeParse({ name: basics?.name }).success
+            }
           />
         </div>
         <div className="space-y-2 sm:col-span-2">
@@ -61,6 +62,11 @@ export const BasicsInfo: React.FC = () => {
             id="basics.title"
             value={basics?.title}
             onChange={handleChange}
+            hasError={
+              !basicsSchema
+                .pick({ title: true })
+                .safeParse({ title: basics?.title }).success
+            }
           />
         </div>
         <div className="space-y-2 sm:col-span-2">
@@ -109,7 +115,7 @@ export const BasicsInfo: React.FC = () => {
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="basics.linkedin">Website/Portfolio</Label>
+          <Label htmlFor="basics.linkedin">Portfolio</Label>
           <Input
             placeholder="http://linkedin.com/in/johndeo"
             name="website"

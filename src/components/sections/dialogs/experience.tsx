@@ -33,13 +33,13 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // Define schema
 const experienceSchema = z.object({
-  name: z.string().min(1, { message: "Company is required" }),
-  position: z.string().min(1, { message: "Position is required" }),
-  dateRange: z.string().min(1, { message: "Date range is required" }),
-  location: z.string(),
-  employmentType: z.string(),
+  name: z.string().trim().min(1, { message: "Company is required" }),
+  position: z.string().trim().min(1, { message: "Position is required" }),
+  dateRange: z.string().trim().min(1, { message: "Date range is required" }),
+  location: z.string().trim(),
+  employmentType: z.string().min(1, { message: "Employment Type is required" }),
   website: z.literal("").or(z.string().url()),
-  summary: z.string(),
+  summary: z.string().trim(),
 });
 
 export const ExperienceDialog: React.FC = () => {
@@ -50,20 +50,21 @@ export const ExperienceDialog: React.FC = () => {
   } = useResume();
 
   //check if experience exists and index is not null
+  // const isEditMode = experience && index !== null && experience[index];
   const isEditMode = experience && index !== null && experience[index];
   /**
    * 	Define the default values for the form
    * If the experience exists and the index is not null then get the experience at the index
    * Otherwise, set the default values to an empty object
    */
-  const defaultValues = isEditMode
+  const defaultValues: Experience = isEditMode
     ? experience[index]
     : {
         name: "",
         position: "",
-        dateRange: "",
         location: "",
         employmentType: "",
+        dateRange: "",
         website: "",
         summary: "",
       };
@@ -77,17 +78,13 @@ export const ExperienceDialog: React.FC = () => {
   // Handle submit logic
   const onSubmit = (data: z.infer<typeof experienceSchema>) => {
     // update the data in the store
-    const updatedExperience = experience
-      ? index !== null
-        ? experience.map((exp: Experience, i: number) =>
-            i === index ? data : exp
-          )
-        : [...experience, data]
-      : [data];
-
-    setData({
-      experience: updatedExperience,
-    });
+    const currentExperience = experience;
+    const updatedExperience = isEditMode
+      ? currentExperience.map((exp: Experience, i: number) =>
+          i === index ? data : exp
+        )
+      : [...currentExperience, data];
+    setData({ experience: updatedExperience });
     closeDialog();
     form.reset();
   };
@@ -104,8 +101,10 @@ export const ExperienceDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Experience" : "Add Experience"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit your professional experience to your resume
+          <DialogDescription>
+            {isEditMode
+              ? "Edit your professional experience to your resume"
+              : "Add your professional experience to your resume"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

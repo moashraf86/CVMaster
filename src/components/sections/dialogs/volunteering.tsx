@@ -26,11 +26,11 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // Define schema
 const volunteeringSchema = z.object({
-  name: z.string().min(1, { message: "Organization is required" }),
-  position: z.string().min(1, { message: "Position is required" }),
-  date: z.string(),
-  location: z.string(),
-  summary: z.string(),
+  name: z.string().trim().min(1, { message: "Organization is required" }),
+  position: z.string().trim().min(1, { message: "Position is required" }),
+  date: z.string().trim(),
+  location: z.string().trim(),
+  summary: z.string().trim(),
 });
 
 export const VolunteeringDialog: React.FC = () => {
@@ -47,7 +47,7 @@ export const VolunteeringDialog: React.FC = () => {
    * If the volunteering exists and the index is not null then get the volunteering at the index
    * Otherwise, set the default values to an empty object
    */
-  const defaultValues = isEditMode
+  const defaultValues: Volunteering = isEditMode
     ? volunteering[index]
     : {
         name: "",
@@ -65,15 +65,13 @@ export const VolunteeringDialog: React.FC = () => {
 
   // Handle submit logic
   const onSubmit = (data: z.infer<typeof volunteeringSchema>) => {
+    const currentVolunteering = volunteering;
     // update the data in the store
-    const updatedVolunteering = volunteering
-      ? index !== null
-        ? volunteering.map((vol: Volunteering, i: number) =>
-            i === index ? data : vol
-          )
-        : [...volunteering, data]
-      : [data];
-
+    const updatedVolunteering = isEditMode
+      ? currentVolunteering.map((vol: Volunteering, i: number) =>
+          i === index ? data : vol
+        )
+      : [...currentVolunteering, data];
     setData({
       volunteering: updatedVolunteering,
     });
@@ -93,8 +91,10 @@ export const VolunteeringDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Volunteering" : "Add Volunteering"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit a volunteering experience you have participated in
+          <DialogDescription>
+            {isEditMode
+              ? "Edit a volunteering experience you have participated in"
+              : "Add a volunteering experience you have participated in"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

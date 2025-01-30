@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Certification } from "../../types/types";
 
 export const CertificationsPreview: React.FC = () => {
   const {
     resumeData: { certifications },
   } = useResume();
+
+  const {
+    pdfSettings: { lineHeight },
+  } = usePdfSettings();
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -29,12 +33,12 @@ export const CertificationsPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Certifications
       </h3>
-      <div className="space-y-2">
+      <div className="space-y-0.5">
         {processedEducation.map((cert: Certification, index: number) => (
-          <div key={index} className="space-y-2">
+          <div key={index}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 {cert.website ? (
@@ -56,7 +60,10 @@ export const CertificationsPreview: React.FC = () => {
               </div>
             </div>
             {cert.summary && (
-              <div dangerouslySetInnerHTML={{ __html: cert.summary }} />
+              <div
+                className={`leading-${lineHeight}`}
+                dangerouslySetInnerHTML={{ __html: cert.summary }}
+              />
             )}
           </div>
         ))}

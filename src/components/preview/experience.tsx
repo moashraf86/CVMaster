@@ -1,11 +1,15 @@
 import { useEffect } from "react";
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Experience } from "../../types/types";
 
 export const ExperiencePreview: React.FC = () => {
   const {
     resumeData: { experience },
   } = useResume();
+
+  const {
+    pdfSettings: { lineHeight },
+  } = usePdfSettings();
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -19,7 +23,7 @@ export const ExperiencePreview: React.FC = () => {
   }));
 
   useEffect(() => {
-    console.log(processedExperience);
+    console.log("EXP", processedExperience);
   }, [experience]);
 
   if (!experience || experience.length === 0) {
@@ -27,13 +31,13 @@ export const ExperiencePreview: React.FC = () => {
   }
 
   return (
-    <section className="space-y-2">
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-2">
+    <section className="space-y-0.5">
+      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Experience
       </h3>
       {experience &&
         processedExperience.map((exp: Experience, index: number) => (
-          <div key={index} className="space-y-2">
+          <div key={index}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{exp.name}</span>
@@ -48,7 +52,10 @@ export const ExperiencePreview: React.FC = () => {
               </div>
             </div>
             {exp.summary && (
-              <div dangerouslySetInnerHTML={{ __html: exp.summary }} />
+              <div
+                className={`leading-${lineHeight}`}
+                dangerouslySetInnerHTML={{ __html: exp.summary }}
+              />
             )}
           </div>
         ))}

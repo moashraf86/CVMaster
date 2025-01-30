@@ -11,7 +11,7 @@ export const BasicsPreview: React.FC = () => {
     basics || {};
 
   return (
-    <header className="text-start space-y-1.5">
+    <header className="text-start space-y-1">
       <h1 className="text-2xl font-bold">{name}</h1>
       <p className="text-base">{title}</p>
       <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
@@ -31,7 +31,7 @@ export const BasicsPreview: React.FC = () => {
         {email && (
           <div className="flex items-center gap-1.5">
             <SendIcon size={12} />
-            <a href={`mailto:${email}`} className="underline">
+            <a href={`mailto:${email}`} className="underline" target="_blank">
               Gmail
             </a>
           </div>
@@ -39,7 +39,7 @@ export const BasicsPreview: React.FC = () => {
         {linkedin && (
           <div className="flex items-center gap-1.5">
             <LinkedInLogoIcon fontSize={12} />
-            <a href={linkedin} className="underline">
+            <a href={linkedin} className="underline" target="_blank">
               Linked In
             </a>
           </div>
@@ -47,7 +47,7 @@ export const BasicsPreview: React.FC = () => {
         {website && (
           <div className="flex items-center gap-1.5">
             <Globe size={12} />
-            <a href={website} className="underline">
+            <a href={website} className="underline" target="_blank">
               Portfolio
             </a>
           </div>

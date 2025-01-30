@@ -2,8 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ... */
-
 @layer base {
   /*
 		FONT FACES
@@ -192,18 +190,33 @@
 @layer base {
   * {
     @apply border-border;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     @apply bg-background text-foreground font-inter;
+  }
+
+  ::selection {
+    @apply bg-primary/20;
+  }
+
+  a {
+    @apply transition-colors duration-200;
   }
 }
 
 .preview ul {
-  @apply list-disc pl-8 my-2;
+  @apply list-disc pl-8 leading-[inherit];
 }
 
 .preview ol {
-  @apply list-decimal pl-8 my-2;
+  @apply list-decimal pl-8 leading-[inherit];
 }
 
 .preview a {
@@ -211,7 +224,7 @@
 }
 
 .tiptap {
-  @apply p-4 min-h-40 max-h-60 overflow-y-auto text-sm;
+  @apply p-4 min-h-28 max-h-60 overflow-y-auto text-sm focus:outline-none;
 }
 
 .tiptap ul {

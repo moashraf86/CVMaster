@@ -26,11 +26,11 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define certifications schema
 const certificationSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  issuer: z.string().min(1, { message: "Issuer is required" }),
-  date: z.string(),
+  name: z.string().trim().min(1, { message: "Name is required" }),
+  issuer: z.string().trim().min(1, { message: "Issuer is required" }),
+  date: z.string().trim(),
   website: z.literal("").or(z.string().url()),
-  summary: z.string(),
+  summary: z.string().trim(),
 });
 
 // Define the form
@@ -45,7 +45,7 @@ export const CertificationsDialog: React.FC = () => {
   const isEditMode = certifications && index !== null && certifications[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
+  const defaultValues: Certification = isEditMode
     ? certifications[index]
     : {
         name: "",
@@ -63,13 +63,12 @@ export const CertificationsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof certificationSchema>) {
-    const updatedCertifications = certifications
-      ? index !== null
-        ? certifications.map((certification: Certification, i: number) =>
-            i === index ? data : certification
-          )
-        : [...certifications, data]
-      : [data];
+    const currentCertifications = certifications;
+    const updatedCertifications = isEditMode
+      ? currentCertifications.map((certification: Certification, i: number) =>
+          i === index ? data : certification
+        )
+      : [...currentCertifications, data];
     setData({
       certifications: updatedCertifications,
     });
@@ -88,8 +87,10 @@ export const CertificationsDialog: React.FC = () => {
           <DialogTitle>
             {isEditMode ? "Edit Certification" : "Add Certification"}
           </DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit a certification you have received
+          <DialogDescription>
+            {isEditMode
+              ? "Edit a certification you have received"
+              : "Add a certification you have received"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>

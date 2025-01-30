@@ -24,12 +24,13 @@ import { Button } from "../../ui/button";
 import { useEffect, useState } from "react";
 import { Skill } from "../../../types/types";
 import { X } from "lucide-react";
+import { cn } from "../../../lib/utils";
 
 // define skills schema
-const projectsSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
-  keyword: z.string(),
-  keywords: z.array(z.string()),
+const skillsSchema = z.object({
+  name: z.string().trim(),
+  keyword: z.string().trim(),
+  keywords: z.array(z.string()).min(1, { message: "Keywords are required" }),
 });
 
 // Define the form
@@ -39,34 +40,40 @@ export const SkillsDialog: React.FC = () => {
     setData,
     resumeData: { skills },
   } = useResume();
+
   const [keywords, setKeywords] = useState<string[]>(
     skills && index !== null ? skills[index].keywords : []
   );
+  const [toDeleteKeyword, setToDeleteKeyword] = useState<number | null>(null);
   // check if user is in edit mode
   const isEditMode = skills && index !== null && skills[index];
 
   // define default values for the form
-  const defaultValues = isEditMode
+  const defaultValues: Skill = isEditMode
     ? skills[index]
     : {
         name: "",
         keyword: "",
-        keywords: [""],
+        keywords: [],
       };
 
   // define form
-  const form = useForm<z.infer<typeof projectsSchema>>({
-    resolver: zodResolver(projectsSchema),
+  const form = useForm<z.infer<typeof skillsSchema>>({
+    resolver: zodResolver(skillsSchema),
     defaultValues,
   });
 
   // on submit function
-  function onSubmit(data: z.infer<typeof projectsSchema>) {
-    const updatedSkills = skills
-      ? index !== null
-        ? skills.map((skill: Skill, i: number) => (i === index ? data : skill))
-        : [...skills, data]
-      : [data];
+  function onSubmit(data: z.infer<typeof skillsSchema>) {
+    const currentSkills = skills;
+    const updatedSkills = isEditMode
+      ? currentSkills.map((skill: Skill, i: number) =>
+          i === index ? data : skill
+        )
+      : [
+          ...currentSkills,
+          { ...data, id: Math.random().toString(36).substring(2, 15) },
+        ];
     setData({
       skills: updatedSkills,
     });
@@ -80,13 +87,15 @@ export const SkillsDialog: React.FC = () => {
     // add new keyword to the keywords array in the form state and reset the input field
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
-      setKeywords([...keywords, form.getValues("keyword")]);
-      form.setValue("keywords", [
-        ...form.getValues("keywords"),
-        form.getValues("keyword"),
-      ]);
+      // check  if the keyword is not empty or duplicate
+      const newKeyword = form.getValues("keyword").trim();
+      if (!newKeyword || keywords.includes(newKeyword)) return;
+      setKeywords([...keywords, newKeyword]);
+      form.setValue("keywords", [...form.getValues("keywords"), newKeyword]);
       form.setValue("keyword", "");
     }
+    // clear the error message
+    form.clearErrors("keywords");
   };
 
   // handle paste
@@ -105,14 +114,19 @@ export const SkillsDialog: React.FC = () => {
 
   // delete keyword
   const deleteKeyword = (index: number) => () => {
-    const newKeywords = keywords.filter((_, i) => i !== index);
-    setKeywords(newKeywords);
-    form.setValue("keywords", newKeywords);
+    setToDeleteKeyword(index);
+    setTimeout(() => {
+      const newKeywords = keywords.filter((_, i) => i !== index);
+      setKeywords(newKeywords);
+      form.setValue("keywords", newKeywords);
+      setToDeleteKeyword(null);
+    }, 300);
   };
 
   useEffect(() => {
     // set the keywords to the keywords in the form state
     setKeywords(isEditMode ? skills[index].keywords : []);
+    // reset the form
     form.reset(defaultValues);
   }, [index, skills]);
 
@@ -121,8 +135,10 @@ export const SkillsDialog: React.FC = () => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{isEditMode ? "Edit Skill" : "Add Skill"}</DialogTitle>
-          <DialogDescription hidden>
-            Add / Edit your skills and keywords
+          <DialogDescription>
+            {isEditMode
+              ? "Edit your skills and keywords"
+              : "Add your skills and keywords"}
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
@@ -154,26 +170,37 @@ export const SkillsDialog: React.FC = () => {
                         onPaste={pasteKeywords}
                         placeholder="React, Node.js, MongoDB"
                         {...field}
+                        hasError={form.formState.errors.keywords !== undefined}
                       />
                     </FormControl>
                     <FormDescription>
                       You can add multiple keywords by separating them with a
                       comma or pressing enter.
                     </FormDescription>
-                    <FormMessage />
+                    <FormMessage>
+                      {form.formState.errors.keywords?.message}
+                    </FormMessage>
                     {/* display keywords here */}
-                    <div className="flex items-center flex-wrap gap-2">
+                    <ul
+                      className="flex items-center flex-wrap gap-2"
+                      role="list"
+                    >
                       {keywords.map((keyword, index) => (
-                        <span
+                        <li
+                          role="listitem"
                           onClick={deleteKeyword(index)}
-                          key={index}
-                          className="inline-flex gap-2 items-center px-3 py-0.5 bg-primary text-primary-foreground rounded-full text-sm cursor-pointer"
+                          key={keyword}
+                          className={cn(
+                            "inline-flex gap-2 items-center px-3 py-0.5 bg-primary text-primary-foreground rounded-full text-sm cursor-pointer animate-in slide-in-from-top fade-in duration-300",
+                            toDeleteKeyword === index &&
+                              "animate-out slide-out-to-left fade-out duration-300"
+                          )}
                         >
                           {keyword}
                           <X size={16} />
-                        </span>
+                        </li>
                       ))}
-                    </div>
+                    </ul>
                   </FormItem>
                 )}
               />

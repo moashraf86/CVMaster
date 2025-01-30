@@ -6,7 +6,7 @@ import { SkillsPreview } from "./skills";
 import { SummaryPreview } from "./summary";
 import { LanguagesPreview } from "./languages";
 import { cn } from "../../lib/utils";
-import { usePdfSettings } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { CertificationsPreview } from "./certifications";
 import { AwardsPreview } from "./awards";
 import { VolunteeringPreview } from "./volunteering";
@@ -29,6 +29,8 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
     pdfSettings: { fontSize, fontFamily },
   } = usePdfSettings();
 
+  const { sectionOrder } = useResume();
+
   // Page size in pixels
   const WIDTH = pageSizeMap.width * MM_TO_PX;
   const HEIGHT = pageSizeMap.height * MM_TO_PX;
@@ -49,26 +51,41 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
     >
       <div
         className={cn(
-          "flex-1 w-full space-y-4 preview",
-          mode === "preview" ? "px-8 py-[23px]" : "px-8 py-0"
+          "flex-1 w-full space-y-1 preview",
+          mode === "preview" ? "px-8 py-[23px]" : "px-8 py-[23px]"
         )}
       >
         <BasicsPreview />
-        <SummaryPreview />
-        <ExperiencePreview />
-        <ProjectsPreview />
-        <SkillsPreview />
-        <EducationPreview />
-        <LanguagesPreview />
-        <CertificationsPreview />
-        <AwardsPreview />
-        <VolunteeringPreview />
+        {sectionOrder.map((sectionId) => {
+          switch (sectionId) {
+            case "summary":
+              return <SummaryPreview />;
+            case "experience":
+              return <ExperiencePreview />;
+            case "projects":
+              return <ProjectsPreview />;
+            case "skills":
+              return <SkillsPreview />;
+            case "education":
+              return <EducationPreview />;
+            case "languages":
+              return <LanguagesPreview />;
+            case "certifications":
+              return <CertificationsPreview />;
+            case "awards":
+              return <AwardsPreview />;
+            case "volunteering":
+              return <VolunteeringPreview />;
+            default:
+              return null;
+          }
+        })}
       </div>
       {mode === "preview" && (
         <hr
           className={`border-t border-dashed border-gray-400 absolute w-full left-0`}
           style={{
-            top: `${1122 - 23 * 2}px`,
+            top: `${pageSizeMap.height * MM_TO_PX}px`,
           }}
         />
       )}

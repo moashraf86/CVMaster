@@ -1,8 +1,11 @@
 import {
   AArrowDown,
   AArrowUp,
+  FoldVertical,
+  GalleryVertical,
   History,
   SquareSquare,
+  UnfoldVertical,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
@@ -19,51 +22,116 @@ import {
   SelectValue,
 } from "../ui/select";
 import { DownloadPDF } from "./DownloadPdf";
+import { useState } from "react";
+import { DragAndDropMenu } from "./DragAndDropMenu";
+
+const PDF_SETTINGS = {
+  SCALE: {
+    MIN: 0.5,
+    MAX: 2,
+    STEP: 0.25,
+    INITIAL: 0.75,
+  },
+  FONTSIZE: {
+    MIN: 12,
+    MAX: 18,
+    INITIAL: 14,
+    STEP: 1,
+  },
+  LINEHEIGHT: {
+    MIN: 3,
+    MAX: 10,
+    INITIAL: 6,
+    STEP: 1,
+  },
+};
 
 export const Controls: React.FC = () => {
   const { zoomIn, zoomOut, resetTransform, instance } = useControls();
 
   const {
     setValue,
-    pdfSettings: { fontSize, fontFamily, scale: pdfScale },
+    pdfSettings: { fontSize, fontFamily, scale: pdfScale, lineHeight },
   } = usePdfSettings();
+
+  // state for the drag-and-drop menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // handle zoom in
   const handleZoomIn = () => {
-    zoomIn(0.25);
-    setValue("scale", Math.min(pdfScale + 0.25, 2));
+    zoomIn(PDF_SETTINGS.SCALE.STEP);
+    setValue(
+      "scale",
+      Math.min(pdfScale + PDF_SETTINGS.SCALE.STEP, PDF_SETTINGS.SCALE.MAX)
+    );
   };
 
   // handle zoom out
   const handleZoomOut = () => {
-    zoomOut(0.25);
-    setValue("scale", Math.max(pdfScale - 0.2, 0.5));
+    zoomOut(PDF_SETTINGS.SCALE.STEP);
+    setValue(
+      "scale",
+      Math.max(pdfScale - PDF_SETTINGS.SCALE.STEP, PDF_SETTINGS.SCALE.MIN)
+    );
   };
 
   // reset transform
   const resetZoom = () => {
     resetTransform();
-    instance.setCenter();
-    setValue("scale", 1);
+    setValue("scale", PDF_SETTINGS.SCALE.INITIAL);
   };
 
   // set center
   const setCenter = () => {
     instance.setCenter();
   };
+
   // increase font size
   const increaseFontSize = () => {
-    setValue("fontSize", Math.min(fontSize + 1, 18));
+    setValue(
+      "fontSize",
+      Math.min(fontSize + PDF_SETTINGS.FONTSIZE.STEP, PDF_SETTINGS.FONTSIZE.MAX)
+    );
   };
 
   // decrease font size
   const decreaseFontSize = () => {
-    setValue("fontSize", Math.max(fontSize - 1, 12));
+    setValue(
+      "fontSize",
+      Math.max(fontSize - PDF_SETTINGS.FONTSIZE.STEP, PDF_SETTINGS.FONTSIZE.MIN)
+    );
   };
 
   // reset font size
   const resetFontSize = () => {
-    setValue("fontSize", 14);
+    setValue("fontSize", PDF_SETTINGS.FONTSIZE.INITIAL);
+  };
+
+  // increase line height
+  const increaseLineHeight = () => {
+    setValue(
+      "lineHeight",
+      Math.min(
+        lineHeight + PDF_SETTINGS.LINEHEIGHT.STEP,
+        PDF_SETTINGS.LINEHEIGHT.MAX
+      )
+    );
+  };
+
+  // decrease line height
+  const decreaseLineHeight = () => {
+    setValue(
+      "lineHeight",
+      Math.max(
+        lineHeight - PDF_SETTINGS.LINEHEIGHT.STEP,
+        PDF_SETTINGS.LINEHEIGHT.MIN
+      )
+    );
+  };
+
+  // reset line height
+  const resetLineHeight = () => {
+    setValue("lineHeight", PDF_SETTINGS.LINEHEIGHT.INITIAL);
   };
 
   // change font type
@@ -81,6 +149,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={handleZoomIn}
+          disabled={pdfScale === PDF_SETTINGS.SCALE.MAX}
         >
           <ZoomIn />
         </Button>
@@ -91,6 +160,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={handleZoomOut}
+          disabled={pdfScale === PDF_SETTINGS.SCALE.MIN}
         >
           <ZoomOut />
         </Button>
@@ -101,6 +171,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={resetZoom}
+          disabled={pdfScale === PDF_SETTINGS.SCALE.INITIAL}
         >
           <History />
         </Button>
@@ -123,7 +194,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={increaseFontSize}
-          disabled={fontSize === 18}
+          disabled={fontSize === PDF_SETTINGS.FONTSIZE.MAX}
         >
           <AArrowUp />
         </Button>
@@ -134,7 +205,7 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={decreaseFontSize}
-          disabled={fontSize === 12}
+          disabled={fontSize === PDF_SETTINGS.FONTSIZE.MIN}
         >
           <AArrowDown />
         </Button>
@@ -145,24 +216,51 @@ export const Controls: React.FC = () => {
           size="icon"
           className="rounded-full"
           onClick={resetFontSize}
-          disabled={fontSize === 14}
+          disabled={fontSize === PDF_SETTINGS.FONTSIZE.INITIAL}
         >
           <History />
         </Button>
       </div>
       <div className="flex border-r px-1">
+        <Button
+          title="Increase Line Height"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={increaseLineHeight}
+          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.MAX}
+        >
+          <UnfoldVertical />
+        </Button>
+        <Button
+          title="Decrease Line Height"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={decreaseLineHeight}
+          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.MIN}
+        >
+          <FoldVertical />
+        </Button>
+        <Button
+          title="Reset Line Height"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={resetLineHeight}
+          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.INITIAL}
+        >
+          <History />
+        </Button>
+      </div>
+      <div className="flex px-1 gap-1">
         <Select defaultValue={fontFamily} onValueChange={changeFontType}>
-          <Button
-            title="Select Font"
-            asChild
-            type="button"
-            variant="ghost"
-            className="focus:ring-0 rounded-full"
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select a font" />
-            </SelectTrigger>
-          </Button>
+          <SelectTrigger className="rounded-full w-auto gap-2">
+            <SelectValue placeholder="Select a font" />
+          </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               <SelectLabel>Fonts</SelectLabel>
@@ -175,17 +273,31 @@ export const Controls: React.FC = () => {
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>
-      <div className="flex px-1">
+        <Button
+          title="Reorder Sections"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full flex-1"
+          onClick={() => setIsMenuOpen(true)}
+        >
+          <GalleryVertical className="w-4 h-4" />
+        </Button>
         <DownloadPDF />
       </div>
+      <DragAndDropMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+      />
       <div className="fonts" hidden>
-        <div className="font-lora"></div>
-        <div className="font-inter"></div>
-        <div className="font-roboto"></div>
-        <div className="font-open"></div>
-        <div className="font-nunito"></div>
-        <div className="font-playfair"></div>
+        <div className="font-lora leading-3"></div>
+        <div className="font-inter leading-4"></div>
+        <div className="font-roboto leading-5"></div>
+        <div className="font-open leading-6"></div>
+        <div className="font-nunito leading-7"></div>
+        <div className="font-playfair leading-8"></div>
+        <div className="font-inter leading-9"></div>
+        <div className="font-inter leading-10"></div>
       </div>
     </div>
   );
