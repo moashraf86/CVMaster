@@ -185,7 +185,8 @@ export const DownloadPDF: React.FC = () => {
       const htmlContent = getHtmlContent();
 
       // send the html content to the server
-      const res = await fetch("http://localhost:5000/pdf", {
+      const api = import.meta.env.VITE_BACKEND_URL;
+      const res = await fetch(`${api}/pdf`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

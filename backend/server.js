@@ -15,7 +15,7 @@ cloudinary.config({
 const app = express();
 const PORT = 5000;
 
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: process.env.CLIENT_URL }));
 app.use(express.json({ limit: "50mb" }));
 
 app.post("/pdf", async (req, res) => {
