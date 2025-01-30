@@ -79,6 +79,6 @@ if (process.env.NODE_ENV !== "prod") {
   app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
   });
-} else {
-  module.exports = app;
 }
+
+export default app;
