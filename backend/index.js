@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
-import puppeteer from "puppeteer";
+import * as puppeteer from "puppeteer";
+import puppeteerCore from "puppeteer-core";
+import Chromium from "@sparticuz/chromium";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 
@@ -15,9 +17,25 @@ cloudinary.config({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middlewares here to handle CORS and JSON parsing
-app.use(cors({ origin: process.env.CLIENT_URL }));
-app.use(express.json({ limit: "50mb" }));
+// Configure CORS to allow requests from the specified origin
+const allowedOrigins = [
+  "https://cv-master-client.vercel.app",
+  "http://localhost:5173",
+];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+};
+
+app.use(cors(corsOptions));
+
+// Middlewares here to handle JSON parsing
+app.use(express.json());
 
 // Define routes here
 app.get("/", (req, res) => {
@@ -33,10 +51,25 @@ app.post("/pdf", async (req, res) => {
   }
 
   try {
-    const browser = await puppeteer.launch({
-      headless: "new",
-      args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    });
+    let browser;
+
+    if (process.env.NODE_ENV === "development") {
+      // 🔵 Use standard Puppeteer locally
+      browser = await puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
+    }
+
+    // 🔴 Use Puppeteer with Chromium in production
+    if (process.env.NODE_ENV === "production") {
+      browser = await puppeteerCore.launch({
+        args: Chromium.args,
+        defaultViewport: Chromium.defaultViewport,
+        executablePath: await Chromium.executablePath(),
+        headless: Chromium.headless,
+      });
+    }
 
     const page = await browser.newPage();
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
