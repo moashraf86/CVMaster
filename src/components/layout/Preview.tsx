@@ -5,10 +5,25 @@ import {
 } from "react-zoom-pan-pinch";
 import { Page } from "../preview";
 import { Controls } from "../core/Controls";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 export const Preview: React.FC = () => {
   const ref = useRef<ReactZoomPanPinchRef>(null);
+  const windowSize = useWindowSize();
+
+  useEffect(() => {
+    if (ref.current) {
+      // check if the window size is less than 768px
+      if (windowSize.width !== null && windowSize.width < 768) {
+        // set the initial scale to 1
+        ref.current.centerView(1);
+      } else {
+        // set the initial scale to 0.75
+        ref.current.centerView(0.75);
+      }
+    }
+  }, [windowSize]);
 
   return (
     <TransformWrapper
