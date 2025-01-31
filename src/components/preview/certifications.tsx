@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { Certification } from "../../types/types";
 
@@ -21,10 +20,6 @@ export const CertificationsPreview: React.FC = () => {
     ...cert,
     summary: removeBulletPoints(cert.summary),
   }));
-
-  useEffect(() => {
-    console.log(certifications);
-  }, [certifications]);
 
   // IF there are no certifications, return null
   if (!certifications || certifications.length === 0) {

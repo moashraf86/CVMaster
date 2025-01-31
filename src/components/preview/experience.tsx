@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { Experience } from "../../types/types";
 
@@ -21,10 +20,6 @@ export const ExperiencePreview: React.FC = () => {
     ...exp,
     summary: removeBulletPoints(exp.summary),
   }));
-
-  useEffect(() => {
-    console.log("EXP", processedExperience);
-  }, [experience]);
 
   if (!experience || experience.length === 0) {
     return null;

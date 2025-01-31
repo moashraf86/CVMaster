@@ -5,32 +5,17 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { SectionBase } from "../sections/shared/SectionBase";
 import { SidebarNavigation } from "../core/SidebarNavigation";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { cn } from "../../lib/utils";
-import { useLockBodyScroll, useWindowSize } from "@uidotdev/usehooks";
+import { useLockBodyScroll } from "@uidotdev/usehooks";
 
 export const CvForm: React.FC = () => {
   const { resumeData } = useResume();
   const {
-    setValue,
     pdfSettings: { showForm },
   } = usePdfSettings();
   const ref = useRef<HTMLDivElement>(null);
-  const windowSize = useWindowSize();
   useLockBodyScroll();
-
-  useEffect(() => {
-    // track the window inner width
-    if (windowSize.width !== null && windowSize.width < 1024 && showForm) {
-      setValue("showForm", false);
-    } else if (
-      windowSize.width !== null &&
-      windowSize.width >= 1024 &&
-      !showForm
-    ) {
-      setValue("showForm", true);
-    }
-  }, [windowSize]);
 
   return (
     <div className="flex max-h-screen overflow-hidden bg-card border-r border-border ">

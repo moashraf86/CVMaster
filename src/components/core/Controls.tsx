@@ -140,8 +140,8 @@ export const Controls: React.FC = () => {
   };
 
   return (
-    <div className="flex absolute z-20 lg:z-50 bottom-4 left-1/2 transform -translate-x-1/2 bg-card border border-border rounded-full shadow-xl px-1.5 py-2">
-      <div className="hidden md:flex border-r px-1">
+    <div className="flex bg-card border border-border rounded-full shadow-xl px-1.5 py-2 max-w-full">
+      <div className="hidden md:flex border-r px-.5 sm:px-1">
         <Button
           title="Zoom In"
           type="button"
@@ -186,7 +186,7 @@ export const Controls: React.FC = () => {
           <SquareSquare />
         </Button>
       </div>
-      <div className="flex border-r px-1">
+      <div className="flex border-r px-.5 sm:px-1">
         <Button
           title="Increase Font Size"
           type="button"
@@ -214,14 +214,14 @@ export const Controls: React.FC = () => {
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className="rounded-full hidden md:flex"
           onClick={resetFontSize}
           disabled={fontSize === PDF_SETTINGS.FONTSIZE.INITIAL}
         >
           <History />
         </Button>
       </div>
-      <div className="flex border-r px-1">
+      <div className="flex border-r px-.5 sm:px-1">
         <Button
           title="Increase Line Height"
           type="button"
@@ -249,14 +249,14 @@ export const Controls: React.FC = () => {
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className="rounded-full hidden md:flex"
           onClick={resetLineHeight}
           disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.INITIAL}
         >
           <History />
         </Button>
       </div>
-      <div className="flex px-1 gap-1">
+      <div className="flex px-1 sm:gap-1">
         <Select defaultValue={fontFamily} onValueChange={changeFontType}>
           <SelectTrigger className="rounded-full w-auto gap-2">
             <SelectValue placeholder="Select a font" />
@@ -274,6 +274,16 @@ export const Controls: React.FC = () => {
           </SelectContent>
         </Select>
         <Button
+          title="Center View"
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full md:hidden"
+          onClick={setCenter}
+        >
+          <SquareSquare />
+        </Button>
+        <Button
           title="Reorder Sections"
           type="button"
           variant="ghost"
@@ -283,7 +293,7 @@ export const Controls: React.FC = () => {
         >
           <GalleryVertical className="w-4 h-4" />
         </Button>
-        <DownloadPDF />
+        <DownloadPDF className="rounded-full hidden md:inline-flex" />
       </div>
       <DragAndDropMenu
         isOpen={isMenuOpen}

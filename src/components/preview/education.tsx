@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { Education } from "../../types/types";
 
@@ -21,10 +20,6 @@ export const EducationPreview: React.FC = () => {
     ...edu,
     summary: removeBulletPoints(edu.summary),
   }));
-
-  useEffect(() => {
-    console.log(education);
-  }, [education]);
 
   // IF there are no education, return null
   if (!education || education.length === 0) {

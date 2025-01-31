@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { Award } from "../../types/types";
 
@@ -21,10 +20,6 @@ export const AwardsPreview: React.FC = () => {
     ...award,
     summary: removeBulletPoints(award.summary),
   }));
-
-  useEffect(() => {
-    console.log(awards);
-  }, [awards]);
 
   // IF there are no awards, return null
   if (!awards || awards.length === 0) {

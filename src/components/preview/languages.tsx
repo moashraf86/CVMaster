@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useResume } from "../../store/useResume";
 import { Language } from "../../types/types";
 
@@ -7,9 +6,6 @@ export const LanguagesPreview: React.FC = () => {
     resumeData: { languages },
   } = useResume();
 
-  useEffect(() => {
-    console.log(languages);
-  }, [languages]);
   // IF there are no languages, return null
   if (!languages || languages.length === 0) {
     return null;

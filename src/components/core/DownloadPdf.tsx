@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "../../hooks/use-toast";
 import { Basics } from "../../types/types";
 import { useResume } from "../../store/useResume";
+import { cn } from "../../lib/utils";
 
 const div = document.createElement("div");
 const root = createRoot(div);
@@ -18,7 +19,11 @@ flushSync(() => {
   );
 });
 
-export const DownloadPDF: React.FC = () => {
+interface DownloadPDFProps {
+  className?: string;
+}
+
+export const DownloadPDF: React.FC<DownloadPDFProps> = ({ className }) => {
   const [isLoading, setIsLoading] = useState(false);
   const {
     resumeData: { basics },
@@ -236,7 +241,7 @@ export const DownloadPDF: React.FC = () => {
       title="Download PDF"
       variant="ghost"
       size="icon"
-      className="rounded-full"
+      className={cn("rounded-full", className)}
       onClick={downloadPdf}
     >
       {isLoading ? <LoaderCircle className="animate-spin" /> : <Download />}

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useResume } from "../../store/useResume";
 import { Skill } from "../../types/types";
 
@@ -7,9 +6,6 @@ export const SkillsPreview: React.FC = () => {
     resumeData: { skills },
   } = useResume();
 
-  useEffect(() => {
-    console.log(skills);
-  }, [skills]);
   // IF there are no skills, return null
   if (!skills || skills.length === 0) {
     return null;
