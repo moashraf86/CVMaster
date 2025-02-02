@@ -17,8 +17,8 @@ export const SkillsPreview: React.FC = () => {
         Skills
       </h3>
       <div>
-        {skills.map((skill: Skill, index: number) => (
-          <div key={index}>
+        {skills.map((skill: Skill) => (
+          <div key={skill.id}>
             {skill.name && <span className="font-bold">{skill.name}: </span>}
             {skill.keywords.join(", ")}
           </div>

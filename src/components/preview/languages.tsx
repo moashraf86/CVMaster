@@ -17,8 +17,8 @@ export const LanguagesPreview: React.FC = () => {
         Languages
       </h3>
       <div className="space-y-1">
-        {languages.map((lang: Language, index: number) => (
-          <div key={index}>
+        {languages.map((lang: Language) => (
+          <div key={lang.id}>
             <span className="font-bold">{lang.name}</span>: {lang.level}
           </div>
         ))}

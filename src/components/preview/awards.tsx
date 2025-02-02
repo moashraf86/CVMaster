@@ -32,8 +32,8 @@ export const AwardsPreview: React.FC = () => {
         Awards
       </h3>
       <div className="space-y-0.5">
-        {processedEducation.map((award: Award, index: number) => (
-          <div key={index}>
+        {processedEducation.map((award: Award) => (
+          <div key={award.id}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 {award.website ? (

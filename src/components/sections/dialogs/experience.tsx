@@ -60,6 +60,7 @@ export const ExperienceDialog: React.FC = () => {
   const defaultValues: Experience = isEditMode
     ? experience[index]
     : {
+        id: "",
         name: "",
         position: "",
         location: "",
@@ -77,13 +78,17 @@ export const ExperienceDialog: React.FC = () => {
 
   // Handle submit logic
   const onSubmit = (data: z.infer<typeof experienceSchema>) => {
-    // update the data in the store
-    const currentExperience = experience;
+    // Generate a unique ID for new experiences
+    const experienceWithId = isEditMode
+      ? { ...data, id: experience[index].id } // Keep the existing ID if editing
+      : { ...data, id: crypto.randomUUID() }; // Generate new ID if creating
+    // Update the experience array
     const updatedExperience = isEditMode
-      ? currentExperience.map((exp: Experience, i: number) =>
-          i === index ? data : exp
+      ? experience.map((exp: Experience, i: number) =>
+          i === index ? experienceWithId : exp
         )
-      : [...currentExperience, data];
+      : [...experience, experienceWithId];
+    // update data in the store
     setData({ experience: updatedExperience });
     closeDialog();
     form.reset();

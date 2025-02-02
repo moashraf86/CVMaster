@@ -48,6 +48,7 @@ export const CertificationsDialog: React.FC = () => {
   const defaultValues: Certification = isEditMode
     ? certifications[index]
     : {
+        id: "",
         name: "",
         issuer: "",
         date: "",
@@ -63,12 +64,17 @@ export const CertificationsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof certificationSchema>) {
-    const currentCertifications = certifications;
+    // Generate a unique id if creating
+    const dataWithId = isEditMode
+      ? { ...data, id: certifications[index].id }
+      : { ...data, id: crypto.randomUUID() };
+    // Update the certifications data with the new data
     const updatedCertifications = isEditMode
-      ? currentCertifications.map((certification: Certification, i: number) =>
-          i === index ? data : certification
+      ? certifications.map((certification: Certification, i: number) =>
+          i === index ? dataWithId : certification
         )
-      : [...currentCertifications, data];
+      : [...certifications, dataWithId];
+    // Set the updated data to the store
     setData({
       certifications: updatedCertifications,
     });

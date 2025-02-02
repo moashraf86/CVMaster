@@ -31,8 +31,8 @@ export const ExperiencePreview: React.FC = () => {
         Experience
       </h3>
       {experience &&
-        processedExperience.map((exp: Experience, index: number) => (
-          <div key={index}>
+        processedExperience.map((exp: Experience) => (
+          <div key={exp.id}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{exp.name}</span>

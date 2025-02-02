@@ -50,13 +50,16 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
         {itemsCount > 0 &&
           sectionData.map((item: SectionItem, index: number) => (
             <li
-              key={item.id as string}
+              key={`${item.id}`}
               className={cn(
-                "border border-border p-4 duration-300",
+                "border border-border p-4 duration-300 animate-in slide-in-from-top fade-in",
                 itemToDelete === index &&
                   "animate-out slide-out-to-left fade-out duration-300"
               )}
             >
+              <span>
+                {item.id} - {index}
+              </span>
               <div className="flex items-center justify-between">
                 <div className="space-y-1">
                   <h3 className="text-base font-bold">{item.name}</h3>

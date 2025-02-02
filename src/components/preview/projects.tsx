@@ -28,8 +28,8 @@ export const ProjectsPreview: React.FC = () => {
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
         Projects
       </h3>
-      {processedExperience.map((project: Project, index: number) => (
-        <div key={index}>
+      {processedExperience.map((project: Project) => (
+        <div key={project.id}>
           <div className="flex items-center justify-between">
             <div className="text-left flex items-center gap-2">
               {project.website ? (

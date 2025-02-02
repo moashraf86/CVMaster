@@ -32,8 +32,8 @@ export const CertificationsPreview: React.FC = () => {
         Certifications
       </h3>
       <div className="space-y-0.5">
-        {processedEducation.map((cert: Certification, index: number) => (
-          <div key={index}>
+        {processedEducation.map((cert: Certification) => (
+          <div key={cert.id}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 {cert.website ? (
