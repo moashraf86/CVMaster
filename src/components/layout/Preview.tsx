@@ -43,7 +43,7 @@ export const Preview: React.FC = () => {
         >
           <Page mode="preview" />
         </TransformComponent>
-        <div className="flex fixed justify-center items-center z-20 lg:z-50 left-0 right-0 bottom-0 px-1.5 py-2">
+        <div className="flex fixed justify-center items-center z-20 lg:z-50 left-1/2 transform -translate-x-1/2 bottom-0 px-3 py-2">
           <Controls />
         </div>
       </>
