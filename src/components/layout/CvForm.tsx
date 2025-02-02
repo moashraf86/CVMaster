@@ -5,26 +5,34 @@ import { ScrollArea } from "../ui/scroll-area";
 import { Separator } from "../ui/separator";
 import { SectionBase } from "../sections/shared/SectionBase";
 import { SidebarNavigation } from "../core/SidebarNavigation";
-import { useRef } from "react";
+import { useEffect } from "react";
 import { cn } from "../../lib/utils";
-import { useLockBodyScroll } from "@uidotdev/usehooks";
+import { useLockBodyScroll, useWindowSize } from "@uidotdev/usehooks";
 
 export const CvForm: React.FC = () => {
   const { resumeData } = useResume();
   const {
+    setValue,
     pdfSettings: { showForm },
   } = usePdfSettings();
-  const ref = useRef<HTMLDivElement>(null);
+  // Get the window size and lock the body scroll
+  const windowSize = useWindowSize();
   useLockBodyScroll();
+
+  useEffect(() => {
+    // check if the window size is not null and greater than 1024
+    if (windowSize.width !== null && windowSize.width > 1024) {
+      setValue("showForm", false);
+    }
+  }, [windowSize.width, setValue]);
 
   return (
     <div className="flex max-h-screen overflow-hidden bg-card border-r border-border ">
       <SidebarNavigation />
       <ScrollArea
-        ref={ref}
         className={cn(
-          "!absolute top-[60px] left-0 transform -translate-x-full w-full h-full z-50 lg:block lg:!static lg:translate-x-0 lg:w-auto bg-card transition-transform duration-300",
-          showForm && "translate-x-0"
+          "!absolute top-[60px] left-0 transform -translate-x-full w-full h-full z-50 lg:block lg:!static lg:translate-x-0 lg:w-auto bg-card transition-transform",
+          showForm && "translate-x-0 duration-300"
         )}
       >
         <div className="grid gap-y-6 p-6">
