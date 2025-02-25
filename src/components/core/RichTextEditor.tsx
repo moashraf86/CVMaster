@@ -335,7 +335,6 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
         onValueChange={(value) => handleCustomize(value)}
       >
         <Button
-          asChild
           shiny
           variant="ghost"
           type="button"

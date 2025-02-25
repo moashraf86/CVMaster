@@ -41,7 +41,9 @@ export const Preview: React.FC = () => {
           contentClass="items-start justify-center pointer-events-none"
           contentStyle={{ width: "100%", transition: "transform 0.1s" }}
         >
-          <Page mode="preview" />
+          <div className="bg-white shadow-2xl p-5">
+            <Page mode="preview" />
+          </div>
         </TransformComponent>
         <div className="flex fixed justify-center items-center z-20 lg:z-50 left-1/2 transform -translate-x-1/2 bottom-0 px-3 py-2">
           <Controls />
