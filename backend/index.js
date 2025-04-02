@@ -114,7 +114,7 @@ app.post("/pdf", async (req, res) => {
 });
 
 // check server does not run in serverless environment
-if (process.env.NODE_ENV !== "prod") {
+if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
   });
