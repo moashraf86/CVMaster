@@ -84,7 +84,7 @@ const MenuBar: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-3 px-1 py-2 border border-b-0 border-border rounded-t-sm">
+    <div className="flex flex-wrap items-center gap-1 sm:gap-3 px-1 py-2 border border-b-0 border-border rounded-t-sm">
       <Button
         title="Bold (Ctrl/⌘ + B)"
         type="button"
@@ -335,7 +335,6 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
         onValueChange={(value) => handleCustomize(value)}
       >
         <Button
-          asChild
           shiny
           variant="ghost"
           type="button"
@@ -513,9 +512,6 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
             setIsCustomizing={setIsCustomizing}
           />
         }
-        onCreate={(editor) => {
-          console.log("editor created", editor);
-        }}
         extensions={extensions}
         content={content}
         onUpdate={(content) => {

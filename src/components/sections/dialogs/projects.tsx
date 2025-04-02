@@ -57,6 +57,7 @@ export const ProjectsDialog: React.FC = () => {
     ? projects[index]
     : {
         // set to empty later
+        id: "",
         name: "",
         description: "",
         date: "",
@@ -77,13 +78,17 @@ export const ProjectsDialog: React.FC = () => {
     // Remove duplicate keywords
     const uniqueKeywords = [...new Set(data.keywords)];
     const cleanedData = { ...data, keywords: uniqueKeywords };
+    // Generate unique id for the project
+    const projectWithId = isEditMode
+      ? { ...cleanedData, id: projects[index].id }
+      : { ...cleanedData, id: crypto.randomUUID() };
 
     const currentProjects = projects;
     const updatedProjects = isEditMode
       ? currentProjects.map((project: Project, i: number) =>
-          i === index ? cleanedData : project
+          i === index ? projectWithId : project
         )
-      : [...currentProjects, cleanedData];
+      : [...currentProjects, projectWithId];
     setData({
       projects: updatedProjects,
     });

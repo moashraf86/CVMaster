@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { Experience } from "../../types/types";
 
@@ -22,10 +21,6 @@ export const ExperiencePreview: React.FC = () => {
     summary: removeBulletPoints(exp.summary),
   }));
 
-  useEffect(() => {
-    console.log("EXP", processedExperience);
-  }, [experience]);
-
   if (!experience || experience.length === 0) {
     return null;
   }
@@ -36,8 +31,8 @@ export const ExperiencePreview: React.FC = () => {
         Experience
       </h3>
       {experience &&
-        processedExperience.map((exp: Experience, index: number) => (
-          <div key={index}>
+        processedExperience.map((exp: Experience) => (
+          <div key={exp.id}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{exp.name}</span>

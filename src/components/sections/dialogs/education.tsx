@@ -49,6 +49,7 @@ export const EducationDialog: React.FC = () => {
   const defaultValues: Education = isEditMode
     ? education[index]
     : {
+        id: "",
         name: "",
         degree: "",
         studyField: "",
@@ -65,15 +66,23 @@ export const EducationDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof educationSchema>) {
-    const currentEducation = education;
-    const updatedEducation = isEditMode
-      ? currentEducation.map((edu: Education, i: number) =>
-          i === index ? data : edu
+    // Generate Unique ID if creating
+    const dataWithId = isEditMode
+      ? { ...data, id: education[index].id } // keep existing ID if editing
+      : { ...data, id: crypto.randomUUID() }; // Generate new ID if creating
+
+    // Update the education array
+    const updatedData = isEditMode
+      ? education.map((edu: Education, i: number) =>
+          i === index ? dataWithId : edu
         )
-      : [...currentEducation, data];
+      : [...education, dataWithId];
+
+    // set the data in the store
     setData({
-      education: updatedEducation,
+      education: updatedData,
     });
+
     closeDialog();
     form.reset();
   }

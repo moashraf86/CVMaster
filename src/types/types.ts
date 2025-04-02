@@ -17,6 +17,7 @@ export interface Summary {
 
 // [3] Define type for Experience
 export interface Experience {
+  id: string;
   name: string;
   position: string;
   dateRange: string;
@@ -27,6 +28,7 @@ export interface Experience {
 }
 
 export interface Project {
+  id: string;
   name: string;
   description: string;
   date: string;
@@ -37,6 +39,7 @@ export interface Project {
 }
 
 export interface Education {
+  id: string;
   name: string;
   degree: string;
   studyField: string;
@@ -46,17 +49,20 @@ export interface Education {
 }
 
 export interface Skill {
+  id: string;
   name: string | undefined;
   keyword: string | undefined;
   keywords: string[];
 }
 
 export interface Language {
+  id: string;
   name: string;
   level: string;
 }
 
 interface BaseAchievement {
+  id: string;
   name: string;
   date: string;
   issuer: string;
@@ -68,6 +74,7 @@ export type Certification = BaseAchievement;
 export type Award = BaseAchievement;
 
 export interface Volunteering {
+  id: string;
   name: string;
   position: string;
   date: string;
@@ -83,7 +90,7 @@ export type Section = {
 };
 
 export type SectionItem = {
-  [key: string]: string | string[];
+  [key: string]: string | string[] | undefined | null;
 };
 
 export type SectionName =

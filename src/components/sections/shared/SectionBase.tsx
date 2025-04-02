@@ -50,11 +50,11 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
         {itemsCount > 0 &&
           sectionData.map((item: SectionItem, index: number) => (
             <li
-              key={item.id as string}
+              key={`${item.id}`}
               className={cn(
-                "border border-border p-4 duration-300",
+                "border border-border p-4 duration-300 animate-in slide-in-from-top fade-in",
                 itemToDelete === index &&
-                  "animate-out slide-out-to-left fade-out duration-300"
+                  "animate-out slide-out-to-left fade-out"
               )}
             >
               <div className="flex items-center justify-between">
@@ -125,7 +125,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
           <Button
             aria-label={`Add new item to ${name}`}
             variant="outline"
-            className="flex ms-auto"
+            className="flex me-auto"
             onClick={() => openDialog(id)}
           >
             + Add new item

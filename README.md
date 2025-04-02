@@ -21,6 +21,13 @@ CVMaster is an AI-powered resume builder created with React, TypeScript, Zustand
 - **React**: A JavaScript library for building user interfaces.
 - **TypeScript**: A typed superset of JavaScript that adds static types.
 - **Zustand**: A lightweight state management library for React applications.
+- **Zod**: A TypeScript-first schema declaration and validation library.
+- **TipTap**: A rich-text editor library.
+- **dnd-kit**: A modern and lightweight drag & drop toolkit.
+- **react-zoom-pan-pinch**: react npm package for zooming, panning and pinching html elements in easy way.
+- **Puppeteer**: A PDF generation library running on headless browsers.
+- **Express**: for building the backend server.
+- **Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs.
 - **ShadCN UI**: A React component library for building modern web interfaces.
 - **Groq SDK**: Provides AI-powered suggestions to enhance the resume creation process.
 - **Cloudinary**: A cloud-based files management service.

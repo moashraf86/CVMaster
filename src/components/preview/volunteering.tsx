@@ -32,8 +32,8 @@ export const VolunteeringPreview: React.FC = () => {
         Volunteering
       </h3>
       <div className="space-y-.5">
-        {processedEducation.map((vol: Volunteering, index: number) => (
-          <div key={index}>
+        {processedEducation.map((vol: Volunteering) => (
+          <div key={vol.id}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{vol.name}</span>

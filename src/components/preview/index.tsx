@@ -13,7 +13,7 @@ import { VolunteeringPreview } from "./volunteering";
 
 const pageSizeMap = {
   width: 210,
-  height: 285, // 297 - 12mm padding top and bottom
+  height: 297, // 297 - 12mm padding top and bottom
 };
 
 // MM to PX conversion
@@ -39,7 +39,7 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
     <div
       className={cn(
         "relative bg-white text-primary dark:text-primary-foreground scale-50 md:scale-100",
-        mode === "preview" ? "shadow-2xl" : "shadow-none",
+        // mode === "preview" ? "shadow-2xl" : "shadow-none",
         `font-${fontFamily}`
       )}
       style={{
@@ -51,31 +51,31 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
     >
       <div
         className={cn(
-          "flex-1 w-full space-y-1 preview",
-          mode === "preview" ? "px-8 py-[23px]" : "px-8 py-[23px]"
+          "flex-1 w-full space-y-1 preview"
+          // mode === "preview" ? "p-0" : "p-0"
         )}
       >
         <BasicsPreview />
         {sectionOrder.map((sectionId) => {
           switch (sectionId) {
             case "summary":
-              return <SummaryPreview />;
+              return <SummaryPreview key={sectionId} />;
             case "experience":
-              return <ExperiencePreview />;
+              return <ExperiencePreview key={sectionId} />;
             case "projects":
-              return <ProjectsPreview />;
+              return <ProjectsPreview key={sectionId} />;
             case "skills":
-              return <SkillsPreview />;
+              return <SkillsPreview key={sectionId} />;
             case "education":
-              return <EducationPreview />;
+              return <EducationPreview key={sectionId} />;
             case "languages":
-              return <LanguagesPreview />;
+              return <LanguagesPreview key={sectionId} />;
             case "certifications":
-              return <CertificationsPreview />;
+              return <CertificationsPreview key={sectionId} />;
             case "awards":
-              return <AwardsPreview />;
+              return <AwardsPreview key={sectionId} />;
             case "volunteering":
-              return <VolunteeringPreview />;
+              return <VolunteeringPreview key={sectionId} />;
             default:
               return null;
           }
@@ -85,7 +85,7 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
         <hr
           className={`border-t border-dashed border-gray-400 absolute w-full left-0`}
           style={{
-            top: `${pageSizeMap.height * MM_TO_PX}px`,
+            top: `${HEIGHT}px`,
           }}
         />
       )}

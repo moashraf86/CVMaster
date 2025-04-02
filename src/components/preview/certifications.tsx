@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { Certification } from "../../types/types";
 
@@ -22,10 +21,6 @@ export const CertificationsPreview: React.FC = () => {
     summary: removeBulletPoints(cert.summary),
   }));
 
-  useEffect(() => {
-    console.log(certifications);
-  }, [certifications]);
-
   // IF there are no certifications, return null
   if (!certifications || certifications.length === 0) {
     return null;
@@ -37,8 +32,8 @@ export const CertificationsPreview: React.FC = () => {
         Certifications
       </h3>
       <div className="space-y-0.5">
-        {processedEducation.map((cert: Certification, index: number) => (
-          <div key={index}>
+        {processedEducation.map((cert: Certification) => (
+          <div key={cert.id}>
             <div className="flex items-center justify-between">
               <div className="text-left">
                 {cert.website ? (

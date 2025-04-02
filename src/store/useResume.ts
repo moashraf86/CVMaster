@@ -19,6 +19,7 @@ const DEFAULT_RESUME_DATA = {
   },
   experience: [
     {
+      id: "cf10d-4b3e-4b7e-8b7d-5e4b4",
       name: "Google",
       position: "Software Developer",
       dateRange: "Jan 2020 - Present",
@@ -31,6 +32,7 @@ const DEFAULT_RESUME_DATA = {
   ],
   projects: [
     {
+      id: "cf10d-4b3e-4b7e-78bh-3e4b4",
       name: "Project Name",
       description: "Project Description",
       date: "Jan 2020 - Present",
@@ -42,6 +44,7 @@ const DEFAULT_RESUME_DATA = {
   ],
   education: [
     {
+      id: "0f222615-8d85-48df-b731-5012717ae97f",
       name: "University of California, Berkeley",
       degree: "Bachelor of Science",
       studyField: "Electrical Engineering & Computer Sciences",

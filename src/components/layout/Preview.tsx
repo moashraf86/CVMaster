@@ -5,10 +5,25 @@ import {
 } from "react-zoom-pan-pinch";
 import { Page } from "../preview";
 import { Controls } from "../core/Controls";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 export const Preview: React.FC = () => {
   const ref = useRef<ReactZoomPanPinchRef>(null);
+  const windowSize = useWindowSize();
+
+  useEffect(() => {
+    if (ref.current) {
+      // check if the window size is less than 768px
+      if (windowSize.width !== null && windowSize.width < 768) {
+        // set the initial scale to 1
+        ref.current.centerView(1);
+      } else {
+        // set the initial scale to 0.75
+        ref.current.centerView(0.75);
+      }
+    }
+  }, [windowSize]);
 
   return (
     <TransformWrapper
@@ -26,9 +41,13 @@ export const Preview: React.FC = () => {
           contentClass="items-start justify-center pointer-events-none"
           contentStyle={{ width: "100%", transition: "transform 0.1s" }}
         >
-          <Page mode="preview" />
+          <div className="bg-white shadow-2xl p-5">
+            <Page mode="preview" />
+          </div>
         </TransformComponent>
-        <Controls />
+        <div className="flex fixed justify-center items-center z-20 lg:z-50 left-1/2 transform -translate-x-1/2 bottom-0 px-3 py-2">
+          <Controls />
+        </div>
       </>
     </TransformWrapper>
   );

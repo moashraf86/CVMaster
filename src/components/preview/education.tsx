@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { Education } from "../../types/types";
 
@@ -22,10 +21,6 @@ export const EducationPreview: React.FC = () => {
     summary: removeBulletPoints(edu.summary),
   }));
 
-  useEffect(() => {
-    console.log(education);
-  }, [education]);
-
   // IF there are no education, return null
   if (!education || education.length === 0) {
     return null;
@@ -37,8 +32,8 @@ export const EducationPreview: React.FC = () => {
         Education
       </h3>
       <div className="space-y-1">
-        {processedEducation.map((edu: Education, index: number) => (
-          <div key={index} className="space-y-1">
+        {processedEducation.map((edu: Education) => (
+          <div key={edu.id} className="space-y-1">
             <div className="flex items-center justify-between">
               <div className="text-left">
                 <span className="font-bold">{edu.name}</span>

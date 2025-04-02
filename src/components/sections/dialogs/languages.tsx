@@ -51,6 +51,7 @@ export const LanguagesDialog: React.FC = () => {
   const defaultValues: Language = isEditMode
     ? languages[index]
     : {
+        id: "",
         name: "",
         level: "",
       };
@@ -63,14 +64,19 @@ export const LanguagesDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof languageSchema>) {
-    const currentLanguages = languages;
-    const updatedLanguages = isEditMode
-      ? currentLanguages.map((lang: Language, i: number) =>
-          i === index ? data : lang
+    // Generate a unique ID if Creating
+    const dataWithId = isEditMode
+      ? { ...data, id: languages[index].id }
+      : { ...data, id: crypto.randomUUID() };
+    // Update data array
+    const updatedData = isEditMode
+      ? languages.map((lang: Language, i: number) =>
+          i === index ? dataWithId : lang
         )
-      : [...currentLanguages, data];
+      : [...languages, dataWithId];
+    // Update the data in the store
     setData({
-      languages: updatedLanguages,
+      languages: updatedData,
     });
     closeDialog();
     form.reset();

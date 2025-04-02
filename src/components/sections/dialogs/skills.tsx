@@ -52,6 +52,7 @@ export const SkillsDialog: React.FC = () => {
   const defaultValues: Skill = isEditMode
     ? skills[index]
     : {
+        id: "",
         name: "",
         keyword: "",
         keywords: [],
@@ -65,15 +66,24 @@ export const SkillsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof skillsSchema>) {
-    const currentSkills = skills;
+    // Generate Unique ID If creating
+    const dataWithId = isEditMode
+      ? {
+          ...data,
+          id: skills[index].id,
+        }
+      : {
+          ...data,
+          id: crypto.randomUUID(),
+        };
+    // update the skills array in the resume data
     const updatedSkills = isEditMode
-      ? currentSkills.map((skill: Skill, i: number) =>
-          i === index ? data : skill
+      ? skills.map((skill: Skill, i: number) =>
+          i === index ? dataWithId : skill
         )
-      : [
-          ...currentSkills,
-          { ...data, id: Math.random().toString(36).substring(2, 15) },
-        ];
+      : [...skills, dataWithId];
+
+    // update the skills in the resume data
     setData({
       skills: updatedSkills,
     });

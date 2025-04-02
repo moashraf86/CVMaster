@@ -1,21 +1,21 @@
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { SectionIcon } from "../sections/shared/SectionIcon";
 import { ThemeToggler } from "./ThemeToggler";
 import { usePdfSettings } from "../../store/useResume";
+import { DownloadPDF } from "./DownloadPdf";
 
 export const SidebarNavigation: React.FC = () => {
   const {
     setValue,
     pdfSettings: { showForm },
   } = usePdfSettings();
-  // scroll into view
+
+  // scroll into view function
   const scrollIntoView = (id: string) => () => {
     const element = document.getElementById(id);
     // if the element exists, scroll to it
     if (element) {
-      console.log(element);
-
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
@@ -41,7 +41,7 @@ export const SidebarNavigation: React.FC = () => {
         className="rounded-full lg:hidden"
         onClick={toggleMenu}
       >
-        <Menu aria-hidden="true" />
+        {showForm ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
         <span className="sr-only">Toggle Menu</span>
       </Button>
 
@@ -178,6 +178,7 @@ export const SidebarNavigation: React.FC = () => {
 
       <div className="mt-auto">
         <ThemeToggler />
+        <DownloadPDF className="md:hidden" />
       </div>
     </aside>
   );

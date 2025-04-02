@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useResume } from "../../store/useResume";
 import { Skill } from "../../types/types";
 
@@ -7,9 +6,6 @@ export const SkillsPreview: React.FC = () => {
     resumeData: { skills },
   } = useResume();
 
-  useEffect(() => {
-    console.log(skills);
-  }, [skills]);
   // IF there are no skills, return null
   if (!skills || skills.length === 0) {
     return null;
@@ -21,8 +17,8 @@ export const SkillsPreview: React.FC = () => {
         Skills
       </h3>
       <div>
-        {skills.map((skill: Skill, index: number) => (
-          <div key={index}>
+        {skills.map((skill: Skill) => (
+          <div key={skill.id}>
             {skill.name && <span className="font-bold">{skill.name}: </span>}
             {skill.keywords.join(", ")}
           </div>

@@ -50,6 +50,7 @@ export const VolunteeringDialog: React.FC = () => {
   const defaultValues: Volunteering = isEditMode
     ? volunteering[index]
     : {
+        id: "",
         name: "",
         position: "",
         date: "",
@@ -65,13 +66,17 @@ export const VolunteeringDialog: React.FC = () => {
 
   // Handle submit logic
   const onSubmit = (data: z.infer<typeof volunteeringSchema>) => {
-    const currentVolunteering = volunteering;
-    // update the data in the store
+    // Generate a unique id if creating
+    const dataWithId = isEditMode
+      ? { ...data, id: volunteering[index].id }
+      : { ...data, id: crypto.randomUUID() };
+    // update the data with the new data
     const updatedVolunteering = isEditMode
-      ? currentVolunteering.map((vol: Volunteering, i: number) =>
-          i === index ? data : vol
+      ? volunteering.map((vol: Volunteering, i: number) =>
+          i === index ? dataWithId : vol
         )
-      : [...currentVolunteering, data];
+      : [...volunteering, dataWithId];
+    // set the updated data to the store
     setData({
       volunteering: updatedVolunteering,
     });

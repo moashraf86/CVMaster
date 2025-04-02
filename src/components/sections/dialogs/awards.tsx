@@ -48,6 +48,7 @@ export const AwardsDialog: React.FC = () => {
   const defaultValues: Award = isEditMode
     ? awards[index]
     : {
+        id: "",
         name: "",
         issuer: "",
         date: "",
@@ -63,12 +64,17 @@ export const AwardsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof awardsSchema>) {
-    const currentAwards = awards;
+    // Generate unique id if creating
+    const dataWithId = isEditMode
+      ? { ...data, id: awards[index].id }
+      : { ...data, id: crypto.randomUUID() };
+    // Update the awards data with the new data
     const updatedAwards = isEditMode
-      ? currentAwards.map((award: Award, i: number) =>
-          i === index ? data : award
+      ? awards.map((award: Award, i: number) =>
+          i === index ? dataWithId : award
         )
-      : [...currentAwards, data];
+      : [...awards, dataWithId];
+    // set the updated data to the store
     setData({
       awards: updatedAwards,
     });
