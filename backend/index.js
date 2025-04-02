@@ -22,20 +22,27 @@ const allowedOrigins = [
   "https://cv-master-client.vercel.app",
   "http://localhost:5173",
 ];
+
 const corsOptions = {
   origin: function (origin, callback) {
-    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+    // Allow requests with no origin (e.g., mobile apps, Postman)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error("Not allowed by CORS"));
     }
   },
+  methods: ["GET", "POST", "OPTIONS"], // Explicitly allow OPTIONS method
+  allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
 };
 
 app.use(cors(corsOptions));
 
-// Middlewares here to handle JSON parsing
+// Middleware to handle JSON parsing
 app.use(express.json());
+
+// Handle preflight OPTIONS requests
+app.options("*", cors(corsOptions));
 
 // Define routes here
 app.get("/", (req, res) => {
@@ -54,15 +61,15 @@ app.post("/pdf", async (req, res) => {
     let browser;
 
     if (process.env.NODE_ENV === "development") {
-      // 🔵 Use standard Puppeteer locally
+      // Use standard Puppeteer locally
       browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
     }
 
-    // 🔴 Use Puppeteer with Chromium in production
     if (process.env.NODE_ENV === "production") {
+      // Use Puppeteer with Chromium in production
       browser = await puppeteerCore.launch({
         args: Chromium.args,
         defaultViewport: Chromium.defaultViewport,
