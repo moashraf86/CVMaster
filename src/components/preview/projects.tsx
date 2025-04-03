@@ -3,7 +3,7 @@ import { Project } from "../../types/types";
 
 export const ProjectsPreview: React.FC = () => {
   const {
-    resumeData: { projects },
+    resumeData: { projects, sectionTitles },
   } = useResume();
 
   const {
@@ -26,7 +26,7 @@ export const ProjectsPreview: React.FC = () => {
   return (
     <section className="space-y-0.5">
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Projects
+        {sectionTitles.projects}
       </h3>
       {processedExperience.map((project: Project) => (
         <div key={project.id}>

@@ -1,17 +1,16 @@
 import { useResume } from "../../store/useResume";
 import { Summary } from "../../types/types";
-import { Edit2, Text } from "lucide-react";
+import { Pencil, Text } from "lucide-react";
 import { useDebounce } from "@uidotdev/usehooks";
 import { useEffect, useState, useRef } from "react";
 import { RichTextEditor } from "../core/RichTextEditor";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import clsx from "clsx";
 
 export const SummaryForm: React.FC = () => {
   const {
     setData,
-    resumeData: { summary },
+    resumeData: { summary, sectionTitles },
   } = useResume();
 
   // set default values from the resumeData
@@ -19,16 +18,13 @@ export const SummaryForm: React.FC = () => {
 
   // set the state for the content and section title
   const [content, setContent] = useState<string>(defaultValues.content || "");
+  const [isEditingTitle, setIsEditingTitle] = useState<boolean>(false);
   const [sectionTitle, setSectionTitle] = useState<string>(
-    defaultValues.sectionTitle || ""
+    sectionTitles["summary"] || "null"
   );
-
-  // set the state for the title input visibility
-  const [titleInputVisible, setTitleInputVisible] = useState<boolean>(false);
 
   // set the debounced content and section title
   const debouncedContent = useDebounce(content, 200);
-  const debouncedSectionTitle = useDebounce(sectionTitle, 200);
 
   // Add ref for the input
   const titleInputRef = useRef<HTMLInputElement>(null);
@@ -43,16 +39,12 @@ export const SummaryForm: React.FC = () => {
     setSectionTitle(e.target.value);
   };
 
-  // toggle title input
-  const toggleTitleInput = () => {
-    setTitleInputVisible(!titleInputVisible);
-    // Focus the input when becoming visible
-    if (!titleInputVisible) {
-      // Use setTimeout to ensure the input is visible before focusing
-      setTimeout(() => {
-        titleInputRef.current?.focus();
-      }, 0);
-    }
+  // save the title to the resumeData
+  const saveTitle = () => {
+    setIsEditingTitle(false);
+    setData({
+      sectionTitles: { ...sectionTitles, summary: sectionTitle },
+    });
   };
 
   useEffect(() => {
@@ -61,47 +53,38 @@ export const SummaryForm: React.FC = () => {
     }
   }, [debouncedContent]);
 
-  useEffect(() => {
-    if (debouncedSectionTitle !== summary?.sectionTitle) {
-      setData({ summary: { ...summary, sectionTitle: debouncedSectionTitle } });
-    }
-  }, [debouncedSectionTitle]);
-
   return (
     <section className="grid" id="summary" aria-labelledby="summary-heading">
       <header className="flex items-center gap-4 mb-6">
-        <Text aria-hidden="true" />
-        <h2
-          className={clsx(`text-2xl font-bold`, titleInputVisible && "hidden")}
-          id="summary-heading"
-        >
-          {sectionTitle || "Summary"}
-        </h2>
-        <Input
-          ref={titleInputRef}
-          value={sectionTitle}
-          placeholder={sectionTitle || "Summary"}
-          onChange={handleTitleChange}
-          onBlur={toggleTitleInput}
-          onKeyDown={(e) => {
-            if (e.key === "Escape" || e.key === "Enter") {
-              titleInputRef.current?.blur();
-            }
-          }}
-          className={clsx("w-auto", !titleInputVisible && "hidden")}
-          aria-label="Edit section title"
-        />
+        <Text aria-hidden />
+        {isEditingTitle ? (
+          <Input
+            value={sectionTitle}
+            ref={titleInputRef}
+            onChange={handleTitleChange}
+            onBlur={saveTitle}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === "Escape") saveTitle();
+            }}
+            className="w-auto"
+            autoFocus
+          />
+        ) : (
+          <h2
+            className="text-2xl font-bold cursor-pointer"
+            onClick={() => setIsEditingTitle(true)}
+          >
+            {sectionTitle || "Summary"}
+          </h2>
+        )}
         <Button
-          onClick={toggleTitleInput}
-          className="rounded-full ms-auto"
-          title="Edit Section Title"
           variant="ghost"
           size="icon"
-          aria-label="Edit Section Title"
-          aria-controls="summary-title"
-          aria-expanded={titleInputVisible}
+          className="rounded-full ms-auto"
+          onClick={() => setIsEditingTitle(true)}
+          aria-label={`Edit summary section title`}
         >
-          <Edit2 />
+          <Pencil />
         </Button>
       </header>
       <RichTextEditor content={content} handleChange={handleContentChange} />

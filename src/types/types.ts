@@ -119,6 +119,9 @@ export interface ResumeType {
     certifications: Certification[];
     awards: Award[];
     volunteering: Volunteering[];
+    sectionTitles: {
+      [key in SectionName]: string;
+    };
   };
   setData: (data: Record<string, unknown>) => void;
   setSectionOrder: (order: SectionName[]) => void;

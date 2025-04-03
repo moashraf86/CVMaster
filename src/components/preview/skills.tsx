@@ -3,7 +3,7 @@ import { Skill } from "../../types/types";
 
 export const SkillsPreview: React.FC = () => {
   const {
-    resumeData: { skills },
+    resumeData: { skills, sectionTitles },
   } = useResume();
 
   // IF there are no skills, return null
@@ -14,7 +14,7 @@ export const SkillsPreview: React.FC = () => {
   return (
     <section>
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Skills
+        {sectionTitles.skills}
       </h3>
       <div>
         {skills.map((skill: Skill) => (

@@ -3,7 +3,7 @@ import { Certification } from "../../types/types";
 
 export const CertificationsPreview: React.FC = () => {
   const {
-    resumeData: { certifications },
+    resumeData: { certifications, sectionTitles },
   } = useResume();
 
   const {
@@ -29,7 +29,7 @@ export const CertificationsPreview: React.FC = () => {
   return (
     <section>
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Certifications
+        {sectionTitles.certifications}
       </h3>
       <div className="space-y-0.5">
         {processedEducation.map((cert: Certification) => (

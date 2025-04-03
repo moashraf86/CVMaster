@@ -3,7 +3,7 @@ import { Education } from "../../types/types";
 
 export const EducationPreview: React.FC = () => {
   const {
-    resumeData: { education },
+    resumeData: { education, sectionTitles },
   } = useResume();
 
   const {
@@ -29,7 +29,7 @@ export const EducationPreview: React.FC = () => {
   return (
     <section>
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Education
+        {sectionTitles.education}
       </h3>
       <div className="space-y-1">
         {processedEducation.map((edu: Education) => (
