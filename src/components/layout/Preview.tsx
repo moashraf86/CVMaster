@@ -15,9 +15,9 @@ export const Preview: React.FC = () => {
   useEffect(() => {
     if (ref.current) {
       // check if the window size is less than 768px
-      if (windowSize.width !== null && windowSize.width < 768) {
-        // set the initial scale to 1
-        ref.current.centerView(1);
+      if (windowSize.width !== null && windowSize.width < 640) {
+        // set the initial scale to 0.5
+        ref.current.centerView(0.5);
       } else {
         // set the initial scale to 0.75
         ref.current.centerView(0.75);

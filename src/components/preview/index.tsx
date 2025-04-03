@@ -38,8 +38,7 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
   return (
     <div
       className={cn(
-        "relative bg-white text-primary dark:text-primary-foreground scale-50 md:scale-100",
-        // mode === "preview" ? "shadow-2xl" : "shadow-none",
+        "relative bg-white text-primary dark:text-primary-foreground",
         `font-${fontFamily}`
       )}
       style={{
@@ -49,12 +48,7 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
         minHeight: `${HEIGHT}px`,
       }}
     >
-      <div
-        className={cn(
-          "flex-1 w-full space-y-1 preview"
-          // mode === "preview" ? "p-0" : "p-0"
-        )}
-      >
+      <div className={cn("flex-1 w-full space-y-1 preview")}>
         <BasicsPreview />
         {sectionOrder.map((sectionId) => {
           switch (sectionId) {
