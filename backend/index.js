@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000;
 // Configure CORS to allow requests from the specified origin
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "*", // Allow specific origin or all origins
+    origin: "*", // Allow all origins
     methods: ["GET", "POST", "OPTIONS"], // Explicitly allow OPTIONS method
     allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
   })
