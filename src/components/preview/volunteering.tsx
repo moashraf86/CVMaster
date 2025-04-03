@@ -3,7 +3,7 @@ import { Volunteering } from "../../types/types";
 
 export const VolunteeringPreview: React.FC = () => {
   const {
-    resumeData: { volunteering },
+    resumeData: { volunteering, sectionTitles },
   } = useResume();
 
   const {
@@ -29,7 +29,7 @@ export const VolunteeringPreview: React.FC = () => {
   return (
     <section>
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Volunteering
+        {sectionTitles.volunteering}
       </h3>
       <div className="space-y-.5">
         {processedEducation.map((vol: Volunteering) => (

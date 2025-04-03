@@ -3,7 +3,7 @@ import { Award } from "../../types/types";
 
 export const AwardsPreview: React.FC = () => {
   const {
-    resumeData: { awards },
+    resumeData: { awards, sectionTitles },
   } = useResume();
 
   const {
@@ -29,7 +29,7 @@ export const AwardsPreview: React.FC = () => {
   return (
     <section>
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Awards
+        {sectionTitles.awards}
       </h3>
       <div className="space-y-0.5">
         {processedEducation.map((award: Award) => (

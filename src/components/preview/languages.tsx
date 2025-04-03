@@ -3,7 +3,7 @@ import { Language } from "../../types/types";
 
 export const LanguagesPreview: React.FC = () => {
   const {
-    resumeData: { languages },
+    resumeData: { languages, sectionTitles },
   } = useResume();
 
   // IF there are no languages, return null
@@ -14,7 +14,7 @@ export const LanguagesPreview: React.FC = () => {
   return (
     <section>
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Languages
+        {sectionTitles.languages}
       </h3>
       <div className="space-y-1">
         {languages.map((lang: Language) => (

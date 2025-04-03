@@ -7,6 +7,7 @@ import { Section, SectionItem, SectionName } from "../../../types/types";
 import { useState, useMemo } from "react";
 import { DeleteConfirmation } from "../../core/DeleteConfirmation";
 import { cn } from "../../../lib/utils";
+import { Input } from "../../ui/input";
 
 export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const { openDialog, updateDialog } = useDialog();
@@ -19,6 +20,21 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
     index: null,
   });
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [sectionTitle, setSectionTitle] = useState(
+    resumeData.sectionTitles[id] || name
+  );
+  // set the current title to the resumeData title or the name
+  const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSectionTitle(e.target.value);
+  };
+  // save the title to the resumeData
+  const saveTitle = () => {
+    setIsEditingTitle(false);
+    setData({
+      sectionTitles: { ...resumeData.sectionTitles, [id]: sectionTitle },
+    });
+  };
 
   // get the section data from the local storage or the resumeData
   const sectionData = useMemo(() => {
@@ -44,7 +60,34 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
     <section className="grid gap-y-6" id={id}>
       <header className="flex items-center gap-4">
         <SectionIcon section={id as SectionName} />
-        <h2 className="text-2xl font-bold">{name}</h2>
+        {isEditingTitle ? (
+          <Input
+            value={sectionTitle}
+            onChange={handleTitleChange}
+            onBlur={saveTitle}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === "Escape") saveTitle();
+            }}
+            className="w-auto"
+            autoFocus
+          />
+        ) : (
+          <h2
+            className="text-2xl font-bold cursor-pointer"
+            onClick={() => setIsEditingTitle(true)}
+          >
+            {resumeData.sectionTitles[id] || name}
+          </h2>
+        )}
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-full ms-auto"
+          onClick={() => setIsEditingTitle(true)}
+          aria-label={`Edit ${name} section title`}
+        >
+          <Pencil />
+        </Button>
       </header>
       <ul className="grid gap-4 sm:grid-col-2">
         {itemsCount > 0 &&

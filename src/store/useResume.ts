@@ -70,6 +70,17 @@ const DEFAULT_RESUME_DATA = {
   certifications: [],
   awards: [],
   volunteering: [],
+  sectionTitles: {
+    summary: "Summary",
+    experience: "Experience",
+    projects: "Projects",
+    education: "Education",
+    skills: "Skills",
+    languages: "Languages",
+    certifications: "Certifications",
+    awards: "Awards",
+    volunteering: "Volunteering",
+  },
 };
 
 // Default values for pdf settings

@@ -3,7 +3,7 @@ import { Experience } from "../../types/types";
 
 export const ExperiencePreview: React.FC = () => {
   const {
-    resumeData: { experience },
+    resumeData: { experience, sectionTitles },
   } = useResume();
 
   const {
@@ -28,7 +28,7 @@ export const ExperiencePreview: React.FC = () => {
   return (
     <section className="space-y-0.5">
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        Experience
+        {sectionTitles.experience}
       </h3>
       {experience &&
         processedExperience.map((exp: Experience) => (

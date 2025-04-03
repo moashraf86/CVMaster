@@ -2,7 +2,7 @@ import { usePdfSettings, useResume } from "../../store/useResume";
 
 export const SummaryPreview: React.FC = () => {
   const {
-    resumeData: { summary },
+    resumeData: { summary, sectionTitles },
   } = useResume();
   const {
     pdfSettings: { lineHeight },
@@ -19,7 +19,7 @@ export const SummaryPreview: React.FC = () => {
   return (
     <section>
       <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
-        {summary.sectionTitle}
+        {sectionTitles["summary"] || "Summary"}
       </h3>
       <div
         className={`leading-${lineHeight}`}
