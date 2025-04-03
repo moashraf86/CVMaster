@@ -1,0 +1,5 @@
+../src/
+../public/
+../vite.config.ts
+../package.json
+../.env

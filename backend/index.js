@@ -17,6 +17,14 @@ cloudinary.config({
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Middleware logging
+app.use((req, res, next) => {
+  console.log(`Incoming Request: ${req.method} ${req.url}`);
+  console.log("Headers:", req.headers);
+  console.log("Body:", req.body);
+  next();
+});
+
 // Configure CORS to allow requests from the specified origin
 app.use(
   cors({
@@ -27,7 +35,12 @@ app.use(
 );
 
 // Handle preflight OPTIONS requests
-app.options("*", cors());
+app.options("*", cors(), (req, res) => {
+  console.log("Preflight OPTIONS request received.");
+  console.log("Request Headers:", req.headers);
+  console.log("Response Headers:", res.getHeaders());
+  res.sendStatus(204); // Respond with 204 No Content
+});
 
 // Middleware to handle JSON parsing with increased payload limit
 app.use(express.json({ limit: "50mb" }));
