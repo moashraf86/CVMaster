@@ -90,7 +90,7 @@ const DEFAULT_PDF_SETTINGS = {
   fontSize: 14,
   fontFamily: "inter",
   scale: 0.75,
-  lineHeight: 6,
+  lineHeight: 5,
   showForm: false,
 };
 

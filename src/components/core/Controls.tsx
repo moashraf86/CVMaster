@@ -41,7 +41,7 @@ const PDF_SETTINGS = {
   LINEHEIGHT: {
     MIN: 3,
     MAX: 10,
-    INITIAL: 6,
+    INITIAL: 5,
     STEP: 1,
   },
 };
