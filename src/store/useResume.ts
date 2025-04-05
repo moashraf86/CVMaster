@@ -56,7 +56,7 @@ const DEFAULT_RESUME_DATA = {
   ],
   skills: [
     {
-      id: "cf10d4b3-e4b7-e8b7-d5e4-b43e78bh3e4b",
+      id: "cf10d4b3-e4b7-e8b7-d5e4-b43e78b3e4b",
       name: "Languages",
       keyword: "",
       keywords: ["JavaScript", "TypeScript", "Python", "Java", "C++"],
