@@ -5,7 +5,7 @@ export const SummaryPreview: React.FC = () => {
     resumeData: { summary, sectionTitles },
   } = useResume();
   const {
-    pdfSettings: { lineHeight },
+    pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
 
   // convert summary from html to text
@@ -18,7 +18,10 @@ export const SummaryPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
+      <h3
+        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        style={{ fontSize: fontSize + 4 }}
+      >
         {sectionTitles["summary"] || "Summary"}
       </h3>
       <div

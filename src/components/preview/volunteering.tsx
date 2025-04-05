@@ -7,7 +7,7 @@ export const VolunteeringPreview: React.FC = () => {
   } = useResume();
 
   const {
-    pdfSettings: { lineHeight },
+    pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
 
   // remove bullets from the description
@@ -28,7 +28,10 @@ export const VolunteeringPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
+      <h3
+        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        style={{ fontSize: fontSize + 4 }}
+      >
         {sectionTitles.volunteering}
       </h3>
       <div className="space-y-.5">

@@ -7,7 +7,7 @@ export const ExperiencePreview: React.FC = () => {
   } = useResume();
 
   const {
-    pdfSettings: { lineHeight },
+    pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
 
   // remove bullets from the description
@@ -27,7 +27,10 @@ export const ExperiencePreview: React.FC = () => {
 
   return (
     <section className="space-y-0.5">
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
+      <h3
+        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        style={{ fontSize: fontSize + 4 }}
+      >
         {sectionTitles.experience}
       </h3>
       {experience &&
@@ -35,7 +38,9 @@ export const ExperiencePreview: React.FC = () => {
           <div key={exp.id}>
             <div className="flex items-center justify-between">
               <div className="text-left">
-                <span className="font-bold">{exp.name}</span>
+                <span className="font-bold" style={{ fontSize: fontSize + 2 }}>
+                  {exp.name}
+                </span>
                 <div className="flex items-center gap-1">
                   <span>{exp.position}</span>
                   {exp.employmentType && <span> - {exp.employmentType}</span>}

@@ -33,7 +33,7 @@ const PDF_SETTINGS = {
     INITIAL: 0.75,
   },
   FONTSIZE: {
-    MIN: 12,
+    MIN: 10,
     MAX: 18,
     INITIAL: 14,
     STEP: 1,

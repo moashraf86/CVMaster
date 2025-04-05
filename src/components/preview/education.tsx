@@ -7,7 +7,7 @@ export const EducationPreview: React.FC = () => {
   } = useResume();
 
   const {
-    pdfSettings: { lineHeight },
+    pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
 
   // remove bullets from the description
@@ -28,7 +28,10 @@ export const EducationPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
+      <h3
+        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        style={{ fontSize: fontSize + 4 }}
+      >
         {sectionTitles.education}
       </h3>
       <div className="space-y-1">
@@ -36,7 +39,9 @@ export const EducationPreview: React.FC = () => {
           <div key={edu.id} className="space-y-1">
             <div className="flex items-center justify-between">
               <div className="text-left">
-                <span className="font-bold">{edu.name}</span>
+                <span className="font-bold" style={{ fontSize: fontSize + 2 }}>
+                  {edu.name}
+                </span>
                 <p>
                   {edu.degree && edu.degree + " in"} {edu.studyField}
                 </p>
