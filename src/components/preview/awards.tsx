@@ -7,7 +7,7 @@ export const AwardsPreview: React.FC = () => {
   } = useResume();
 
   const {
-    pdfSettings: { lineHeight },
+    pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
 
   // remove bullets from the description
@@ -28,7 +28,10 @@ export const AwardsPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
+      <h3
+        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        style={{ fontSize: fontSize + 4 }}
+      >
         {sectionTitles.awards}
       </h3>
       <div className="space-y-0.5">
@@ -42,11 +45,17 @@ export const AwardsPreview: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="font-bold"
+                    style={{ fontSize: fontSize + 2 }}
                   >
                     {award.name}
                   </a>
                 ) : (
-                  <span className="font-bold">{award.name}</span>
+                  <span
+                    className="font-bold"
+                    style={{ fontSize: fontSize + 2 }}
+                  >
+                    {award.name}
+                  </span>
                 )}
                 <p>{award.issuer}</p>
               </div>

@@ -1,20 +1,32 @@
 import { Globe, MapPin, Phone, SendIcon } from "lucide-react";
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { LinkedInLogoIcon } from "@radix-ui/react-icons";
+import { cn } from "../../lib/utils";
 
 export const BasicsPreview: React.FC = () => {
   // get the data from the store
   const {
     resumeData: { basics },
   } = useResume();
+
+  // get the pdf settings from the store
+  const {
+    pdfSettings: { fontSize },
+  } = usePdfSettings();
+
   const { name, title, location, phone, email, linkedin, website } =
     basics || {};
 
   return (
     <header className="text-start space-y-1">
-      <h1 className="text-2xl font-bold">{name}</h1>
-      <p className="text-base">{title}</p>
-      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm">
+      <h1 className={cn("font-bold", fontSize > 16 ? "text-3xl" : "text-2xl")}>
+        {name}
+      </h1>
+      <p style={{ fontSize: fontSize + 2 }}>{title}</p>
+      <div
+        className="flex flex-wrap items-center gap-x-2 gap-y-0.5"
+        style={{ fontSize }}
+      >
         {location && (
           <div className="flex items-center gap-1.5">
             <MapPin size={12} />

@@ -1,10 +1,14 @@
-import { useResume } from "../../store/useResume";
+import { usePdfSettings, useResume } from "../../store/useResume";
 import { Skill } from "../../types/types";
 
 export const SkillsPreview: React.FC = () => {
   const {
     resumeData: { skills, sectionTitles },
   } = useResume();
+
+  const {
+    pdfSettings: { fontSize },
+  } = usePdfSettings();
 
   // IF there are no skills, return null
   if (!skills || skills.length === 0) {
@@ -13,7 +17,10 @@ export const SkillsPreview: React.FC = () => {
 
   return (
     <section>
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
+      <h3
+        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        style={{ fontSize: fontSize + 4 }}
+      >
         {sectionTitles.skills}
       </h3>
       <div>

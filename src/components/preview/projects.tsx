@@ -7,7 +7,7 @@ export const ProjectsPreview: React.FC = () => {
   } = useResume();
 
   const {
-    pdfSettings: { lineHeight },
+    pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
 
   // remove bullet points from the summary
@@ -25,7 +25,10 @@ export const ProjectsPreview: React.FC = () => {
   }
   return (
     <section className="space-y-0.5">
-      <h3 className="text-lg font-bold border-b border-primary dark:border-primary-foreground mb-1">
+      <h3
+        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        style={{ fontSize: fontSize + 4 }}
+      >
         {sectionTitles.projects}
       </h3>
       {processedExperience.map((project: Project) => (
@@ -34,10 +37,17 @@ export const ProjectsPreview: React.FC = () => {
             <div className="text-left flex items-center gap-2">
               {project.website ? (
                 <a href={project.website} className="underline" target="_blank">
-                  <span className="font-bold">{project.name}</span>
+                  <span
+                    className="font-bold"
+                    style={{ fontSize: fontSize + 2 }}
+                  >
+                    {project.name}
+                  </span>
                 </a>
               ) : (
-                <span className="font-bold">{project.name}</span>
+                <span className="font-bold" style={{ fontSize: fontSize + 2 }}>
+                  {project.name}
+                </span>
               )}
               {project.keywords.length > 0 && (
                 <div className="flex items-center gap-1">
