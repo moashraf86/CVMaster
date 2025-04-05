@@ -56,6 +56,7 @@ const DEFAULT_RESUME_DATA = {
   ],
   skills: [
     {
+      id: "0f222615-8d85-48df-b731-55009933fdsd",
       name: "Languages",
       keyword: "",
       keywords: ["JavaScript", "TypeScript", "Python", "Java", "C++"],
@@ -63,6 +64,7 @@ const DEFAULT_RESUME_DATA = {
   ],
   languages: [
     {
+      id: "0f222615-8d85-774466s-b731-5012717ae97f",
       name: "Arabic",
       level: "Native or Bilingual",
     },
