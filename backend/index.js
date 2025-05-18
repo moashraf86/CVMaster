@@ -20,7 +20,7 @@ const PORT = process.env.PORT || 5000;
 // Configure CORS to allow requests from the specified origin
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "*", // Allow requests from the client URL
+    origin: "*", // Allow requests from any origin
     methods: ["GET", "POST", "OPTIONS"], // Explicitly allow OPTIONS method
     allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
   })
@@ -82,7 +82,7 @@ app.post("/pdf", async (req, res) => {
     // Upload to Cloudinary
     const uploadResult = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { resource_type: "raw", folder: "cvs", format: "pdf" },
+        { resource_type: "image", folder: "cvs", format: "pdf" },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);
