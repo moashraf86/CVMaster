@@ -49,22 +49,8 @@ export const SidebarNavigation: React.FC = () => {
       role="navigation"
       aria-label="Main navigation"
     >
-      {/* Mobile Menu Button */}
-      <Button
-        title="Toggle menu"
-        aria-expanded={showForm}
-        aria-controls="navigation-menu"
-        variant="ghost"
-        size="icon"
-        className="rounded-full lg:hidden"
-        onClick={toggleMenu}
-      >
-        {showForm ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-        <span className="sr-only">Toggle Menu</span>
-      </Button>
-
       {/* Logo */}
-      <div className="hidden lg:flex items-center justify-center size-9 dark:invert">
+      <div className="flex items-center justify-center size-9 dark:invert">
         <img
           src="/logo.svg"
           alt="CV Master"
@@ -205,6 +191,18 @@ export const SidebarNavigation: React.FC = () => {
       <div className="mt-auto">
         <ThemeToggler />
         <DownloadPDF className="md:hidden" />
+        <Button
+          title="Toggle menu"
+          aria-expanded={showForm}
+          aria-controls="navigation-menu"
+          variant="ghost"
+          size="icon"
+          className="rounded-full lg:hidden order-1"
+          onClick={toggleMenu}
+        >
+          {showForm ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+          <span className="sr-only">Toggle Menu</span>
+        </Button>
       </div>
     </aside>
   );
