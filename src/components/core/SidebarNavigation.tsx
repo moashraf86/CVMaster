@@ -64,7 +64,7 @@ export const SidebarNavigation: React.FC = () => {
       </Button>
 
       {/* Logo */}
-      <div className="flex items-center justify-center size-9 dark:invert">
+      <div className="hidden lg:flex items-center justify-center size-9 dark:invert">
         <img
           src="/logo.svg"
           alt="CV Master"
