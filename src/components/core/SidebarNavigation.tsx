@@ -11,12 +11,30 @@ export const SidebarNavigation: React.FC = () => {
     pdfSettings: { showForm },
   } = usePdfSettings();
 
-  // scroll into view function
+  // scroll into view function with -16px offset
   const scrollIntoView = (id: string) => () => {
     const element = document.getElementById(id);
-    // if the element exists, scroll to it
+    // if the element exists, scroll to it with offset
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+      // Find the ScrollArea viewport
+      const scrollViewport = document.querySelector(
+        "[data-radix-scroll-area-viewport]"
+      );
+
+      if (scrollViewport) {
+        const elementRect = element.getBoundingClientRect();
+        const viewportRect = scrollViewport.getBoundingClientRect();
+        const offsetTop =
+          elementRect.top - viewportRect.top + scrollViewport.scrollTop - 16;
+
+        scrollViewport.scrollTo({
+          top: offsetTop,
+          behavior: "smooth",
+        });
+      } else {
+        // Fallback to regular scrollIntoView if ScrollArea not found
+        element.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -45,10 +63,18 @@ export const SidebarNavigation: React.FC = () => {
         <span className="sr-only">Toggle Menu</span>
       </Button>
 
+      {/* Logo */}
+      <div className="flex items-center justify-center size-9 dark:invert">
+        <img
+          src="/logo.svg"
+          alt="CV Master"
+          className="size-5 object-contain"
+        />
+      </div>
       {/* Navigation List */}
       <nav>
         <ul
-          className="hidden lg:flex flex-col gap-4"
+          className="hidden lg:flex flex-col gap-4 mt-auto"
           id="navigation-menu"
           role="menubar"
         >
