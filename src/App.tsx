@@ -3,6 +3,7 @@ import { CvForm } from "./components/layout/CvForm";
 import { DialogProvider } from "./providers/DialogProvider";
 import { ThemeProvider } from "./providers/ThemeProvider";
 import { Toaster } from "./components/ui/toaster";
+import { Analytics } from "@vercel/analytics/react";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
             <Toaster />
           </div>
         </div>
+        <Analytics />
       </DialogProvider>
     </ThemeProvider>
   );
