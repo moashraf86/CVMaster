@@ -8,6 +8,7 @@ import { toast } from "../../hooks/use-toast";
 import { Basics } from "../../types/types";
 import { useResume } from "../../store/useResume";
 import { cn } from "../../lib/utils";
+import { DownloadOptionsMenu } from "./DownloadOptionsMenu";
 
 const div = document.createElement("div");
 const root = createRoot(div);
@@ -19,15 +20,16 @@ flushSync(() => {
   );
 });
 
-interface DownloadPDFProps {
+interface DownloadCVProps {
   className?: string;
+  type?: "icon" | "button";
 }
 
-export const DownloadPDF: React.FC<DownloadPDFProps> = ({ className }) => {
+export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const {
-    resumeData: { basics },
-  } = useResume();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { resumeData } = useResume();
+  const { basics } = resumeData;
 
   // render CVPreview component to HTML
   const getHtmlContent = () => {
@@ -174,6 +176,9 @@ export const DownloadPDF: React.FC<DownloadPDFProps> = ({ className }) => {
 
   const downloadPdf = async () => {
     try {
+      // close the menu
+      setIsMenuOpen(false);
+
       setIsLoading(true);
 
       // check if user is offline
@@ -196,7 +201,11 @@ export const DownloadPDF: React.FC<DownloadPDFProps> = ({ className }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ htmlContent }),
+        body: JSON.stringify({
+          htmlContent,
+          name: basics.name,
+          title: basics.title,
+        }),
       });
 
       // check if the response is ok
@@ -215,7 +224,7 @@ export const DownloadPDF: React.FC<DownloadPDFProps> = ({ className }) => {
       const link = document.createElement("a");
       link.href = data.url;
       link.target = "_blank";
-      link.download = "cv.pdf";
+      link.download = `${basics.name}-${basics.title}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -235,16 +244,51 @@ export const DownloadPDF: React.FC<DownloadPDFProps> = ({ className }) => {
     }
   };
 
+  const downloadJson = () => {
+    // close the menu
+    setIsMenuOpen(false);
+
+    // create a json file
+    const json = JSON.stringify(resumeData, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${basics.name}-${basics.title}.json`;
+    link.click();
+  };
+
   return (
-    <Button
-      type="button"
-      title="Download PDF"
-      variant="ghost"
-      size="icon"
-      className={cn("rounded-full", className)}
-      onClick={downloadPdf}
-    >
-      {isLoading ? <LoaderCircle className="animate-spin" /> : <Download />}
-    </Button>
+    <>
+      <Button
+        type="button"
+        title="Download your CV"
+        variant={type === "icon" ? "ghost" : "default"}
+        size={type === "icon" ? "icon" : "default"}
+        className={cn("rounded-md", className)}
+        onClick={() => setIsMenuOpen(true)}
+      >
+        {isLoading ? (
+          <>
+            <span className="flex items-center gap-2">
+              Downloading...
+              <LoaderCircle className="animate-spin" />
+            </span>
+          </>
+        ) : type === "icon" ? (
+          <Download />
+        ) : (
+          <span className="flex items-center gap-2">
+            Download <Download />
+          </span>
+        )}
+      </Button>
+      <DownloadOptionsMenu
+        isOpen={isMenuOpen}
+        onClose={() => setIsMenuOpen(false)}
+        downloadPdf={downloadPdf}
+        downloadJson={downloadJson}
+      />
+    </>
   );
 };

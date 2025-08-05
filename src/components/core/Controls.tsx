@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { DownloadPDF } from "./DownloadPdf";
 import { useState } from "react";
 import { DragAndDropMenu } from "./DragAndDropMenu";
 
@@ -140,8 +139,8 @@ export const Controls: React.FC = () => {
   };
 
   return (
-    <div className="flex bg-card border border-border rounded-full shadow-xl px-1.5 py-2 max-w-full">
-      <div className="hidden md:flex border-r px-.5 sm:px-1">
+    <div className="flex shadow-none bg-card border border-border rounded-none sm:rounded-full sm:shadow-xl px-1.5 py-2 max-w-full w-full sm:w-auto">
+      <div className="hidden sm:flex border-r px-.5 sm:px-1">
         <Button
           title="Zoom In"
           type="button"
@@ -214,7 +213,7 @@ export const Controls: React.FC = () => {
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full hidden md:flex"
+          className="rounded-full"
           onClick={resetFontSize}
           disabled={fontSize === PDF_SETTINGS.FONTSIZE.INITIAL}
         >
@@ -249,7 +248,7 @@ export const Controls: React.FC = () => {
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full hidden md:flex"
+          className="rounded-full hidden sm:flex"
           onClick={resetLineHeight}
           disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.INITIAL}
         >
@@ -293,7 +292,6 @@ export const Controls: React.FC = () => {
         >
           <GalleryVertical className="w-4 h-4" />
         </Button>
-        <DownloadPDF className="rounded-full hidden md:inline-flex" />
       </div>
       <DragAndDropMenu
         isOpen={isMenuOpen}

@@ -91,7 +91,6 @@ const DEFAULT_PDF_SETTINGS = {
   fontFamily: "inter",
   scale: 0.75,
   lineHeight: 5,
-  showForm: false,
 };
 
 // Helper function to safely parse JSON from localStorage
