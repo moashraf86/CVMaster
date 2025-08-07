@@ -29,6 +29,12 @@ export const SummaryForm: React.FC = () => {
   // Add ref for the input
   const titleInputRef = useRef<HTMLInputElement>(null);
 
+  // Sync local state when store data changes (e.g., after import)
+  useEffect(() => {
+    setContent(summary?.content || "");
+    setSectionTitle(sectionTitles["summary"] || "Summary");
+  }, [summary?.content, sectionTitles]);
+
   // handle input change
   const handleContentChange = (content: string) => {
     setContent(content);

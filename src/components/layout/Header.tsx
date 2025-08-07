@@ -1,5 +1,6 @@
 import React from "react";
 import { DownloadCV } from "../core/DownloadCV";
+import { ImportCV } from "../core/ImportCV";
 
 export const Header: React.FC = () => {
   return (
@@ -10,6 +11,7 @@ export const Header: React.FC = () => {
         className="size-6 object-contain dark:invert"
       />
       <div className="flex items-center gap-2">
+        <ImportCV />
         <DownloadCV type="button" />
       </div>
     </header>

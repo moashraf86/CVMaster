@@ -11,7 +11,7 @@ import OrderedList from "@tiptap/extension-ordered-list";
 import History from "@tiptap/extension-history";
 
 import { useCurrentEditor } from "@tiptap/react";
-import { useCallback, useState } from "react";
+import { useCallback, useState, useEffect } from "react";
 import { Button } from "../ui/button";
 import { cn } from "../../lib/utils";
 import {
@@ -377,6 +377,19 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
   );
 };
 
+// Component to handle editor content updates
+const EditorContentUpdater: React.FC<{ content: string }> = ({ content }) => {
+  const { editor } = useCurrentEditor();
+
+  useEffect(() => {
+    if (editor && editor.getHTML() !== content) {
+      editor.commands.setContent(content);
+    }
+  }, [editor, content]);
+
+  return null;
+};
+
 interface RichTextEditorProps {
   handleChange: (html: string) => void;
   content: string;
@@ -389,6 +402,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
   const [isRegenerating, setIsRegenerating] = useState(false);
   const [isFixingTypos, setIsFixingTypos] = useState(false);
   const [isCustomizing, setIsCustomizing] = useState(false);
+
   // Define extensions array
   const extensions = [
     Document,
@@ -517,7 +531,9 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
         onUpdate={(content) => {
           handleChange(content.editor.getHTML());
         }}
-      ></EditorProvider>
+      >
+        <EditorContentUpdater content={content} />
+      </EditorProvider>
     </div>
   );
 };
