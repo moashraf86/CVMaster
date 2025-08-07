@@ -4,9 +4,9 @@ import { z } from "zod";
 const basicsSchema = z.object({
   name: z.string(),
   title: z.string(),
-  email: z.string().email(),
-  linkedin: z.string().url().optional(),
-  website: z.string().url().optional(),
+  email: z.literal("").or(z.string().email()),
+  linkedin: z.literal("").or(z.string().url()),
+  website: z.literal("").or(z.string().url()),
   phone: z.string(),
   location: z.string(),
 });
@@ -25,7 +25,7 @@ const experienceItemSchema = z.object({
   dateRange: z.string(),
   location: z.string(),
   employmentType: z.string(),
-  website: z.string().url().optional(),
+  website: z.literal("").or(z.string().url()),
   summary: z.string(),
 });
 
@@ -35,7 +35,7 @@ const projectItemSchema = z.object({
   name: z.string(),
   description: z.string(),
   date: z.string(),
-  website: z.string().optional(),
+  website: z.literal("").or(z.string().url()),
   summary: z.string(),
   keywords: z.array(z.string()),
 });
@@ -47,7 +47,7 @@ const educationItemSchema = z.object({
   degree: z.string(),
   studyField: z.string(),
   date: z.string(),
-  website: z.string().url().optional(),
+  website: z.literal("").or(z.string().url()),
   summary: z.string(),
 });
 
@@ -55,8 +55,7 @@ const educationItemSchema = z.object({
 const skillsItemSchema = z.object({
   id: z.string(),
   name: z.string(),
-  keyword: z.string().optional(),
-  keywords: z.array(z.string()),
+  keywords: z.array(z.string()).optional(),
 });
 
 // Language entry
