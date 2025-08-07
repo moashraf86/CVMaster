@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { PdfSettings, ResumeType } from "../types/types";
+import { PDF_SETTINGS } from "../lib/constants";
 
 // Default values for resume data
 const DEFAULT_RESUME_DATA = {
@@ -89,7 +90,7 @@ const DEFAULT_RESUME_DATA = {
 const DEFAULT_PDF_SETTINGS = {
   fontSize: 14,
   fontFamily: "inter",
-  scale: 0.75,
+  scale: PDF_SETTINGS.SCALE.INITIAL,
   lineHeight: 5,
 };
 

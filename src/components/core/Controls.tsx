@@ -23,27 +23,7 @@ import {
 } from "../ui/select";
 import { useState } from "react";
 import { DragAndDropMenu } from "./DragAndDropMenu";
-
-const PDF_SETTINGS = {
-  SCALE: {
-    MIN: 0.5,
-    MAX: 2,
-    STEP: 0.25,
-    INITIAL: 0.75,
-  },
-  FONTSIZE: {
-    MIN: 12,
-    MAX: 18,
-    INITIAL: 14,
-    STEP: 1,
-  },
-  LINEHEIGHT: {
-    MIN: 3,
-    MAX: 10,
-    INITIAL: 5,
-    STEP: 1,
-  },
-};
+import { PDF_SETTINGS } from "../../lib/constants";
 
 export const Controls: React.FC = () => {
   const { zoomIn, zoomOut, resetTransform, instance } = useControls();

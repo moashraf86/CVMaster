@@ -7,10 +7,14 @@ import { Page } from "../preview";
 import { Controls } from "../core/Controls";
 import { useEffect, useRef } from "react";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { useGestureZoomHandler } from "../../hooks/useGestureZoomHandler";
+import { PDF_SETTINGS } from "../../lib/constants";
 
 export const Preview: React.FC = () => {
   const ref = useRef<ReactZoomPanPinchRef>(null);
   const windowSize = useWindowSize();
+
+  const handleGestureZoom = useGestureZoomHandler();
 
   useEffect(() => {
     const width = windowSize.width;
@@ -33,10 +37,13 @@ export const Preview: React.FC = () => {
       ref={ref}
       centerZoomedOut={true}
       centerOnInit={true}
-      initialScale={0.65}
-      maxScale={2}
-      minScale={0.4}
+      initialScale={PDF_SETTINGS.SCALE.INITIAL}
+      maxScale={PDF_SETTINGS.SCALE.MAX}
+      minScale={PDF_SETTINGS.SCALE.MIN}
       limitToBounds={false}
+      onZoom={handleGestureZoom}
+      onZoomStop={handleGestureZoom}
+      smooth={true}
     >
       <>
         <TransformComponent
