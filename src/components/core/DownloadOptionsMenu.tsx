@@ -1,5 +1,11 @@
 import React from "react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import { Button } from "../ui/button";
 import { FileJson, FileText } from "lucide-react";
 
@@ -18,9 +24,12 @@ export const DownloadOptionsMenu: React.FC<DownloadOptionsMenuProps> = ({
 }) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="sm:max-w-lg md:max-w-lg">
         <DialogHeader>
           <DialogTitle>Download Options</DialogTitle>
+          <DialogDescription>
+            Download your CV in PDF or JSON format.
+          </DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-2 mt-4">
           <Button
