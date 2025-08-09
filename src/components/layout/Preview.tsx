@@ -55,7 +55,7 @@ export const Preview: React.FC = () => {
             <Page mode="preview" />
           </div>
         </TransformComponent>
-        <div className="flex justify-center items-center absolute z-20 lg:z-50 left-0 right-0 top-[104px] sm:top-auto sm:bottom-4 transform sm:px-3">
+        <div className="flex justify-center items-center absolute z-20 lg:z-50 left-0 right-0 top-[104px] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:top-auto sm:bottom-4 transform sm:px-3">
           <Controls />
         </div>
       </>

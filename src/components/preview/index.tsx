@@ -43,6 +43,7 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
       )}
       style={{
         fontSize: `${fontSize || 14}px`,
+        fontFamily: fontFamily.charAt(0).toUpperCase() + fontFamily.slice(1),
         width: `${WIDTH}px`,
         minWidth: `${WIDTH}px`,
         minHeight: `${HEIGHT}px`,

@@ -7,7 +7,7 @@ export const MobileCvTabs: React.FC = () => {
     <div className="flex w-full flex-col gap-6 ">
       <Tabs defaultValue="preview">
         <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="edit">Edit CV</TabsTrigger>
+          <TabsTrigger value="edit">Edit</TabsTrigger>
           <TabsTrigger value="preview">Preview</TabsTrigger>
         </TabsList>
         <TabsContent value="edit">

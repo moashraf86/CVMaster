@@ -1,3 +1,5 @@
+// components/controls/controls.ts
+
 import {
   AArrowDown,
   AArrowUp,
@@ -12,18 +14,11 @@ import {
 import { Button } from "../ui/button";
 import { useControls } from "react-zoom-pan-pinch";
 import { usePdfSettings } from "../../store/useResume";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
 import { useState } from "react";
 import { DragAndDropMenu } from "./DragAndDropMenu";
+import { FontSelect } from "./FontSelect";
 import { PDF_SETTINGS } from "../../lib/constants";
+import { loadGoogleFont } from "../../lib/googleFonts";
 
 export const Controls: React.FC = () => {
   const { zoomIn, zoomOut, resetTransform, instance } = useControls();
@@ -33,7 +28,6 @@ export const Controls: React.FC = () => {
     pdfSettings: { fontSize, fontFamily, scale: pdfScale, lineHeight },
   } = usePdfSettings();
 
-  // state for the drag-and-drop menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // handle zoom in
@@ -114,12 +108,18 @@ export const Controls: React.FC = () => {
   };
 
   // change font type
-  const changeFontType = (value: string) => {
-    setValue("fontFamily", value);
+  const changeFontType = (fontClassName: string) => {
+    setValue("fontFamily", fontClassName);
+    loadGoogleFont(fontClassName);
   };
 
   return (
-    <div className="flex shadow-none bg-card border border-border rounded-none sm:rounded-full sm:shadow-xl px-1.5 py-2 max-w-full w-full sm:w-auto">
+    <div className="flex shadow-none bg-card border border-border rounded-none sm:rounded-full sm:shadow-xl px-1.5 py-2 max-w-full w-full sm:w-auto flex-nowrap overflow-x-auto">
+      {/* before & after blur effect */}
+      <div className="absolute left-0 top-0 bottom-0 w-3 bg-background/10 backdrop-blur-sm sm:hidden" />
+      <div className="absolute right-0 top-0 bottom-0 w-3 bg-background/10 backdrop-blur-sm sm:hidden" />
+
+      {/* controls */}
       <div className="hidden sm:flex border-r px-.5 sm:px-1">
         <Button
           title="Zoom In"
@@ -228,7 +228,7 @@ export const Controls: React.FC = () => {
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full hidden sm:flex"
+          className="rounded-full"
           onClick={resetLineHeight}
           disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.INITIAL}
         >
@@ -236,28 +236,17 @@ export const Controls: React.FC = () => {
         </Button>
       </div>
       <div className="flex px-1 sm:gap-1">
-        <Select defaultValue={fontFamily} onValueChange={changeFontType}>
-          <SelectTrigger className="rounded-full w-auto gap-2">
-            <SelectValue placeholder="Select a font" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Fonts</SelectLabel>
-              <SelectItem value="inter">Inter</SelectItem>
-              <SelectItem value="roboto">Roboto</SelectItem>
-              <SelectItem value="lora">Lora</SelectItem>
-              <SelectItem value="open">Open Sans</SelectItem>
-              <SelectItem value="nunito">Nunito</SelectItem>
-              <SelectItem value="playfair">Playfair</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <FontSelect
+          defaultFont={fontFamily}
+          currentFont={fontFamily.charAt(0).toUpperCase() + fontFamily.slice(1)}
+          onFontChange={changeFontType}
+        />
         <Button
           title="Center View"
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full md:hidden"
+          className="rounded-full md:hidden order-0 md:order-1"
           onClick={setCenter}
         >
           <SquareSquare />
@@ -267,7 +256,7 @@ export const Controls: React.FC = () => {
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full flex-1"
+          className="rounded-full flex-1 min-w-9"
           onClick={() => setIsMenuOpen(true)}
         >
           <GalleryVertical className="w-4 h-4" />
@@ -277,15 +266,15 @@ export const Controls: React.FC = () => {
         isOpen={isMenuOpen}
         onClose={() => setIsMenuOpen(false)}
       />
-      <div className="fonts" hidden>
-        <div className="font-lora leading-3"></div>
-        <div className="font-inter leading-4"></div>
-        <div className="font-roboto leading-5"></div>
-        <div className="font-open leading-6"></div>
-        <div className="font-nunito leading-7"></div>
-        <div className="font-playfair leading-8"></div>
-        <div className="font-inter leading-9"></div>
-        <div className="font-inter leading-10"></div>
+      <div className="line-heights" hidden>
+        <div className="leading-3"></div>
+        <div className="leading-4"></div>
+        <div className="leading-5"></div>
+        <div className="leading-6"></div>
+        <div className="leading-7"></div>
+        <div className="leading-8"></div>
+        <div className="leading-9"></div>
+        <div className="leading-10"></div>
       </div>
     </div>
   );
