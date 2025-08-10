@@ -7,8 +7,15 @@ const basicsSchema = z.object({
   email: z.literal("").or(z.string().email()),
   linkedin: z.literal("").or(z.string().url()),
   website: z.literal("").or(z.string().url()),
-  phone: z.string(),
-  location: z.string(),
+  phone: z.object({
+    value: z.string(),
+    breakAfter: z.boolean(),
+  }),
+  location: z.object({
+    value: z.string(),
+    breakAfter: z.boolean(),
+  }),
+  alignment: z.enum(["start", "center", "end"]).optional(),
 });
 
 // Define summary

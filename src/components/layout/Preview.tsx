@@ -5,45 +5,63 @@ import {
 } from "react-zoom-pan-pinch";
 import { Page } from "../preview";
 import { Controls } from "../core/Controls";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { useGestureZoomHandler } from "../../hooks/useGestureZoomHandler";
 import { PDF_SETTINGS } from "../../lib/constants";
+import { usePdfSettings } from "../../store/useResume";
 
 export const Preview: React.FC = () => {
-  const ref = useRef<ReactZoomPanPinchRef>(null);
-  const windowSize = useWindowSize();
-
+  const transformRef = useRef<ReactZoomPanPinchRef>(null);
+  const [wheelPanning, setWheelPanning] = useState(false);
   const handleGestureZoom = useGestureZoomHandler();
+  const windowSize = useWindowSize();
+  const {
+    setValue,
+    pdfSettings: { scale: initialScale },
+  } = usePdfSettings();
 
   useEffect(() => {
     const width = windowSize.width;
 
-    if (!ref.current || width === null) return;
+    if (!transformRef.current || width === null) return;
 
-    let scale = 0.65; // default
+    let scale = initialScale || PDF_SETTINGS.SCALE.INITIAL; // default
 
     if (width < 430) {
-      scale = 0.4;
-    } else if (width < 640) {
-      scale = 0.5;
+      scale = PDF_SETTINGS.SCALE.SMALL;
+      setValue("scale", scale);
+    } else if (width < 1024) {
+      scale = PDF_SETTINGS.SCALE.MEDIUM;
+      setValue("scale", scale);
+      setWheelPanning(true);
+    } else if (width > 640) {
+      scale = PDF_SETTINGS.SCALE.INITIAL;
+      setValue("scale", scale);
     }
-
-    ref.current.centerView(scale);
+    // if scale is initial, center the view
+    if (scale === PDF_SETTINGS.SCALE.INITIAL) {
+      transformRef.current.centerView(initialScale, 0);
+      return;
+    }
   }, [windowSize]);
 
   return (
     <TransformWrapper
-      ref={ref}
+      ref={transformRef}
       centerZoomedOut={true}
       centerOnInit={true}
-      initialScale={PDF_SETTINGS.SCALE.INITIAL}
-      maxScale={PDF_SETTINGS.SCALE.MAX}
+      initialScale={initialScale || PDF_SETTINGS.SCALE.INITIAL}
       minScale={PDF_SETTINGS.SCALE.MIN}
+      maxScale={PDF_SETTINGS.SCALE.MAX}
       limitToBounds={false}
       onZoom={handleGestureZoom}
       onZoomStop={handleGestureZoom}
       smooth={true}
+      wheel={{
+        wheelDisabled: wheelPanning,
+      }}
+      panning={{ wheelPanning: wheelPanning }}
     >
       <>
         <TransformComponent
@@ -56,7 +74,11 @@ export const Preview: React.FC = () => {
           </div>
         </TransformComponent>
         <div className="flex justify-center items-center absolute z-20 lg:z-50 left-0 right-0 top-[104px] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:top-auto sm:bottom-4 transform sm:px-3">
-          <Controls />
+          <Controls
+            elem={transformRef}
+            wheelPanning={wheelPanning}
+            setWheelPanning={setWheelPanning}
+          />
         </div>
       </>
     </TransformWrapper>

@@ -5,8 +5,15 @@ export interface Basics {
   email: string;
   linkedin: string;
   website: string;
-  phone: string;
-  location: string;
+  phone: {
+    value: string;
+    breakAfter: boolean;
+  };
+  location: {
+    value: string;
+    breakAfter: boolean;
+  };
+  alignment: "start" | "center" | "end";
 }
 
 // [2] Define type for summary
@@ -131,6 +138,7 @@ export interface PdfSettings {
   pdfSettings: {
     fontSize: number;
     fontFamily: string;
+    fontsCategory: string;
     scale: number;
     lineHeight: number;
   };

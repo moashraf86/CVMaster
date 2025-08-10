@@ -80,11 +80,11 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
           </h2>
         )}
         <Button
+          title="Edit title"
           variant="ghost"
           size="icon"
           className="rounded-full ms-auto"
           onClick={() => setIsEditingTitle(true)}
-          aria-label={`Edit ${name} section title`}
         >
           <Pencil />
         </Button>

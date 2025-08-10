@@ -1,18 +1,18 @@
-// components/controls/controls.ts
-
 import {
   AArrowDown,
   AArrowUp,
   FoldVertical,
   GalleryVertical,
   History,
+  Move,
+  Search,
   SquareSquare,
   UnfoldVertical,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { useControls } from "react-zoom-pan-pinch";
+import { ReactZoomPanPinchRef, useControls } from "react-zoom-pan-pinch";
 import { usePdfSettings } from "../../store/useResume";
 import { useState } from "react";
 import { DragAndDropMenu } from "./DragAndDropMenu";
@@ -20,7 +20,17 @@ import { FontSelect } from "./FontSelect";
 import { PDF_SETTINGS } from "../../lib/constants";
 import { loadGoogleFont } from "../../lib/googleFonts";
 
-export const Controls: React.FC = () => {
+interface ControlsProps {
+  elem: React.RefObject<ReactZoomPanPinchRef>;
+  wheelPanning: boolean;
+  setWheelPanning: (wheelPanning: boolean) => void;
+}
+
+export const Controls: React.FC<ControlsProps> = ({
+  elem,
+  wheelPanning,
+  setWheelPanning,
+}: ControlsProps) => {
   const { zoomIn, zoomOut, resetTransform, instance } = useControls();
 
   const {
@@ -50,8 +60,12 @@ export const Controls: React.FC = () => {
 
   // reset transform
   const resetZoom = () => {
-    resetTransform();
     setValue("scale", PDF_SETTINGS.SCALE.INITIAL);
+    resetTransform();
+    // Force re-center with the new scale
+    setTimeout(() => {
+      elem?.current?.centerView(PDF_SETTINGS.SCALE.INITIAL);
+    }, 0);
   };
 
   // set center
@@ -163,6 +177,16 @@ export const Controls: React.FC = () => {
           onClick={setCenter}
         >
           <SquareSquare />
+        </Button>
+        <Button
+          title={wheelPanning ? "scroll to pan" : "scroll to zoom"}
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={() => setWheelPanning(!wheelPanning)}
+        >
+          {wheelPanning ? <Move /> : <Search />}
         </Button>
       </div>
       <div className="flex border-r px-.5 sm:px-1">

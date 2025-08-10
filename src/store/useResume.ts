@@ -10,8 +10,15 @@ const DEFAULT_RESUME_DATA = {
     email: "youremail@domain.com",
     linkedin: "http://linkedin.com/in/johndoe",
     website: "http://johndoe.com",
-    phone: "+010101010",
-    location: "Cairo, Egypt",
+    phone: {
+      value: "+010101010",
+      breakAfter: false,
+    },
+    location: {
+      value: "Cairo, Egypt",
+      breakAfter: false,
+    },
+    alignment: "start",
   },
   summary: {
     sectionTitle: "Summary",
@@ -90,6 +97,7 @@ const DEFAULT_RESUME_DATA = {
 const DEFAULT_PDF_SETTINGS = {
   fontSize: 14,
   fontFamily: "Inter",
+  fontsCategory: "ATS-Friendly",
   scale: PDF_SETTINGS.SCALE.INITIAL,
   lineHeight: 5,
 };

@@ -88,7 +88,7 @@ export const SummaryForm: React.FC = () => {
           size="icon"
           className="rounded-full ms-auto"
           onClick={() => setIsEditingTitle(true)}
-          aria-label={`Edit summary section title`}
+          title="Edit title"
         >
           <Pencil />
         </Button>

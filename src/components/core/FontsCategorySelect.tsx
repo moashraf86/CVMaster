@@ -5,6 +5,7 @@ import { Command, CommandGroup, CommandItem } from "../ui/command";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { cn } from "../../lib/utils";
 import { FONT_CATEGORIES } from "../../lib/constants";
+import { usePdfSettings } from "../../store/useResume";
 
 export const FontsCategorySelect = ({
   selectedCategory,
@@ -14,6 +15,13 @@ export const FontsCategorySelect = ({
   setSelectedCategory: (category: string) => void;
 }) => {
   const [open, setOpen] = useState(false);
+  const { setValue } = usePdfSettings();
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    setOpen(false);
+    setValue("fontsCategory", category);
+  };
 
   return (
     <div className="flex w-full">
@@ -26,7 +34,9 @@ export const FontsCategorySelect = ({
             className="w-full justify-between m-2 bg-accent"
           >
             <span className="capitalize">
-              {selectedCategory || "Select font category"}
+              {selectedCategory
+                ? `${selectedCategory} fonts`
+                : "Select font category"}
             </span>
             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
@@ -38,10 +48,7 @@ export const FontsCategorySelect = ({
                 <CommandItem
                   key={category}
                   value={category}
-                  onSelect={() => {
-                    setSelectedCategory(category);
-                    setOpen(false);
-                  }}
+                  onSelect={handleCategoryChange}
                   className={cn(
                     "cursor-pointer font-medium",
                     selectedCategory === category

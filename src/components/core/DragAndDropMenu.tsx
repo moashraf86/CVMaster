@@ -16,7 +16,13 @@ import {
 } from "@dnd-kit/sortable";
 import { useResume } from "../../store/useResume";
 import { SortableItem } from "./SortableItem";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 import { SectionName } from "../../types/types";
 
 interface DragAndDropMenuProps {
@@ -53,9 +59,12 @@ export const DragAndDropMenu: React.FC<DragAndDropMenuProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="sm:max-w-lg md:max-w-lg">
         <DialogHeader>
           <DialogTitle>Reorder Sections</DialogTitle>
+          <DialogDescription>
+            Drag and drop to reorder the sections of your resume.
+          </DialogDescription>
         </DialogHeader>
         <DndContext
           sensors={sensors}

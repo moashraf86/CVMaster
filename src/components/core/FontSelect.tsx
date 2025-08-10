@@ -24,6 +24,7 @@ import {
 } from "../../lib/constants";
 import { FontsCategorySelect } from "./FontsCategorySelect";
 import { Separator } from "../ui/separator";
+import { usePdfSettings } from "../../store/useResume";
 
 export const FontSelect = ({
   currentFont,
@@ -37,11 +38,16 @@ export const FontSelect = ({
   const [googleFonts, setGoogleFonts] = useState<FontInfo[]>([]);
   const fontNames = googleFonts.map((font) => font.family);
 
+  const {
+    pdfSettings: { fontsCategory },
+  } = usePdfSettings();
+
   const value = currentFont ? currentFont : "Inter";
   const [fontOpen, setFontOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    FONT_CATEGORIES[0] || "sans-serif"
+    fontsCategory || FONT_CATEGORIES[0]
   );
+
   // keep previous font name when changing category
   const previousFont = useRef<string>(defaultFont);
 
@@ -75,8 +81,8 @@ export const FontSelect = ({
         selectedCategory
       );
       setGoogleFonts(fonts);
-      //set fonts to the ATS friendly fonts
-      if (selectedCategory === "ATS Friendly")
+      //set fonts to the ATS Friendly fonts
+      if (selectedCategory === "ATS-Friendly")
         setGoogleFonts(ATS_FRIENDLY_FONTS as FontInfo[]);
       else setGoogleFonts(fonts);
     };

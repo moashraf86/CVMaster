@@ -2,7 +2,14 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 import { useResume } from "../../store/useResume";
 import { Label } from "../ui/label";
-import { UserRound } from "lucide-react";
+import {
+  AlignCenterVertical,
+  AlignEndVertical,
+  AlignStartVertical,
+  UserRound,
+} from "lucide-react";
+import { Switch } from "../ui/switch";
+import { Button } from "../ui/button";
 
 // schema
 const basicsSchema = z.object({
@@ -11,8 +18,14 @@ const basicsSchema = z.object({
   email: z.string().email(), // empty string or valid email
   linkedin: z.literal("").or(z.string().url()),
   website: z.literal("").or(z.string().url()),
-  phone: z.string(),
-  location: z.string(),
+  phone: z.object({
+    value: z.string(),
+    breakAfter: z.boolean(),
+  }),
+  location: z.object({
+    value: z.string(),
+    breakAfter: z.boolean(),
+  }),
 });
 
 export const BasicsInfo: React.FC = () => {
@@ -23,7 +36,27 @@ export const BasicsInfo: React.FC = () => {
 
   // handle input change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setData({ basics: { ...basics, [e.target.name]: e.target.value } });
+    setData({
+      basics: {
+        ...basics,
+        [e.target.name]:
+          e.target.name === "phone"
+            ? { ...basics?.phone, value: e.target.value }
+            : e.target.name === "location"
+            ? { ...basics?.location, value: e.target.value }
+            : e.target.value,
+      },
+    });
+  };
+
+  // handle justify content
+  const handleJustify = (alignment: "start" | "center" | "end") => {
+    setData({
+      basics: {
+        ...basics,
+        alignment,
+      },
+    });
   };
 
   return (
@@ -142,7 +175,7 @@ export const BasicsInfo: React.FC = () => {
             placeholder=" +010101010"
             name="phone"
             id="basics.phone"
-            value={basics?.phone}
+            value={basics?.phone.value}
             onChange={handleChange}
             hasError={
               !basicsSchema
@@ -150,6 +183,22 @@ export const BasicsInfo: React.FC = () => {
                 .safeParse({ phone: basics?.phone }).success
             }
           />
+          <div className="flex items-center justify-end gap-x-2">
+            <Switch
+              title="Break after"
+              id="basics.phone.breakAfter"
+              checked={basics?.phone.breakAfter}
+              disabled={!basics?.phone.value}
+              onCheckedChange={(checked: boolean) =>
+                setData({
+                  basics: {
+                    ...basics,
+                    phone: { ...basics?.phone, breakAfter: checked },
+                  },
+                })
+              }
+            />
+          </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="basics.location">Location</Label>
@@ -157,9 +206,60 @@ export const BasicsInfo: React.FC = () => {
             placeholder="Cairo, Egypt"
             name="location"
             id="basics.location"
-            value={basics?.location}
+            value={basics?.location.value}
             onChange={handleChange}
+            hasError={
+              !basicsSchema
+                .pick({ location: true })
+                .safeParse({ location: basics?.location }).success
+            }
           />
+          <div className="flex items-center justify-end gap-x-2">
+            <Switch
+              title="Break after"
+              id="basics.location.breakAfter"
+              checked={basics?.location.breakAfter}
+              disabled={!basics?.location.value}
+              onCheckedChange={(checked: boolean) =>
+                setData({
+                  basics: {
+                    ...basics,
+                    location: { ...basics?.location, breakAfter: checked },
+                  },
+                })
+              }
+            />
+          </div>
+        </div>
+        {/* Justify Content controller */}
+        <div className="inline-flex  max-w-fit gap-2 col-span-2 py-1.5 px-3 border border-border rounded-md">
+          <Button
+            title="Justify start"
+            type="button"
+            variant={basics.alignment === "start" ? "default" : "ghost"}
+            className="rounded-sm"
+            onClick={() => handleJustify("start")}
+          >
+            <AlignStartVertical className="!size-5" />
+          </Button>
+          <Button
+            title="Justify center"
+            type="button"
+            variant={basics.alignment === "center" ? "default" : "ghost"}
+            className="rounded-sm"
+            onClick={() => handleJustify("center")}
+          >
+            <AlignCenterVertical className="!size-5" />
+          </Button>
+          <Button
+            title="Justify end"
+            type="button"
+            variant={basics.alignment === "end" ? "default" : "ghost"}
+            className="rounded-sm"
+            onClick={() => handleJustify("end")}
+          >
+            <AlignEndVertical className="!size-5" />
+          </Button>
         </div>
       </main>
     </section>

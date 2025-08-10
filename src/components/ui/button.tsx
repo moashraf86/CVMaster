@@ -17,7 +17,7 @@ import type { HTMLMotionProps } from "framer-motion";
 const isMobile = window.innerWidth < 768;
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 cursor-pointer",
   {
     variants: {
       variant: {
@@ -129,7 +129,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <Tooltip>
             <TooltipTrigger asChild>{shinyButton}</TooltipTrigger>
             <TooltipContent
-              className="bg-primary text-primary-foreground rounded-md text-xs capitalize"
+              className={
+                "z-50 overflow-hidden rounded-md bg-accent px-3 py-1.5 text-xs text-accent-foreground border border-border animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+              }
               side={side}
             >
               {title}
@@ -156,7 +158,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         <Tooltip>
           <TooltipTrigger asChild>{btnElement}</TooltipTrigger>
           <TooltipContent
-            className="bg-primary text-primary-foreground rounded-md text-xs capitalize"
+            className="z-50 overflow-hidden rounded-md bg-accent px-3 py-1.5 text-xs text-accent-foreground border border-border animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
             side={side}
           >
             {title}

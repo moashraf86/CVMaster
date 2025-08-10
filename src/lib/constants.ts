@@ -2,8 +2,10 @@ export const PDF_SETTINGS = {
   SCALE: {
     MIN: 0.4,
     MAX: 2,
-    STEP: 0.25,
+    SMALL: 0.4,
+    MEDIUM: 0.5,
     INITIAL: 0.65,
+    STEP: 0.25,
   },
   FONTSIZE: {
     MIN: 12,
@@ -116,7 +118,7 @@ export const ATS_FRIENDLY_FONTS = [
 ];
 
 export const FONT_CATEGORIES = [
-  "ATS Friendly",
+  "ATS-Friendly",
   "sans-serif",
   "serif",
   "display",

@@ -16,7 +16,7 @@ export async function fetchGoogleFonts(
   try {
     if (!googleFontApiKey) throw new Error("Google Fonts API key is required");
 
-    if (category === "ATS Friendly") return [];
+    if (category === "ATS-Friendly") return [];
 
     const response = await fetch(`${GOOGLE_FONTS_API_URL}?${query}`, {
       headers: {
