@@ -172,7 +172,7 @@ export const SidebarNavigation: React.FC<{ className?: string }> = ({
         </ul>
       </nav>
       <div className="mt-auto">
-        <ThemeToggler />
+        <ThemeToggler direction="vertical" />
       </div>
     </aside>
   );

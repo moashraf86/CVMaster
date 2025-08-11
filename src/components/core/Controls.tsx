@@ -14,6 +14,7 @@ import { useState } from "react";
 import { PDF_SETTINGS } from "../../lib/constants";
 import { ControlsSheet } from "./ControlsSheet";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { ThemeToggler } from "./ThemeToggler";
 
 interface ControlsProps {
   elem: React.RefObject<ReactZoomPanPinchRef>;
@@ -159,7 +160,7 @@ export const Controls: React.FC<ControlsProps> = ({
         </Button>
       </div>
 
-      <div className="flex px-1 sm:gap-1">
+      <div className="flex items-center px-1 gap-1">
         <Button
           title="Controls"
           variant="ghost"
@@ -169,6 +170,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <SlidersVertical className="size-4" />
         </Button>
+        <ThemeToggler direction="horizontal" />
       </div>
       <ControlsSheet
         isOpen={isControlsOpen}
