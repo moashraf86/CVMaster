@@ -85,6 +85,22 @@ const sectionTitlesSchema = z.object({
   volunteering: z.string(),
 });
 
+// PDF Settings schema
+const pdfSettingsSchema = z.object({
+  fontFamily: z.string(),
+  fontSize: z.number(),
+  fontCategory: z.enum([
+    "serif",
+    "sans-serif",
+    "monospace",
+    "display",
+    "handwriting",
+    "ATS-Friendly",
+  ]),
+  lineHeight: z.number(),
+  verticalSpacing: z.number(),
+});
+
 // Final CV Master schema
 export const cvMasterSchema = z.object({
   basics: basicsSchema,
@@ -98,4 +114,5 @@ export const cvMasterSchema = z.object({
   awards: z.array(z.any()), // empty array for now
   volunteering: z.array(z.any()), // empty array for now
   sectionTitles: sectionTitlesSchema,
+  pdfSettings: pdfSettingsSchema,
 });

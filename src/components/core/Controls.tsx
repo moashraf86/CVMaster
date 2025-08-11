@@ -1,13 +1,9 @@
 import {
-  AArrowDown,
-  AArrowUp,
-  FoldVertical,
-  GalleryVertical,
   History,
   Move,
   Search,
+  SlidersVertical,
   SquareSquare,
-  UnfoldVertical,
   ZoomIn,
   ZoomOut,
 } from "lucide-react";
@@ -15,10 +11,9 @@ import { Button } from "../ui/button";
 import { ReactZoomPanPinchRef, useControls } from "react-zoom-pan-pinch";
 import { usePdfSettings } from "../../store/useResume";
 import { useState } from "react";
-import { DragAndDropMenu } from "./DragAndDropMenu";
-import { FontSelect } from "./FontSelect";
 import { PDF_SETTINGS } from "../../lib/constants";
-import { loadGoogleFont } from "../../lib/googleFonts";
+import { ControlsSheet } from "./ControlsSheet";
+import { useWindowSize } from "@uidotdev/usehooks";
 
 interface ControlsProps {
   elem: React.RefObject<ReactZoomPanPinchRef>;
@@ -35,11 +30,12 @@ export const Controls: React.FC<ControlsProps> = ({
 
   const {
     setValue,
-    pdfSettings: { fontSize, fontFamily, scale: pdfScale, lineHeight },
+    pdfSettings: { scale: pdfScale },
   } = usePdfSettings();
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isControlsOpen, setIsControlsOpen] = useState(false);
 
+  const windowSize = useWindowSize();
   // handle zoom in
   const handleZoomIn = () => {
     zoomIn(PDF_SETTINGS.SCALE.STEP);
@@ -60,71 +56,44 @@ export const Controls: React.FC<ControlsProps> = ({
 
   // reset transform
   const resetZoom = () => {
-    setValue("scale", PDF_SETTINGS.SCALE.INITIAL);
+    let targetScale = PDF_SETTINGS.SCALE.INITIAL;
+
+    // determine target scale based on window size
+    if (windowSize.width && windowSize.width < 430) {
+      targetScale = PDF_SETTINGS.SCALE.SMALL;
+    } else if (windowSize.width && windowSize.width < 640) {
+      targetScale = PDF_SETTINGS.SCALE.MEDIUM;
+    } else if (windowSize.width && windowSize.width < 1280) {
+      targetScale = PDF_SETTINGS.SCALE.INITIAL;
+    } else if (windowSize.width && windowSize.width > 1280) {
+      targetScale = PDF_SETTINGS.SCALE.LARGE;
+    }
+
+    setValue("scale", targetScale);
     resetTransform();
-    // Force re-center with the new scale
+
+    // Force re-center with the correct target scale
     setTimeout(() => {
-      elem?.current?.centerView(PDF_SETTINGS.SCALE.INITIAL);
+      elem?.current?.centerView(targetScale);
     }, 0);
   };
 
+  // Helper function to get target scale based on window size
+  const getTargetScale = () => {
+    if (windowSize.width && windowSize.width < 430) {
+      return PDF_SETTINGS.SCALE.SMALL;
+    } else if (windowSize.width && windowSize.width < 640) {
+      return PDF_SETTINGS.SCALE.MEDIUM;
+    } else if (windowSize.width && windowSize.width < 1280) {
+      return PDF_SETTINGS.SCALE.INITIAL;
+    } else if (windowSize.width && windowSize.width > 1280) {
+      return PDF_SETTINGS.SCALE.LARGE;
+    }
+    return PDF_SETTINGS.SCALE.INITIAL;
+  };
   // set center
   const setCenter = () => {
     instance.setCenter();
-  };
-
-  // increase font size
-  const increaseFontSize = () => {
-    setValue(
-      "fontSize",
-      Math.min(fontSize + PDF_SETTINGS.FONTSIZE.STEP, PDF_SETTINGS.FONTSIZE.MAX)
-    );
-  };
-
-  // decrease font size
-  const decreaseFontSize = () => {
-    setValue(
-      "fontSize",
-      Math.max(fontSize - PDF_SETTINGS.FONTSIZE.STEP, PDF_SETTINGS.FONTSIZE.MIN)
-    );
-  };
-
-  // reset font size
-  const resetFontSize = () => {
-    setValue("fontSize", PDF_SETTINGS.FONTSIZE.INITIAL);
-  };
-
-  // increase line height
-  const increaseLineHeight = () => {
-    setValue(
-      "lineHeight",
-      Math.min(
-        lineHeight + PDF_SETTINGS.LINEHEIGHT.STEP,
-        PDF_SETTINGS.LINEHEIGHT.MAX
-      )
-    );
-  };
-
-  // decrease line height
-  const decreaseLineHeight = () => {
-    setValue(
-      "lineHeight",
-      Math.max(
-        lineHeight - PDF_SETTINGS.LINEHEIGHT.STEP,
-        PDF_SETTINGS.LINEHEIGHT.MIN
-      )
-    );
-  };
-
-  // reset line height
-  const resetLineHeight = () => {
-    setValue("lineHeight", PDF_SETTINGS.LINEHEIGHT.INITIAL);
-  };
-
-  // change font type
-  const changeFontType = (fontClassName: string) => {
-    setValue("fontFamily", fontClassName);
-    loadGoogleFont(fontClassName);
   };
 
   return (
@@ -133,8 +102,8 @@ export const Controls: React.FC<ControlsProps> = ({
       <div className="absolute left-0 top-0 bottom-0 w-3 bg-background/10 backdrop-blur-sm sm:hidden" />
       <div className="absolute right-0 top-0 bottom-0 w-3 bg-background/10 backdrop-blur-sm sm:hidden" />
 
-      {/* controls */}
-      <div className="hidden sm:flex border-r px-.5 sm:px-1">
+      {/* Zoom controls */}
+      <div className="flex border-r px-.5 sm:px-1">
         <Button
           title="Zoom In"
           type="button"
@@ -164,7 +133,7 @@ export const Controls: React.FC<ControlsProps> = ({
           size="icon"
           className="rounded-full"
           onClick={resetZoom}
-          disabled={pdfScale === PDF_SETTINGS.SCALE.INITIAL}
+          disabled={pdfScale === getTargetScale()}
         >
           <History />
         </Button>
@@ -183,123 +152,28 @@ export const Controls: React.FC<ControlsProps> = ({
           type="button"
           variant="ghost"
           size="icon"
-          className="rounded-full"
+          className="hidden sm:flex rounded-full"
           onClick={() => setWheelPanning(!wheelPanning)}
         >
           {wheelPanning ? <Move /> : <Search />}
         </Button>
       </div>
-      <div className="flex border-r px-.5 sm:px-1">
-        <Button
-          title="Increase Font Size"
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={increaseFontSize}
-          disabled={fontSize === PDF_SETTINGS.FONTSIZE.MAX}
-        >
-          <AArrowUp />
-        </Button>
-        <Button
-          title="Decrease Font Size"
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={decreaseFontSize}
-          disabled={fontSize === PDF_SETTINGS.FONTSIZE.MIN}
-        >
-          <AArrowDown />
-        </Button>
-        <Button
-          title="Reset Font Size"
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={resetFontSize}
-          disabled={fontSize === PDF_SETTINGS.FONTSIZE.INITIAL}
-        >
-          <History />
-        </Button>
-      </div>
-      <div className="flex border-r px-.5 sm:px-1">
-        <Button
-          title="Increase Line Height"
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={increaseLineHeight}
-          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.MAX}
-        >
-          <UnfoldVertical />
-        </Button>
-        <Button
-          title="Decrease Line Height"
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={decreaseLineHeight}
-          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.MIN}
-        >
-          <FoldVertical />
-        </Button>
-        <Button
-          title="Reset Line Height"
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full"
-          onClick={resetLineHeight}
-          disabled={lineHeight === PDF_SETTINGS.LINEHEIGHT.INITIAL}
-        >
-          <History />
-        </Button>
-      </div>
+
       <div className="flex px-1 sm:gap-1">
-        <FontSelect
-          defaultFont={fontFamily}
-          currentFont={fontFamily.charAt(0).toUpperCase() + fontFamily.slice(1)}
-          onFontChange={changeFontType}
-        />
         <Button
-          title="Center View"
-          type="button"
+          title="Controls"
           variant="ghost"
           size="icon"
-          className="rounded-full md:hidden order-0 md:order-1"
-          onClick={setCenter}
+          className="rounded-full"
+          onClick={() => setIsControlsOpen(true)}
         >
-          <SquareSquare />
-        </Button>
-        <Button
-          title="Reorder Sections"
-          type="button"
-          variant="ghost"
-          size="icon"
-          className="rounded-full flex-1 min-w-9"
-          onClick={() => setIsMenuOpen(true)}
-        >
-          <GalleryVertical className="w-4 h-4" />
+          <SlidersVertical className="size-4" />
         </Button>
       </div>
-      <DragAndDropMenu
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
+      <ControlsSheet
+        isOpen={isControlsOpen}
+        onClose={() => setIsControlsOpen(false)}
       />
-      <div className="line-heights" hidden>
-        <div className="leading-3"></div>
-        <div className="leading-4"></div>
-        <div className="leading-5"></div>
-        <div className="leading-6"></div>
-        <div className="leading-7"></div>
-        <div className="leading-8"></div>
-        <div className="leading-9"></div>
-        <div className="leading-10"></div>
-      </div>
     </div>
   );
 };

@@ -29,7 +29,7 @@ import { cn } from "../../../lib/utils";
 // define skills schema
 const skillsSchema = z.object({
   name: z.string().trim(),
-  keyword: z.string().trim(),
+  keyword: z.string().optional(),
   keywords: z.array(z.string()).min(1, { message: "Keywords are required" }),
 });
 
@@ -98,10 +98,13 @@ export const SkillsDialog: React.FC = () => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       // check  if the keyword is not empty or duplicate
-      const newKeyword = form.getValues("keyword").trim();
+      const newKeyword = form.getValues("keyword")?.trim() || "";
       if (!newKeyword || keywords.includes(newKeyword)) return;
       setKeywords([...keywords, newKeyword]);
-      form.setValue("keywords", [...form.getValues("keywords"), newKeyword]);
+      form.setValue("keywords", [
+        ...(form.getValues("keywords") || []),
+        newKeyword,
+      ]);
       form.setValue("keyword", "");
     }
     // clear the error message
@@ -116,7 +119,7 @@ export const SkillsDialog: React.FC = () => {
     const clipboardKeywords = clipboardData.split(",");
     setKeywords([...keywords, ...clipboardKeywords]);
     form.setValue("keywords", [
-      ...form.getValues("keywords"),
+      ...(form.getValues("keywords") || []),
       ...clipboardKeywords,
     ]);
     form.setValue("keyword", "");

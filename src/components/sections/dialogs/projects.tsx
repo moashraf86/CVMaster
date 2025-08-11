@@ -34,8 +34,8 @@ const projectsSchema = z.object({
   date: z.string().trim(),
   website: z.literal("").or(z.string().url()),
   summary: z.string(),
-  keyword: z.string(),
-  keywords: z.array(z.string()),
+  keyword: z.string().optional(),
+  keywords: z.array(z.string()).optional(),
 });
 
 // Define the form
@@ -103,10 +103,13 @@ export const ProjectsDialog: React.FC = () => {
     if (e.key === "Enter" || e.key === ",") {
       e.preventDefault();
       // check if the keyword is not empty or duplicate
-      const newKeyword = form.getValues("keyword").trim();
+      const newKeyword = form.getValues("keyword")?.trim() || "";
       if (!newKeyword || keywords.includes(newKeyword)) return;
       setKeywords([...keywords, newKeyword]);
-      form.setValue("keywords", [...form.getValues("keywords"), newKeyword]);
+      form.setValue("keywords", [
+        ...(form.getValues("keywords") || []),
+        newKeyword,
+      ]);
       form.setValue("keyword", "");
     }
     // clear the error message
@@ -125,7 +128,7 @@ export const ProjectsDialog: React.FC = () => {
       .filter((keyword) => keyword && !keywords.includes(keyword));
     setKeywords([...keywords, ...clipboardKeywords]);
     form.setValue("keywords", [
-      ...form.getValues("keywords"),
+      ...(form.getValues("keywords") || []),
       ...clipboardKeywords,
     ]);
     form.setValue("keyword", "");
@@ -145,6 +148,7 @@ export const ProjectsDialog: React.FC = () => {
   useEffect(() => {
     // set the keywords to the keywords in the form state
     setKeywords(isEditMode ? projects[index].keywords : []);
+    form.setValue("keyword", "");
     form.reset(defaultValues);
   }, [index, projects]);
 

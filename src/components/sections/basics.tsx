@@ -2,14 +2,8 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 import { useResume } from "../../store/useResume";
 import { Label } from "../ui/label";
-import {
-  AlignCenterVertical,
-  AlignEndVertical,
-  AlignStartVertical,
-  UserRound,
-} from "lucide-react";
+import { UserRound } from "lucide-react";
 import { Switch } from "../ui/switch";
-import { Button } from "../ui/button";
 
 // schema
 const basicsSchema = z.object({
@@ -45,16 +39,6 @@ export const BasicsInfo: React.FC = () => {
             : e.target.name === "location"
             ? { ...basics?.location, value: e.target.value }
             : e.target.value,
-      },
-    });
-  };
-
-  // handle justify content
-  const handleJustify = (alignment: "start" | "center" | "end") => {
-    setData({
-      basics: {
-        ...basics,
-        alignment,
       },
     });
   };
@@ -148,7 +132,7 @@ export const BasicsInfo: React.FC = () => {
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="basics.linkedin">Portfolio</Label>
+          <Label htmlFor="basics.website">Portfolio</Label>
           <Input
             placeholder="http://linkedin.com/in/johndeo"
             name="website"
@@ -170,20 +154,8 @@ export const BasicsInfo: React.FC = () => {
           )}
         </div>
         <div className="space-y-2">
-          <Label htmlFor="basics.phone">Phone</Label>
-          <Input
-            placeholder=" +010101010"
-            name="phone"
-            id="basics.phone"
-            value={basics?.phone.value}
-            onChange={handleChange}
-            hasError={
-              !basicsSchema
-                .pick({ phone: true })
-                .safeParse({ phone: basics?.phone }).success
-            }
-          />
-          <div className="flex items-center justify-end gap-x-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="basics.phone">Phone</Label>
             <Switch
               title="Break after"
               id="basics.phone.breakAfter"
@@ -199,22 +171,22 @@ export const BasicsInfo: React.FC = () => {
               }
             />
           </div>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="basics.location">Location</Label>
           <Input
-            placeholder="Cairo, Egypt"
-            name="location"
-            id="basics.location"
-            value={basics?.location.value}
+            placeholder=" +010101010"
+            name="phone"
+            id="basics.phone"
+            value={basics?.phone.value}
             onChange={handleChange}
             hasError={
               !basicsSchema
-                .pick({ location: true })
-                .safeParse({ location: basics?.location }).success
+                .pick({ phone: true })
+                .safeParse({ phone: basics?.phone }).success
             }
           />
-          <div className="flex items-center justify-end gap-x-2">
+        </div>
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="basics.location">Location</Label>
             <Switch
               title="Break after"
               id="basics.location.breakAfter"
@@ -230,36 +202,18 @@ export const BasicsInfo: React.FC = () => {
               }
             />
           </div>
-        </div>
-        {/* Justify Content controller */}
-        <div className="inline-flex  max-w-fit gap-2 col-span-2 py-1.5 px-3 border border-border rounded-md">
-          <Button
-            title="Justify start"
-            type="button"
-            variant={basics.alignment === "start" ? "default" : "ghost"}
-            className="rounded-sm"
-            onClick={() => handleJustify("start")}
-          >
-            <AlignStartVertical className="!size-5" />
-          </Button>
-          <Button
-            title="Justify center"
-            type="button"
-            variant={basics.alignment === "center" ? "default" : "ghost"}
-            className="rounded-sm"
-            onClick={() => handleJustify("center")}
-          >
-            <AlignCenterVertical className="!size-5" />
-          </Button>
-          <Button
-            title="Justify end"
-            type="button"
-            variant={basics.alignment === "end" ? "default" : "ghost"}
-            className="rounded-sm"
-            onClick={() => handleJustify("end")}
-          >
-            <AlignEndVertical className="!size-5" />
-          </Button>
+          <Input
+            placeholder="Cairo, Egypt"
+            name="location"
+            id="basics.location"
+            value={basics?.location.value}
+            onChange={handleChange}
+            hasError={
+              !basicsSchema
+                .pick({ location: true })
+                .safeParse({ location: basics?.location }).success
+            }
+          />
         </div>
       </main>
     </section>

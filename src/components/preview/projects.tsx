@@ -63,7 +63,7 @@ export const ProjectsPreview: React.FC = () => {
           {project.description && <span>{project.description}</span>}
           {project.summary && (
             <div
-              className={`leading-${lineHeight}`}
+              style={{ lineHeight: `${lineHeight * 0.25}rem` }}
               dangerouslySetInnerHTML={{ __html: project.summary }}
             />
           )}

@@ -5,18 +5,18 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
+} from "../../ui/dialog";
+import { Button } from "../../ui/button";
 import { FileJson, FileText } from "lucide-react";
 
-interface DownloadOptionsMenuProps {
+interface DownloadOptionsDialogProps {
   isOpen: boolean;
   onClose: () => void;
   downloadPdf: () => void;
   downloadJson: () => void;
 }
 
-export const DownloadOptionsMenu: React.FC<DownloadOptionsMenuProps> = ({
+export const DownloadOptionsDialog: React.FC<DownloadOptionsDialogProps> = ({
   isOpen,
   onClose,
   downloadPdf,

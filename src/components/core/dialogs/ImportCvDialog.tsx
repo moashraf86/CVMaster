@@ -6,20 +6,20 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../ui/dialog";
+} from "../../ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { Button } from "../ui/button";
+} from "../../ui/select";
+import { Label } from "../../ui/label";
+import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { CheckIcon, Loader2 } from "lucide-react";
-import { useFileValidation } from "../../hooks/useFileValidation";
-import { useFileImport } from "../../hooks/useFileImport";
+import { useFileValidation } from "../../../hooks/useFileValidation";
+import { useFileImport } from "../../../hooks/useFileImport";
 
 interface ImportCvDialogProps {
   isOpen: boolean;
@@ -105,7 +105,9 @@ export const ImportCvDialog: React.FC<ImportCvDialogProps> = ({
             <Input
               type="file"
               accept=".json,.pdf"
-              onChange={(e) => setFile(e.target.files?.[0] || null)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFile(e.target.files?.[0] || null)
+              }
             />
             <span className="text-xs text-muted-foreground">
               Accepts only: .json, .pdf

@@ -25,7 +25,7 @@ export const SummaryPreview: React.FC = () => {
         {sectionTitles["summary"] || "Summary"}
       </h3>
       <div
-        className={`leading-${lineHeight}`}
+        style={{ lineHeight: `${lineHeight * 0.25}rem` }}
         dangerouslySetInnerHTML={{ __html: summary.content }}
       />
     </section>

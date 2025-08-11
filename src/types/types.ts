@@ -138,9 +138,16 @@ export interface PdfSettings {
   pdfSettings: {
     fontSize: number;
     fontFamily: string;
-    fontsCategory: string;
+    fontCategory:
+      | "ATS-Friendly"
+      | "serif"
+      | "sans-serif"
+      | "monospace"
+      | "display"
+      | "handwriting";
     scale: number;
     lineHeight: number;
+    verticalSpacing: number;
   };
   setValue: (key: string, value: number | string | boolean) => void;
 }

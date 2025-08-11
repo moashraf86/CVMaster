@@ -50,7 +50,7 @@ export const EducationPreview: React.FC = () => {
             </div>
             {edu.summary && (
               <div
-                className={`leading-${lineHeight}`}
+                style={{ lineHeight: `${lineHeight * 0.25}rem` }}
                 dangerouslySetInnerHTML={{ __html: edu.summary }}
               />
             )}

@@ -97,9 +97,10 @@ const DEFAULT_RESUME_DATA = {
 const DEFAULT_PDF_SETTINGS = {
   fontSize: 14,
   fontFamily: "Inter",
-  fontsCategory: "ATS-Friendly",
+  fontCategory: "ATS-Friendly",
   scale: PDF_SETTINGS.SCALE.INITIAL,
   lineHeight: 5,
+  verticalSpacing: 1,
 };
 
 // Helper function to safely parse JSON from localStorage

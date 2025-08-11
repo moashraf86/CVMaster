@@ -53,7 +53,7 @@ export const ExperiencePreview: React.FC = () => {
             </div>
             {exp.summary && (
               <div
-                className={`leading-${lineHeight}`}
+                style={{ lineHeight: `${lineHeight * 0.25}rem` }}
                 dangerouslySetInnerHTML={{ __html: exp.summary }}
               />
             )}

@@ -1,7 +1,4 @@
-"use client";
-
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
-
 import { cn } from "../../lib/utils";
 import { Button } from "../ui/button";
 import {
@@ -39,13 +36,13 @@ export const FontSelect = ({
   const fontNames = googleFonts.map((font) => font.family);
 
   const {
-    pdfSettings: { fontsCategory },
+    pdfSettings: { fontCategory },
   } = usePdfSettings();
 
   const value = currentFont ? currentFont : "Inter";
   const [fontOpen, setFontOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    fontsCategory || FONT_CATEGORIES[0]
+    fontCategory || FONT_CATEGORIES[0]
   );
 
   // keep previous font name when changing category

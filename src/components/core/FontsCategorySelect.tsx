@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Command, CommandGroup, CommandItem } from "../ui/command";
@@ -16,17 +16,18 @@ export const FontsCategorySelect = ({
 }) => {
   const [open, setOpen] = useState(false);
   const { setValue } = usePdfSettings();
-
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const triggerWidth = triggerRef.current?.offsetWidth;
   const handleCategoryChange = (category: string) => {
     setSelectedCategory(category);
     setOpen(false);
-    setValue("fontsCategory", category);
+    setValue("fontCategory", category);
   };
 
   return (
     <div className="flex w-full">
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
+      <Popover open={open} onOpenChange={setOpen} modal>
+        <PopoverTrigger asChild ref={triggerRef}>
           <Button
             variant="outline"
             role="combobox"
@@ -41,7 +42,7 @@ export const FontsCategorySelect = ({
             <ChevronsUpDownIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[234px] p-0">
+        <PopoverContent className="p-0" style={{ width: triggerWidth }}>
           <Command>
             <CommandGroup>
               {FONT_CATEGORIES.map((category) => (

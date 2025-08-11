@@ -16,6 +16,7 @@ const cvMasterJsonSchema = cvMasterSchema.pick({
   awards: true,
   volunteering: true,
   sectionTitles: true,
+  pdfSettings: true,
 });
 
 export type ValidatedData = z.infer<typeof cvMasterJsonSchema>;
@@ -92,7 +93,7 @@ export const useFileValidation = () => {
     const fileContent = await file.text();
     const json = JSON.parse(fileContent);
     const parseResult = cvMasterJsonSchema.safeParse(json);
-
+    console.log(parseResult);
     if (!parseResult.success) {
       const errorMsg = parseResult.error.errors
         .map((err) => `${err.path.join(".")}: ${err.message}`)

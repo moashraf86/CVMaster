@@ -65,7 +65,7 @@ export const CertificationsPreview: React.FC = () => {
             </div>
             {cert.summary && (
               <div
-                className={`leading-${lineHeight}`}
+                style={{ lineHeight: `${lineHeight * 0.25}rem` }}
                 dangerouslySetInnerHTML={{ __html: cert.summary }}
               />
             )}

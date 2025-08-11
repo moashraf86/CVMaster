@@ -65,7 +65,7 @@ export const AwardsPreview: React.FC = () => {
             </div>
             {award.summary && (
               <div
-                className={`leading-${lineHeight}`}
+                style={{ lineHeight: `${lineHeight * 0.25}rem` }}
                 dangerouslySetInnerHTML={{ __html: award.summary }}
               />
             )}

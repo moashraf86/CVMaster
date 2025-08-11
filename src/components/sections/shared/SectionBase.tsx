@@ -5,7 +5,7 @@ import { useResume } from "../../../store/useResume";
 import { SectionIcon } from "./SectionIcon";
 import { Section, SectionItem, SectionName } from "../../../types/types";
 import { useState, useMemo } from "react";
-import { DeleteConfirmation } from "../../core/DeleteConfirmation";
+import { DeleteConfirmation } from "../../core/dialogs/DeleteConfirmation";
 import { cn } from "../../../lib/utils";
 import { Input } from "../../ui/input";
 
@@ -95,7 +95,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
             <li
               key={`${item.id}`}
               className={cn(
-                "border border-border p-4 duration-300 animate-in slide-in-from-top fade-in",
+                "border border-border p-4 duration-300 animate-in slide-in-from-top fade-in group",
                 itemToDelete === index &&
                   "animate-out slide-out-to-left fade-out"
               )}
@@ -126,7 +126,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                     ) : null
                   }
                 </div>
-                <div className="flex">
+                <div className="lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex">
                   <Button
                     aria-label={`Edit ${item.name}`}
                     title="Edit"

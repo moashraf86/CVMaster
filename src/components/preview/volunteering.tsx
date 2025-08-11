@@ -49,7 +49,7 @@ export const VolunteeringPreview: React.FC = () => {
             </div>
             {vol.summary && (
               <div
-                className={`leading-${lineHeight}`}
+                style={{ lineHeight: `${lineHeight * 0.25}rem` }}
                 dangerouslySetInnerHTML={{ __html: vol.summary }}
               />
             )}

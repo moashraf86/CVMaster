@@ -8,7 +8,7 @@ import { toast } from "../../hooks/use-toast";
 import { Basics } from "../../types/types";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { cn } from "../../lib/utils";
-import { DownloadOptionsMenu } from "./DownloadOptionsMenu";
+import { DownloadOptionsDialog } from "./dialogs/DownloadOptionsDialog";
 import { buildFontCssUrl } from "../../lib/googleFonts";
 
 const div = document.createElement("div");
@@ -28,10 +28,17 @@ interface DownloadCVProps {
 
 export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { resumeData } = useResume();
   const {
-    pdfSettings: { fontFamily },
+    pdfSettings: {
+      fontFamily,
+      fontSize,
+      fontCategory,
+      lineHeight,
+      scale,
+      verticalSpacing,
+    },
   } = usePdfSettings();
   const { basics } = resumeData;
 
@@ -88,7 +95,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
   const downloadPdf = async () => {
     try {
       // close the menu
-      setIsMenuOpen(false);
+      setIsDialogOpen(false);
 
       setIsLoading(true);
 
@@ -157,10 +164,25 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
 
   const downloadJson = () => {
     // close the menu
-    setIsMenuOpen(false);
+    setIsDialogOpen(false);
 
     // create a json file
-    const json = JSON.stringify(resumeData, null, 2);
+    // TODO: add pdf settings to the json
+    const json = JSON.stringify(
+      {
+        ...resumeData,
+        pdfSettings: {
+          fontFamily,
+          fontSize,
+          fontCategory,
+          lineHeight,
+          scale,
+          verticalSpacing,
+        },
+      },
+      null,
+      2
+    );
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -177,7 +199,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         variant={type === "icon" ? "ghost" : "default"}
         size={type === "icon" ? "icon" : "default"}
         className={cn("rounded-md", className)}
-        onClick={() => setIsMenuOpen(true)}
+        onClick={() => setIsDialogOpen(true)}
       >
         {isLoading ? (
           <>
@@ -194,9 +216,9 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
           </span>
         )}
       </Button>
-      <DownloadOptionsMenu
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
+      <DownloadOptionsDialog
+        isOpen={isDialogOpen}
+        onClose={() => setIsDialogOpen(false)}
         downloadPdf={downloadPdf}
         downloadJson={downloadJson}
       />

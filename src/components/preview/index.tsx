@@ -26,7 +26,7 @@ interface PreviewProps {
 
 export const Page: React.FC<PreviewProps> = ({ mode }) => {
   const {
-    pdfSettings: { fontSize, fontFamily },
+    pdfSettings: { fontSize, fontFamily, verticalSpacing },
   } = usePdfSettings();
 
   const { sectionOrder } = useResume();
@@ -49,7 +49,20 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
         minHeight: `${HEIGHT}px`,
       }}
     >
-      <div className={cn("flex-1 w-full space-y-1 preview")}>
+      <div
+        className={cn("flex flex-col flex-1 w-full preview", {
+          "space-y-1": verticalSpacing === 1,
+          "space-y-2": verticalSpacing === 2,
+          "space-y-3": verticalSpacing === 3,
+          "space-y-4": verticalSpacing === 4,
+          "space-y-5": verticalSpacing === 5,
+          "space-y-6": verticalSpacing === 6,
+          "space-y-7": verticalSpacing === 7,
+          "space-y-8": verticalSpacing === 8,
+          "space-y-9": verticalSpacing === 9,
+          "space-y-10": verticalSpacing === 10,
+        })}
+      >
         <BasicsPreview />
         {sectionOrder.map((sectionId) => {
           switch (sectionId) {
