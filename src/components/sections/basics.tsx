@@ -2,8 +2,12 @@ import { z } from "zod";
 import { Input } from "../ui/input";
 import { useResume } from "../../store/useResume";
 import { Label } from "../ui/label";
-import { UserRound } from "lucide-react";
+import { Plus, TrashIcon, UserRound } from "lucide-react";
 import { Switch } from "../ui/switch";
+import { Button } from "../ui/button";
+import { CustomIcon } from "../core/CustomIcon";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { LinkedInIcon } from "../core/icons/LinkedInIcon";
 
 // schema
 const basicsSchema = z.object({
@@ -20,6 +24,15 @@ const basicsSchema = z.object({
     value: z.string(),
     breakAfter: z.boolean(),
   }),
+  customFields: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      iconName: z.string(),
+      value: z.string(),
+      breakAfter: z.boolean(),
+    })
+  ),
 });
 
 export const BasicsInfo: React.FC = () => {
@@ -41,6 +54,57 @@ export const BasicsInfo: React.FC = () => {
             : e.target.value,
       },
     });
+  };
+
+  // handle show custom field
+  const handleShowCustomField = () => {
+    const newCustomField = {
+      id: crypto.randomUUID(),
+      name: "",
+      iconName: "link",
+      value: "",
+      breakAfter: false,
+    };
+
+    setData({
+      basics: {
+        ...basics,
+        customFields: [...(basics?.customFields || []), newCustomField],
+      },
+    });
+  };
+
+  // handle remove custom field
+  const handleRemoveCustomField = (id: string) => {
+    setData({
+      basics: {
+        ...basics,
+        customFields: basics?.customFields.filter((f) => f.id !== id),
+      },
+    });
+  };
+
+  // Handle update custom field
+  const handleUpdateCustomField = (
+    id: string,
+    key: "name" | "iconName" | "value" | "breakAfter",
+    newValue: string | boolean
+  ) => {
+    setData({
+      basics: {
+        ...basics,
+        customFields: basics?.customFields.map((f) =>
+          f.id === id ? { ...f, [key]: newValue } : f
+        ),
+      },
+    });
+  };
+
+  // if icon name is empty, set it to "link"
+  const handleBlurIconNameInput = (id: string, iconName: string) => {
+    if (iconName.trim() === "") {
+      handleUpdateCustomField(id, "iconName", "link");
+    }
   };
 
   return (
@@ -215,6 +279,93 @@ export const BasicsInfo: React.FC = () => {
             }
           />
         </div>
+        {/* CONDITIONALLY RENDER CUSTOM FIELDS */}
+        {basics?.customFields.map((field) => (
+          <div
+            key={field.id}
+            className="flex items-center justify-between col-span-2 gap-x-2"
+          >
+            {/* Icon Name Input */}
+            <Popover>
+              <Button variant="ghost" size="icon" asChild>
+                <PopoverTrigger>
+                  {field.iconName === "linkedin" ? (
+                    <LinkedInIcon size={14} />
+                  ) : (
+                    <CustomIcon iconName={field.iconName} size={14} />
+                  )}
+                </PopoverTrigger>
+              </Button>
+              <PopoverContent className="w-fit p-2" align="start">
+                <Input
+                  type="text"
+                  placeholder="Icon Name"
+                  value={field.iconName}
+                  onBlur={() =>
+                    handleBlurIconNameInput(field.id, field.iconName)
+                  }
+                  onChange={(e) =>
+                    handleUpdateCustomField(
+                      field.id,
+                      "iconName",
+                      e.target.value
+                    )
+                  }
+                />
+                <p className="text-xs text-primary/65 mt-2">
+                  Visit{" "}
+                  <a
+                    href="https://lucide.dev/icons/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="underline underline-offset-2 hover:text-primary"
+                  >
+                    lucide.dev/icons
+                  </a>{" "}
+                  for the list of all icons.
+                </p>
+              </PopoverContent>
+            </Popover>
+            {/* Name Input */}
+            <Input
+              type="text"
+              placeholder="Name"
+              className="flex-1"
+              value={field.name}
+              onChange={(e) =>
+                handleUpdateCustomField(field.id, "name", e.target.value)
+              }
+            />
+            {/* Value Input */}
+            <Input
+              type="text"
+              placeholder="Value"
+              className="flex-1"
+              value={field.value}
+              onChange={(e) =>
+                handleUpdateCustomField(field.id, "value", e.target.value)
+              }
+            />
+            {/* Remove Button */}
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => handleRemoveCustomField(field.id)}
+            >
+              <TrashIcon />
+            </Button>
+          </div>
+        ))}
+        {/* Add custom fields Button - always at the bottom */}
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-fit col-span-2"
+          onClick={handleShowCustomField}
+        >
+          <Plus />
+          Add Custom Field
+        </Button>
       </main>
     </section>
   );

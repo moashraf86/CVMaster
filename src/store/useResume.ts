@@ -18,6 +18,7 @@ const DEFAULT_RESUME_DATA = {
       value: "Cairo, Egypt",
       breakAfter: false,
     },
+    customFields: [],
     alignment: "start",
   },
   summary: {

@@ -14,6 +14,12 @@ export interface Basics {
     breakAfter: boolean;
   };
   alignment: "start" | "center" | "end";
+  customFields: {
+    id: string;
+    name: string;
+    iconName: string;
+    value: string;
+  }[];
 }
 
 // [2] Define type for summary

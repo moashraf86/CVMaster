@@ -1,7 +1,9 @@
-import { Globe, MapPin, Phone, SendIcon } from "lucide-react";
+import { Globe, Mail, MapPin, Phone } from "lucide-react";
 import { usePdfSettings, useResume } from "../../store/useResume";
-import { LinkedInLogoIcon } from "@radix-ui/react-icons";
+import { CustomIcon } from "../core/CustomIcon";
 import { cn } from "../../lib/utils";
+import { z } from "zod";
+import { LinkedInIcon } from "../core/icons/LinkedInIcon";
 
 export const BasicsPreview: React.FC = () => {
   // get the data from the store
@@ -14,8 +16,17 @@ export const BasicsPreview: React.FC = () => {
     pdfSettings: { fontSize },
   } = usePdfSettings();
 
-  const { name, title, location, phone, email, linkedin, website, alignment } =
-    basics || {};
+  const {
+    name,
+    title,
+    location,
+    phone,
+    email,
+    linkedin,
+    website,
+    alignment,
+    customFields,
+  } = basics || {};
 
   return (
     <header
@@ -34,13 +45,10 @@ export const BasicsPreview: React.FC = () => {
         {name}
       </h1>
       <p style={{ fontSize: fontSize + 2 }}>{title}</p>
-      <div
-        // className="flex flex-wrap items-center gap-x-2 gap-y-0.5"
-        style={{ fontSize }}
-      >
+      <div style={{ fontSize }}>
         {location.value && (
           <span className="inline-flex items-center gap-1 mr-3">
-            <MapPin size={12} />
+            <MapPin size={14} />
             <span>{location.value}</span>
           </span>
         )}
@@ -48,15 +56,21 @@ export const BasicsPreview: React.FC = () => {
         {phone.value && (
           <>
             <span className="inline-flex items-center gap-1 mr-3">
-              <Phone size={12} />
-              <span>{phone.value}</span>
+              <Phone size={14} />
+              <a
+                href={`tel:${phone.value}`}
+                className="underline"
+                target="_blank"
+              >
+                {phone.value}
+              </a>
             </span>
             {phone.breakAfter && <br />}
           </>
         )}
         {email && (
           <span className="inline-flex items-center gap-1 mr-3">
-            <SendIcon size={12} />
+            <Mail size={14} />
             <a href={`mailto:${email}`} className="underline" target="_blank">
               {email}
             </a>
@@ -64,7 +78,7 @@ export const BasicsPreview: React.FC = () => {
         )}
         {linkedin && (
           <span className="inline-flex items-center gap-1 mr-3">
-            <LinkedInLogoIcon fontSize={12} />
+            <LinkedInIcon size={14} />
             <a href={linkedin} className="underline" target="_blank">
               Linked In
             </a>
@@ -72,12 +86,49 @@ export const BasicsPreview: React.FC = () => {
         )}
         {website && (
           <span className="inline-flex items-center gap-1 mr-3">
-            <Globe size={12} />
+            <Globe size={14} />
             <a href={website} className="underline" target="_blank">
               Portfolio
             </a>
           </span>
         )}
+        {customFields?.map((field) => {
+          const isValidUrl = z.string().url().safeParse(field.value).success;
+          return (
+            <span
+              key={field.id}
+              className="inline-flex items-center gap-1 mr-3"
+            >
+              {isValidUrl && field.name ? (
+                <>
+                  {field.iconName === "linkedin" ? (
+                    <LinkedInIcon size={14} />
+                  ) : (
+                    <CustomIcon iconName={field.iconName} size={14} />
+                  )}
+                  <a
+                    href={field.value}
+                    className="underline"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {field.name}
+                  </a>
+                </>
+              ) : (
+                <>
+                  {field.iconName === "linkedin" ? (
+                    <LinkedInIcon size={14} />
+                  ) : (
+                    <CustomIcon iconName={field.iconName} size={14} />
+                  )}
+                  {field.name && <span>{field.name}:</span>}
+                  <span>{field.value}</span>
+                </>
+              )}
+            </span>
+          );
+        })}
       </div>
     </header>
   );
