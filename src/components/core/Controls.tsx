@@ -170,7 +170,7 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <SlidersVertical className="size-4" />
         </Button>
-        <ThemeToggler direction="horizontal" />
+        <ThemeToggler direction="horizontal" className="lg:hidden" />
       </div>
       <ControlsSheet
         isOpen={isControlsOpen}
