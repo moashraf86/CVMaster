@@ -124,7 +124,7 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
           config.thumb,
           config.translate,
           // Thumb styling
-          isDark ? "bg-primary-foreground border" : "bg-white border"
+          isDark ? "bg-primary-foreground" : "bg-white"
         )}
       >
         {/* Icon in thumb */}

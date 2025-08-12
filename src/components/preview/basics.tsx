@@ -3,7 +3,7 @@ import { usePdfSettings, useResume } from "../../store/useResume";
 import { CustomIcon } from "../core/CustomIcon";
 import { cn } from "../../lib/utils";
 import { z } from "zod";
-import { LinkedInIcon } from "../core/icons/LinkedInIcon";
+import { LinkedInIcon } from "../core/icons/LinkedIn";
 
 export const BasicsPreview: React.FC = () => {
   // get the data from the store

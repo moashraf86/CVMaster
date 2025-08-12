@@ -7,7 +7,7 @@ import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import { CustomIcon } from "../core/CustomIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { LinkedInIcon } from "../core/icons/LinkedInIcon";
+import { LinkedInIcon } from "../core/icons/LinkedIn";
 
 // schema
 const basicsSchema = z.object({
@@ -167,7 +167,7 @@ export const BasicsInfo: React.FC = () => {
           {!basicsSchema
             .pick({ email: true })
             .safeParse({ email: basics?.email }).success && (
-            <p className="text-xs text-primary/65">
+            <p className="text-xs text-muted-foreground/70">
               Use format: name@domain.com
             </p>
           )}
@@ -190,7 +190,7 @@ export const BasicsInfo: React.FC = () => {
           {!basicsSchema
             .pick({ linkedin: true })
             .safeParse({ linkedin: basics?.linkedin }).success && (
-            <p className="text-xs text-primary/65">
+            <p className="text-xs text-muted-foreground/70">
               URL must start with: https://
             </p>
           )}
@@ -212,7 +212,7 @@ export const BasicsInfo: React.FC = () => {
           {!basicsSchema
             .pick({ website: true })
             .safeParse({ website: basics?.website }).success && (
-            <p className="text-xs text-primary/65">
+            <p className="text-xs text-muted-foreground/70">
               URL must start with: https://
             </p>
           )}
@@ -283,7 +283,7 @@ export const BasicsInfo: React.FC = () => {
         {basics?.customFields.map((field) => (
           <div
             key={field.id}
-            className="flex items-center justify-between col-span-2 gap-x-2"
+            className="flex items-center justify-between sm:col-span-2 gap-x-2"
           >
             {/* Icon Name Input */}
             <Popover>
@@ -312,7 +312,7 @@ export const BasicsInfo: React.FC = () => {
                     )
                   }
                 />
-                <p className="text-xs text-primary/65 mt-2">
+                <p className="text-xs text-muted-foreground/70 mt-2">
                   Visit{" "}
                   <a
                     href="https://lucide.dev/icons/"
@@ -351,6 +351,7 @@ export const BasicsInfo: React.FC = () => {
               variant="ghost"
               size="icon"
               onClick={() => handleRemoveCustomField(field.id)}
+              className="col-span-1"
             >
               <TrashIcon />
             </Button>
@@ -360,7 +361,7 @@ export const BasicsInfo: React.FC = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="w-fit col-span-2"
+          className="w-fit col-span-1"
           onClick={handleShowCustomField}
         >
           <Plus />

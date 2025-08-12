@@ -37,10 +37,7 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
 
   return (
     <div
-      className={cn(
-        "relative bg-white text-primary dark:text-primary-foreground",
-        `font-${fontFamily}`
-      )}
+      className={cn("relative bg-white text-black", `font-${fontFamily}`)}
       style={{
         fontSize: `${fontSize || 14}px`,
         fontFamily: fontFamily.charAt(0).toUpperCase() + fontFamily.slice(1),

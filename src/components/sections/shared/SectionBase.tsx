@@ -140,7 +140,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
               <li
                 key={item.id as string}
                 className={cn(
-                  "border border-border p-4 duration-300 group",
+                  "border border-border p-4 duration-300 group rounded-sm",
                   shouldAnimateIn && "animate-in slide-in-from-top fade-in",
                   itemToDelete === index &&
                     "animate-out slide-out-to-left fade-out"

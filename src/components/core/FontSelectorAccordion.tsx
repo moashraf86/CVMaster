@@ -88,9 +88,9 @@ export const FontSelectorAccordion = ({
     <Accordion type="single" collapsible className="w-full">
       <AccordionItem
         value="item-1"
-        className="border border-border shadow-sm rounded-md hover:bg-accent"
+        className="border border-border shadow-sm rounded-md overflow-hidden"
       >
-        <AccordionTrigger className="items-center px-4 h-10 hover:no-underline">
+        <AccordionTrigger className="items-center px-4 h-10 hover:no-underline hover:bg-muted">
           <span
             className="leading-normal font-bold"
             style={{

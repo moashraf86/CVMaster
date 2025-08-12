@@ -10,7 +10,6 @@ import {
 import { Separator } from "../ui/separator";
 import {
   GalleryVertical,
-  Palette,
   RefreshCcw,
   Text,
   UserRound,
@@ -291,15 +290,6 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
               </span>
             </div>
           </div>
-        </div>
-        <Separator className="my-8" />
-        {/* Colors */}
-        <div className="flex flex-col gap-6">
-          <h3 className="text-lg font-semibold flex items-center gap-2">
-            <Palette className="size-4" />
-            Colors
-          </h3>
-          {/* TODO: add colors picker */}
         </div>
       </SheetContent>
     </Sheet>

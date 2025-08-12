@@ -30,7 +30,7 @@ export const SortableItem: React.FC<SortableItemProps> = ({ id, children }) => {
       {...attributes}
       {...listeners}
       className={cn(
-        "flex items-center gap-2 p-2 bg-primary/10 border border-border rounded-md shadow-sm cursor-move capitalize text-sm",
+        "flex items-center gap-2 p-2 bg-muted/50 hover:bg-muted border border-border rounded-md shadow-sm cursor-move capitalize text-sm",
         isDragging && "bg-muted cursor-grabbing opacity-50"
       )}
     >
