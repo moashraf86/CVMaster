@@ -154,8 +154,19 @@ export interface PdfSettings {
     scale: number;
     lineHeight: number;
     verticalSpacing: number;
+    margin: {
+      MIN: number;
+      MAX: number;
+      VALUE: number;
+      INITIAL: number;
+    };
+    pageBreakLine: boolean;
+    pageFormat: "a4" | "letter";
   };
-  setValue: (key: string, value: number | string | boolean) => void;
+  setValue: (
+    key: string,
+    value: number | string | boolean | { [key: string]: number }
+  ) => void;
 }
 
 // Fonts type

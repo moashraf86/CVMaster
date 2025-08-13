@@ -10,14 +10,7 @@ import { usePdfSettings, useResume } from "../../store/useResume";
 import { CertificationsPreview } from "./certifications";
 import { AwardsPreview } from "./awards";
 import { VolunteeringPreview } from "./volunteering";
-
-const pageSizeMap = {
-  width: 210,
-  height: 297, // 297 - 12mm padding top and bottom
-};
-
-// MM to PX conversion
-const MM_TO_PX = 3.78;
+import { MM_TO_PX, PAPER_SIZES } from "../../lib/constants";
 
 // Preview props type
 interface PreviewProps {
@@ -26,14 +19,20 @@ interface PreviewProps {
 
 export const Page: React.FC<PreviewProps> = ({ mode }) => {
   const {
-    pdfSettings: { fontSize, fontFamily, verticalSpacing },
+    pdfSettings: {
+      fontSize,
+      fontFamily,
+      verticalSpacing,
+      margin,
+      pageBreakLine,
+    },
   } = usePdfSettings();
 
   const { sectionOrder } = useResume();
 
   // Page size in pixels
-  const WIDTH = pageSizeMap.width * MM_TO_PX;
-  const HEIGHT = pageSizeMap.height * MM_TO_PX;
+  const WIDTH = PAPER_SIZES.width * MM_TO_PX;
+  const HEIGHT = PAPER_SIZES.height * MM_TO_PX;
 
   return (
     <div
@@ -86,11 +85,14 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
           }
         })}
       </div>
-      {mode === "preview" && (
+      {mode === "preview" && pageBreakLine && (
         <hr
-          className={`border-t border-dashed border-gray-400 absolute w-full left-0`}
+          className={`absolute w-full left-0`}
           style={{
-            top: `${HEIGHT}px`,
+            top: `${HEIGHT + margin.VALUE / 2}px`,
+            borderTop: "1px dashed transparent",
+            borderImage:
+              "repeating-linear-gradient(to right, black 0, black 8px, transparent 8px, transparent 16px) 1",
           }}
         />
       )}

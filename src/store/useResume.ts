@@ -96,12 +96,19 @@ const DEFAULT_RESUME_DATA = {
 
 // Default values for pdf settings
 const DEFAULT_PDF_SETTINGS = {
-  fontSize: 14,
+  fontSize: 14, // 14px
   fontFamily: "Inter",
   fontCategory: "ATS-Friendly",
   scale: PDF_SETTINGS.SCALE.INITIAL,
-  lineHeight: 5,
-  verticalSpacing: 1,
+  lineHeight: 5, // leading-5 (tailwind)
+  verticalSpacing: 1, // space-y-1 (tailwind)
+  margin: {
+    MIN: PDF_SETTINGS.MARGIN.MIN,
+    MAX: PDF_SETTINGS.MARGIN.MAX,
+    INITIAL: PDF_SETTINGS.MARGIN.INITIAL,
+    VALUE: PDF_SETTINGS.MARGIN.VALUE,
+  },
+  pageBreakLine: true, // show page break in preview mode
 };
 
 // Helper function to safely parse JSON from localStorage

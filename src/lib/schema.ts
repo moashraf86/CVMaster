@@ -15,6 +15,14 @@ const basicsSchema = z.object({
     value: z.string(),
     breakAfter: z.boolean(),
   }),
+  customFields: z.array(
+    z.object({
+      id: z.string(),
+      name: z.string(),
+      iconName: z.string(),
+      value: z.string(),
+    })
+  ),
   alignment: z.enum(["start", "center", "end"]).optional(),
 });
 
@@ -99,6 +107,13 @@ const pdfSettingsSchema = z.object({
   ]),
   lineHeight: z.number(),
   verticalSpacing: z.number(),
+  margin: z.object({
+    MIN: z.number(),
+    MAX: z.number(),
+    VALUE: z.number(),
+    INITIAL: z.number(),
+  }),
+  pageBreakLine: z.boolean(),
 });
 
 // Final CV Master schema

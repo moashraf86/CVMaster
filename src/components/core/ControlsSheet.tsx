@@ -16,6 +16,7 @@ import {
   AlignStartVertical,
   AlignCenterVertical,
   AlignEndVertical,
+  FileText,
 } from "lucide-react";
 import { Slider } from "../ui/slider";
 import {
@@ -58,7 +59,7 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
   } = useResume();
   const {
     setValue,
-    pdfSettings: { fontFamily, fontSize, lineHeight, verticalSpacing },
+    pdfSettings: { fontFamily, fontSize, lineHeight, verticalSpacing, margin },
   } = usePdfSettings();
 
   // Handle drag-and-drop reordering
@@ -111,6 +112,11 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
   const changeFontType = (fontClassName: string) => {
     setValue("fontFamily", fontClassName);
     loadGoogleFont(fontClassName, ["400", "700"]);
+  };
+
+  // handle margin change
+  const handleMarginChange = (value: number) => {
+    setValue("margin", { ...margin, VALUE: value });
   };
 
   return (
@@ -287,6 +293,45 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
               <span className="text-sm font-semibold text-primary">
                 {/* convert to rem from tailwind */}
                 {(verticalSpacing * 4) / 16}
+              </span>
+            </div>
+          </div>
+        </div>
+        <Separator className="my-8" />
+        {/* Margin */}
+        <div className="flex flex-col gap-6">
+          <h3 className="text-lg font-semibold flex items-center gap-2">
+            <FileText className="size-4" />
+            Page
+          </h3>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <Label>Margin</Label>
+              <Button
+                title="Reset margin"
+                type="button"
+                variant="ghost"
+                size="icon"
+                onClick={() =>
+                  setValue("margin", {
+                    ...margin,
+                    VALUE: PDF_SETTINGS.MARGIN.INITIAL,
+                  })
+                }
+              >
+                <RefreshCcw className="size-4" />
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              <Slider
+                value={[margin.VALUE]}
+                min={PDF_SETTINGS.MARGIN.MIN}
+                max={PDF_SETTINGS.MARGIN.MAX}
+                step={PDF_SETTINGS.MARGIN.STEP}
+                onValueChange={(value) => handleMarginChange(value[0])}
+              />
+              <span className="text-sm font-semibold text-primary">
+                {margin.VALUE}px
               </span>
             </div>
           </div>

@@ -38,6 +38,8 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
       lineHeight,
       scale,
       verticalSpacing,
+      margin,
+      pageFormat,
     },
   } = usePdfSettings();
   const { basics } = resumeData;
@@ -123,6 +125,8 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
           htmlContent,
           name: basics.name,
           title: basics.title,
+          margin,
+          pageFormat,
         }),
       });
 
@@ -178,6 +182,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
           lineHeight,
           scale,
           verticalSpacing,
+          margin,
         },
       },
       null,

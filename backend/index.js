@@ -36,7 +36,7 @@ app.get("/", (req, res) => {
 
 // POST /pdf route to generate PDF from HTML content
 app.post("/pdf", async (req, res) => {
-  const { htmlContent, name, title } = req.body;
+  const { htmlContent, name, title, margin } = req.body;
 
   // Replace spaces with underscores and convert to lowercase
   const fullName = name.split(" ").join("-").toLowerCase();
@@ -81,13 +81,13 @@ app.post("/pdf", async (req, res) => {
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
 
     const pdfBuffer = await page.pdf({
-      format: "A4",
+      format: "a4",
       printBackground: true,
       margin: {
-        top: "20px",
-        right: "20px",
-        bottom: "20px",
-        left: "20px",
+        top: `${margin.VALUE}px`,
+        bottom: `${margin.VALUE}px`,
+        left: `${margin.VALUE}px`,
+        right: `${margin.VALUE}px`,
       },
     });
 

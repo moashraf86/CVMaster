@@ -19,7 +19,7 @@ export const Preview: React.FC = () => {
   const windowSize = useWindowSize();
   const {
     setValue,
-    pdfSettings: { scale: initialScale, fontFamily },
+    pdfSettings: { scale: initialScale, fontFamily, margin },
   } = usePdfSettings();
 
   useEffect(() => {
@@ -78,7 +78,12 @@ export const Preview: React.FC = () => {
           contentClass="items-start justify-center pointer-events-none"
           contentStyle={{ width: "100%", transition: "transform 0.1s" }}
         >
-          <div className="bg-white shadow-2xl p-5">
+          <div
+            className="bg-white shadow-2xl"
+            style={{
+              padding: `${margin.VALUE}px`,
+            }}
+          >
             <Page mode="preview" />
           </div>
         </TransformComponent>

@@ -26,7 +26,23 @@ export const PDF_SETTINGS = {
     INITIAL: 2,
     STEP: 1,
   },
+  MARGIN: {
+    MIN: 10,
+    MAX: 50,
+    INITIAL: 20,
+    VALUE: 20,
+    STEP: 1,
+  },
 };
+
+// Paper size constants
+export const PAPER_SIZES = {
+  width: 210, // 210mm
+  height: 297, // 297mm
+};
+
+// MM to PX conversion
+export const MM_TO_PX = 3.78;
 
 export const GOOGLE_FONTS_API_KEY = import.meta.env.VITE_GOOGLE_FONTS_API_KEY;
 

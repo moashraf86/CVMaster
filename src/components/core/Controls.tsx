@@ -3,6 +3,7 @@ import {
   Move,
   Search,
   SlidersVertical,
+  SquareSplitVertical,
   SquareSquare,
   ZoomIn,
   ZoomOut,
@@ -31,7 +32,7 @@ export const Controls: React.FC<ControlsProps> = ({
 
   const {
     setValue,
-    pdfSettings: { scale: pdfScale },
+    pdfSettings: { scale: pdfScale, pageBreakLine },
   } = usePdfSettings();
 
   const [isControlsOpen, setIsControlsOpen] = useState(false);
@@ -157,6 +158,18 @@ export const Controls: React.FC<ControlsProps> = ({
           onClick={() => setWheelPanning(!wheelPanning)}
         >
           {wheelPanning ? <Move /> : <Search />}
+        </Button>
+        <Button
+          title={
+            pageBreakLine ? "Hide Page Break Line" : "Show Page Break Line"
+          }
+          type="button"
+          variant="ghost"
+          size="icon"
+          className="rounded-full"
+          onClick={() => setValue("pageBreakLine", !pageBreakLine)}
+        >
+          <SquareSplitVertical className="size-4" />
         </Button>
       </div>
 
