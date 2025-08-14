@@ -52,7 +52,9 @@ export const ProjectsPreview: React.FC = () => {
               {project.keywords.length > 0 && (
                 <div className="flex items-center gap-1">
                   |&nbsp;
-                  <span className="italic">{project.keywords.join(", ")}</span>
+                  <span className="italic text-xs">
+                    {project.keywords.join(", ")}
+                  </span>
                 </div>
               )}
             </div>

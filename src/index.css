@@ -20,7 +20,7 @@
     --muted-foreground: 50 2.36% 50.19%;
     --accent: 46.1538 22.8% 88.82%;
     --accent-foreground: 50.7692 19.4% 13.13%;
-    --destructive: 60 2.56% 7.64%;
+    --destructive: 0 84.23% 60.19%;
     --destructive-foreground: 0 0% 100%;
     --border: 50 7.5% 84.31%;
     --input: 50.7692 7.97% 68.03%;
@@ -136,7 +136,7 @@
   }
 
   ::selection {
-    @apply bg-primary/20;
+    @apply bg-primary text-primary-foreground;
   }
 
   a {

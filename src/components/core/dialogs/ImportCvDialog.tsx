@@ -118,7 +118,7 @@ export const ImportCvDialog: React.FC<ImportCvDialogProps> = ({
         {error && (
           <div className="flex flex-col gap-2">
             <Label className="text-sm text-red-500">Error</Label>
-            <div className="whitespace-pre-wrap rounded bg-secondary p-4 font-mono text-xs leading-relaxed">
+            <div className="whitespace-pre-wrap rounded bg-muted p-4 font-mono text-xs leading-relaxed">
               {error}
             </div>
           </div>

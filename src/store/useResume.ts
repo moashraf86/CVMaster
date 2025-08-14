@@ -107,6 +107,7 @@ const DEFAULT_PDF_SETTINGS = {
     MAX: PDF_SETTINGS.MARGIN.MAX,
     INITIAL: PDF_SETTINGS.MARGIN.INITIAL,
     VALUE: PDF_SETTINGS.MARGIN.VALUE,
+    STEP: PDF_SETTINGS.MARGIN.STEP,
   },
   pageBreakLine: true, // show page break in preview mode
 };

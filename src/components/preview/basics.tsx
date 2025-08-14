@@ -30,7 +30,7 @@ export const BasicsPreview: React.FC = () => {
 
   return (
     <header
-      className={cn("space-y-1", {
+      className={cn("space-y-0.5", {
         "text-start": alignment === "start",
         "text-center": alignment === "center",
         "text-end": alignment === "end",
@@ -80,7 +80,7 @@ export const BasicsPreview: React.FC = () => {
           <span className="inline-flex items-center gap-1 mr-3">
             <LinkedInIcon size={14} />
             <a href={linkedin} className="underline" target="_blank">
-              Linked In
+              LinkedIn
             </a>
           </span>
         )}

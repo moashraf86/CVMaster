@@ -39,7 +39,6 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
       scale,
       verticalSpacing,
       margin,
-      pageFormat,
     },
   } = usePdfSettings();
   const { basics } = resumeData;
@@ -126,7 +125,6 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
           name: basics.name,
           title: basics.title,
           margin,
-          pageFormat,
         }),
       });
 
@@ -182,12 +180,19 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
           lineHeight,
           scale,
           verticalSpacing,
-          margin,
+          margin: {
+            MIN: margin.MIN,
+            MAX: margin.MAX,
+            INITIAL: margin.INITIAL,
+            VALUE: margin.VALUE,
+          },
+          pageBreakLine: true,
         },
       },
       null,
       2
     );
+    console.log(json);
     const blob = new Blob([json], { type: "application/json" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
