@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { toast } from "./use-toast";
 import { usePdfSettings, useResume } from "../store/useResume";
-import { ValidatedData } from "./useFileValidation";
+import { ValidatedData } from "./useValidateJson";
 
-export const useFileImport = () => {
+export const useImportJSON = () => {
   const [isImporting, setIsImporting] = useState(false);
   const { setData } = useResume();
   const { setValue } = usePdfSettings();
 
-  const importData = async (
-    validatedData: ValidatedData | null,
-    onSuccess?: () => void
-  ) => {
+  const importJSONData = async (validatedData: ValidatedData | null) => {
     if (!validatedData) {
       toast({
         title: "No data to import",
@@ -41,9 +38,9 @@ export const useFileImport = () => {
       toast({
         title: "File imported successfully",
         description: "You can now edit the imported data",
+        variant: "success",
       });
 
-      onSuccess?.();
       return true;
     } catch (error) {
       console.error("Import error:", error);
@@ -60,6 +57,6 @@ export const useFileImport = () => {
 
   return {
     isImporting,
-    importData,
+    importJSONData,
   };
 };

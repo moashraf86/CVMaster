@@ -135,6 +135,7 @@ export interface ResumeType {
     sectionTitles: {
       [key in SectionName]: string;
     };
+    pdfSettings: PdfSettings;
   };
   setData: (data: Record<string, unknown>) => void;
   setSectionOrder: (order: SectionName[]) => void;
@@ -161,7 +162,6 @@ export interface PdfSettings {
       INITIAL: number;
     };
     pageBreakLine: boolean;
-    pageFormat: "a4" | "letter";
   };
   setValue: (
     key: string,

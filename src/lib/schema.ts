@@ -113,7 +113,6 @@ const pdfSettingsSchema = z.object({
     VALUE: z.number(),
     INITIAL: z.number(),
   }),
-  pageBreakLine: z.boolean(),
 });
 
 // Final CV Master schema

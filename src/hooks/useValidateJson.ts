@@ -1,6 +1,6 @@
 // hooks/useFileValidation.ts
 import { useState } from "react";
-import { toast } from "../hooks/use-toast";
+import { toast } from "./use-toast";
 import { cvMasterSchema } from "../lib/schema";
 import { z } from "zod";
 
@@ -21,7 +21,7 @@ const cvMasterJsonSchema = cvMasterSchema.pick({
 
 export type ValidatedData = z.infer<typeof cvMasterJsonSchema>;
 
-export const useFileValidation = () => {
+export const useValidateJson = () => {
   const [isValidating, setIsValidating] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,7 +29,7 @@ export const useFileValidation = () => {
     null
   );
 
-  const validateFile = async (file: File | null, fileType: string) => {
+  const validateFile = async (file: File | null) => {
     if (!file) {
       toast({
         title: "No file selected",
@@ -41,26 +41,10 @@ export const useFileValidation = () => {
     try {
       setIsValidating(true);
       setError(null);
-
       // Simulate a delay (to be removed in future enhancement)
       await new Promise((resolve) => setTimeout(resolve, 500));
-
-      if (fileType === "cv-master-json") {
-        return await validateCvMasterJson(file);
-      } else if (fileType === "pdf") {
-        // TODO: validate pdf file
-        toast({
-          title: "PDF validation coming soon",
-          description: "PDF file validation is not yet implemented",
-        });
-        return false;
-      } else {
-        toast({
-          title: "Invalid file type",
-          description: "Please select a valid file type",
-        });
-        return false;
-      }
+      await validateCvMasterJson(file);
+      return true;
     } catch (error) {
       console.error("Validation error:", error);
       setError(
@@ -93,7 +77,7 @@ export const useFileValidation = () => {
     const fileContent = await file.text();
     const json = JSON.parse(fileContent);
     const parseResult = cvMasterJsonSchema.safeParse(json);
-    console.log(parseResult);
+
     if (!parseResult.success) {
       const errorMsg = parseResult.error.errors
         .map((err) => `${err.path.join(".")}: ${err.message}`)
