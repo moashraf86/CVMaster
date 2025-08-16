@@ -1,27 +1,56 @@
 import * as React from "react";
 import * as SwitchPrimitives from "@radix-ui/react-switch";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@radix-ui/react-tooltip";
 
 import { cn } from "../../lib/utils";
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
-  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root>
->(({ className, ...props }, ref) => (
-  <SwitchPrimitives.Root
-    className={cn(
-      "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
-      className
-    )}
-    {...props}
-    ref={ref}
-  >
-    <SwitchPrimitives.Thumb
+  React.ComponentPropsWithoutRef<typeof SwitchPrimitives.Root> & {
+    title?: string;
+  }
+>(({ className, title, ...props }, ref) => {
+  const switchElement = (
+    <SwitchPrimitives.Root
       className={cn(
-        "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0"
+        "peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input bg-primary",
+        className
       )}
-    />
-  </SwitchPrimitives.Root>
-));
+      {...props}
+      ref={ref}
+    >
+      <SwitchPrimitives.Thumb
+        className={cn(
+          "pointer-events-none block h-4 w-4 rounded-full bg-background shadow-lg ring-0 transition-transform data-[state=checked]:translate-x-4 data-[state=unchecked]:translate-x-0"
+        )}
+      />
+    </SwitchPrimitives.Root>
+  );
+
+  return title ? (
+    <TooltipProvider delayDuration={100}>
+      <Tooltip>
+        <TooltipTrigger>{switchElement}</TooltipTrigger>
+        <TooltipContent
+          sideOffset={5}
+          side="bottom"
+          align="center"
+          className="z-50 overflow-hidden rounded-md bg-accent px-3 py-1.5 text-xs text-accent-foreground border border-border animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2"
+        >
+          {title}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  ) : (
+    switchElement
+  );
+});
+
 Switch.displayName = SwitchPrimitives.Root.displayName;
 
 export { Switch };

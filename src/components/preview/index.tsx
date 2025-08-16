@@ -10,14 +10,7 @@ import { usePdfSettings, useResume } from "../../store/useResume";
 import { CertificationsPreview } from "./certifications";
 import { AwardsPreview } from "./awards";
 import { VolunteeringPreview } from "./volunteering";
-
-const pageSizeMap = {
-  width: 210,
-  height: 297, // 297 - 12mm padding top and bottom
-};
-
-// MM to PX conversion
-const MM_TO_PX = 3.78;
+import { MM_TO_PX, PAPER_SIZES } from "../../lib/constants";
 
 // Preview props type
 interface PreviewProps {
@@ -26,29 +19,46 @@ interface PreviewProps {
 
 export const Page: React.FC<PreviewProps> = ({ mode }) => {
   const {
-    pdfSettings: { fontSize, fontFamily },
+    pdfSettings: {
+      fontSize,
+      fontFamily,
+      verticalSpacing,
+      margin,
+      pageBreakLine,
+    },
   } = usePdfSettings();
 
   const { sectionOrder } = useResume();
 
   // Page size in pixels
-  const WIDTH = pageSizeMap.width * MM_TO_PX;
-  const HEIGHT = pageSizeMap.height * MM_TO_PX;
+  const WIDTH = PAPER_SIZES.width * MM_TO_PX;
+  const HEIGHT = PAPER_SIZES.height * MM_TO_PX;
 
   return (
     <div
-      className={cn(
-        "relative bg-white text-primary dark:text-primary-foreground",
-        `font-${fontFamily}`
-      )}
+      className={cn("relative bg-white text-black", `font-${fontFamily}`)}
       style={{
         fontSize: `${fontSize || 14}px`,
+        fontFamily: fontFamily.charAt(0).toUpperCase() + fontFamily.slice(1),
         width: `${WIDTH}px`,
         minWidth: `${WIDTH}px`,
         minHeight: `${HEIGHT}px`,
       }}
     >
-      <div className={cn("flex-1 w-full space-y-1 preview")}>
+      <div
+        className={cn("flex flex-col flex-1 w-full preview", {
+          "space-y-1": verticalSpacing === 1,
+          "space-y-2": verticalSpacing === 2,
+          "space-y-3": verticalSpacing === 3,
+          "space-y-4": verticalSpacing === 4,
+          "space-y-5": verticalSpacing === 5,
+          "space-y-6": verticalSpacing === 6,
+          "space-y-7": verticalSpacing === 7,
+          "space-y-8": verticalSpacing === 8,
+          "space-y-9": verticalSpacing === 9,
+          "space-y-10": verticalSpacing === 10,
+        })}
+      >
         <BasicsPreview />
         {sectionOrder.map((sectionId) => {
           switch (sectionId) {
@@ -75,11 +85,14 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
           }
         })}
       </div>
-      {mode === "preview" && (
+      {mode === "preview" && pageBreakLine && (
         <hr
-          className={`border-t border-dashed border-gray-400 absolute w-full left-0`}
+          className={`absolute w-full left-0`}
           style={{
-            top: `${HEIGHT}px`,
+            top: `${HEIGHT + margin.VALUE / 2}px`,
+            borderTop: "1px dashed transparent",
+            borderImage:
+              "repeating-linear-gradient(to right, black 0, black 8px, transparent 8px, transparent 16px) 1",
           }}
         />
       )}

@@ -19,13 +19,13 @@ export const SummaryPreview: React.FC = () => {
   return (
     <section>
       <h3
-        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        className="font-bold border-b border-neutral-400 mb-1"
         style={{ fontSize: fontSize + 4 }}
       >
         {sectionTitles["summary"] || "Summary"}
       </h3>
       <div
-        className={`leading-${lineHeight}`}
+        style={{ lineHeight: `${lineHeight * 0.25}rem` }}
         dangerouslySetInnerHTML={{ __html: summary.content }}
       />
     </section>

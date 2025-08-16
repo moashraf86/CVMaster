@@ -135,6 +135,7 @@ export const LanguagesDialog: React.FC = () => {
                         <SelectItem value="Conversational">
                           Conversational
                         </SelectItem>
+                        <SelectItem value="Advanced">Advanced</SelectItem>
                         <SelectItem value="Fluent">Fluent</SelectItem>
                         <SelectItem value="Native or Bilingual">
                           Native or Bilingual

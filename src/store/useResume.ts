@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { PdfSettings, ResumeType } from "../types/types";
+import { PDF_SETTINGS } from "../lib/constants";
 
 // Default values for resume data
 const DEFAULT_RESUME_DATA = {
@@ -9,8 +10,16 @@ const DEFAULT_RESUME_DATA = {
     email: "youremail@domain.com",
     linkedin: "http://linkedin.com/in/johndoe",
     website: "http://johndoe.com",
-    phone: "+010101010",
-    location: "Cairo, Egypt",
+    phone: {
+      value: "+010101010",
+      breakAfter: false,
+    },
+    location: {
+      value: "Cairo, Egypt",
+      breakAfter: false,
+    },
+    customFields: [],
+    alignment: "start",
   },
   summary: {
     sectionTitle: "Summary",
@@ -87,11 +96,20 @@ const DEFAULT_RESUME_DATA = {
 
 // Default values for pdf settings
 const DEFAULT_PDF_SETTINGS = {
-  fontSize: 14,
-  fontFamily: "inter",
-  scale: 0.75,
-  lineHeight: 5,
-  showForm: false,
+  fontSize: 14, // 14px
+  fontFamily: "Inter",
+  fontCategory: "ATS-Friendly",
+  scale: PDF_SETTINGS.SCALE.INITIAL,
+  lineHeight: 5, // leading-5 (tailwind)
+  verticalSpacing: 1, // space-y-1 (tailwind)
+  margin: {
+    MIN: PDF_SETTINGS.MARGIN.MIN,
+    MAX: PDF_SETTINGS.MARGIN.MAX,
+    INITIAL: PDF_SETTINGS.MARGIN.INITIAL,
+    VALUE: PDF_SETTINGS.MARGIN.VALUE,
+    STEP: PDF_SETTINGS.MARGIN.STEP,
+  },
+  pageBreakLine: true, // show page break in preview mode
 };
 
 // Helper function to safely parse JSON from localStorage

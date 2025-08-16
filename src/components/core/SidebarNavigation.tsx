@@ -1,16 +1,11 @@
-import { Menu, X } from "lucide-react";
 import { Button } from "../ui/button";
 import { SectionIcon } from "../sections/shared/SectionIcon";
 import { ThemeToggler } from "./ThemeToggler";
-import { usePdfSettings } from "../../store/useResume";
-import { DownloadPDF } from "./DownloadPdf";
+import { cn } from "../../lib/utils";
 
-export const SidebarNavigation: React.FC = () => {
-  const {
-    setValue,
-    pdfSettings: { showForm },
-  } = usePdfSettings();
-
+export const SidebarNavigation: React.FC<{ className?: string }> = ({
+  className,
+}) => {
   // scroll into view function with -16px offset
   const scrollIntoView = (id: string) => () => {
     const element = document.getElementById(id);
@@ -38,29 +33,18 @@ export const SidebarNavigation: React.FC = () => {
     }
   };
 
-  // toggle menu
-  const toggleMenu = () => {
-    setValue("showForm", !showForm);
-  };
-
   return (
     <aside
-      className="flex flex-auto flex-row lg:flex-col items-center justify-between lg:justify-center gap-10 py-3 lg:py-6 px-2 shadow-md lg:border-r border-border bg-card"
+      className={cn(
+        "flex flex-auto flex-row lg:flex-col items-center justify-between lg:justify- gap-10 py-3 lg:py-6 px-2 shadow-md lg:border-r border-border bg-card",
+        className
+      )}
       role="navigation"
       aria-label="Main navigation"
     >
-      {/* Logo */}
-      <div className="flex items-center justify-center size-9 dark:invert">
-        <img
-          src="/logo.svg"
-          alt="CV Master"
-          className="size-5 object-contain"
-        />
-      </div>
-      {/* Navigation List */}
       <nav>
         <ul
-          className="hidden lg:flex flex-col gap-4 mt-auto"
+          className="flex flex-col gap-4 mt-auto"
           id="navigation-menu"
           role="menubar"
         >
@@ -187,22 +171,8 @@ export const SidebarNavigation: React.FC = () => {
           </li>
         </ul>
       </nav>
-
       <div className="mt-auto">
-        <ThemeToggler />
-        <DownloadPDF className="md:hidden" />
-        <Button
-          title="Toggle menu"
-          aria-expanded={showForm}
-          aria-controls="navigation-menu"
-          variant="ghost"
-          size="icon"
-          className="rounded-full lg:hidden order-1"
-          onClick={toggleMenu}
-        >
-          {showForm ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
-          <span className="sr-only">Toggle Menu</span>
-        </Button>
+        <ThemeToggler direction="vertical" />
       </div>
     </aside>
   );

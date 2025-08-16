@@ -36,7 +36,21 @@ app.get("/", (req, res) => {
 
 // POST /pdf route to generate PDF from HTML content
 app.post("/pdf", async (req, res) => {
-  const { htmlContent } = req.body;
+  const { htmlContent, name, title, margin } = req.body;
+
+  // Replace spaces with underscores and convert to lowercase
+  const fullName = name.split(" ").join("-").toLowerCase();
+  const fullTitle = title.split(" ").join("-").toLowerCase();
+
+  // format the date
+  const now = new Date();
+  const formattedDate = now
+    .toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "numeric",
+      year: "numeric",
+    })
+    .replace(/\//g, "-");
 
   if (!htmlContent) {
     return res.status(400).json({ message: "HTML content is required" });
@@ -67,13 +81,13 @@ app.post("/pdf", async (req, res) => {
     await page.setContent(htmlContent, { waitUntil: "networkidle0" });
 
     const pdfBuffer = await page.pdf({
-      format: "A4",
+      format: "a4",
       printBackground: true,
       margin: {
-        top: "20px",
-        right: "20px",
-        bottom: "20px",
-        left: "20px",
+        top: `${margin.VALUE}px`,
+        bottom: `${margin.VALUE}px`,
+        left: `${margin.VALUE}px`,
+        right: `${margin.VALUE}px`,
       },
     });
 
@@ -82,7 +96,12 @@ app.post("/pdf", async (req, res) => {
     // Upload to Cloudinary
     const uploadResult = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
-        { resource_type: "image", folder: "cvs", format: "pdf" },
+        {
+          resource_type: "image",
+          folder: "cvs",
+          format: "pdf",
+          public_id: `${fullName}_${fullTitle}_${formattedDate}`,
+        },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);

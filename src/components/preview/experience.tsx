@@ -28,7 +28,7 @@ export const ExperiencePreview: React.FC = () => {
   return (
     <section className="space-y-0.5">
       <h3
-        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        className="font-bold border-b border-neutral-400 mb-1"
         style={{ fontSize: fontSize + 4 }}
       >
         {sectionTitles.experience}
@@ -53,7 +53,7 @@ export const ExperiencePreview: React.FC = () => {
             </div>
             {exp.summary && (
               <div
-                className={`leading-${lineHeight}`}
+                style={{ lineHeight: `${lineHeight * 0.25}rem` }}
                 dangerouslySetInnerHTML={{ __html: exp.summary }}
               />
             )}

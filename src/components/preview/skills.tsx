@@ -7,7 +7,7 @@ export const SkillsPreview: React.FC = () => {
   } = useResume();
 
   const {
-    pdfSettings: { fontSize },
+    pdfSettings: { fontSize, lineHeight },
   } = usePdfSettings();
 
   // IF there are no skills, return null
@@ -18,12 +18,12 @@ export const SkillsPreview: React.FC = () => {
   return (
     <section>
       <h3
-        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        className="font-bold border-b border-neutral-400 mb-1"
         style={{ fontSize: fontSize + 4 }}
       >
         {sectionTitles.skills}
       </h3>
-      <div>
+      <div style={{ lineHeight: `${lineHeight * 0.25}rem` }}>
         {skills.map((skill: Skill) => (
           <div key={skill.id}>
             {skill.name && <span className="font-bold">{skill.name}: </span>}

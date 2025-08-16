@@ -7,7 +7,7 @@ export const LanguagesPreview: React.FC = () => {
   } = useResume();
 
   const {
-    pdfSettings: { fontSize },
+    pdfSettings: { fontSize, lineHeight },
   } = usePdfSettings();
 
   // IF there are no languages, return null
@@ -18,12 +18,12 @@ export const LanguagesPreview: React.FC = () => {
   return (
     <section>
       <h3
-        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        className="font-bold border-b border-neutral-400 mb-1"
         style={{ fontSize: fontSize + 4 }}
       >
         {sectionTitles.languages}
       </h3>
-      <div className="space-y-1">
+      <div style={{ lineHeight: `${lineHeight * 0.25}rem` }}>
         {languages.map((lang: Language) => (
           <div key={lang.id}>
             <span className="font-bold">{lang.name}</span>: {lang.level}

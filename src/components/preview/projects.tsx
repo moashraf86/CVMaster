@@ -26,7 +26,7 @@ export const ProjectsPreview: React.FC = () => {
   return (
     <section className="space-y-0.5">
       <h3
-        className="font-bold border-b border-primary dark:border-primary-foreground mb-1"
+        className="font-bold border-b border-neutral-400 mb-1"
         style={{ fontSize: fontSize + 4 }}
       >
         {sectionTitles.projects}
@@ -52,7 +52,9 @@ export const ProjectsPreview: React.FC = () => {
               {project.keywords.length > 0 && (
                 <div className="flex items-center gap-1">
                   |&nbsp;
-                  <span className="italic">{project.keywords.join(", ")}</span>
+                  <span className="italic text-xs">
+                    {project.keywords.join(", ")}
+                  </span>
                 </div>
               )}
             </div>
@@ -63,7 +65,7 @@ export const ProjectsPreview: React.FC = () => {
           {project.description && <span>{project.description}</span>}
           {project.summary && (
             <div
-              className={`leading-${lineHeight}`}
+              style={{ lineHeight: `${lineHeight * 0.25}rem` }}
               dangerouslySetInnerHTML={{ __html: project.summary }}
             />
           )}

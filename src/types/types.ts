@@ -5,8 +5,21 @@ export interface Basics {
   email: string;
   linkedin: string;
   website: string;
-  phone: string;
-  location: string;
+  phone: {
+    value: string;
+    breakAfter: boolean;
+  };
+  location: {
+    value: string;
+    breakAfter: boolean;
+  };
+  alignment: "start" | "center" | "end";
+  customFields: {
+    id: string;
+    name: string;
+    iconName: string;
+    value: string;
+  }[];
 }
 
 // [2] Define type for summary
@@ -122,6 +135,7 @@ export interface ResumeType {
     sectionTitles: {
       [key in SectionName]: string;
     };
+    pdfSettings: PdfSettings;
   };
   setData: (data: Record<string, unknown>) => void;
   setSectionOrder: (order: SectionName[]) => void;
@@ -131,9 +145,71 @@ export interface PdfSettings {
   pdfSettings: {
     fontSize: number;
     fontFamily: string;
+    fontCategory:
+      | "ATS-Friendly"
+      | "serif"
+      | "sans-serif"
+      | "monospace"
+      | "display"
+      | "handwriting";
     scale: number;
     lineHeight: number;
-    showForm: boolean;
+    verticalSpacing: number;
+    margin: {
+      MIN: number;
+      MAX: number;
+      VALUE: number;
+      INITIAL: number;
+    };
+    pageBreakLine: boolean;
   };
-  setValue: (key: string, value: number | string | boolean) => void;
+  setValue: (
+    key: string,
+    value: number | string | boolean | { [key: string]: number }
+  ) => void;
 }
+
+// Fonts type
+export type FontCategory =
+  | "sans-serif"
+  | "serif"
+  | "display"
+  | "handwriting"
+  | "monospace";
+
+// Google Fonts API response types
+export type GoogleFontAxis = {
+  tag: string;
+  start: number;
+  end: number;
+};
+
+export type GoogleFontFiles = {
+  [variant: string]: string; // URL to font file
+};
+
+export type GoogleFont = {
+  kind: "webfonts#webfont";
+  family: string;
+  category: FontCategory;
+  variants: string[];
+  subsets: string[];
+  version: string;
+  lastModified: string;
+  files: GoogleFontFiles;
+  menu?: string;
+  axes?: GoogleFontAxis[]; // For variable fonts
+};
+
+export type GoogleFontsAPIResponse = {
+  kind: "webfonts#webfontList";
+  items: GoogleFont[];
+};
+
+// App's font info type
+export type FontInfo = {
+  family: string;
+  category: FontCategory;
+  variants: string[];
+  variable: boolean;
+};
