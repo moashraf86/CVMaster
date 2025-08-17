@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [v1.2.1] - 2025-08-17
+
+### Changed
+
+- Improved error handling for AI model rate limit exceeded.
+- Updated **ReviewCvDialog.tsx** to use a more appropriate loading state.
+
 ---
 
 ## [v1.2.0] - 2025-08-17
