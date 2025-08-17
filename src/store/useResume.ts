@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { PdfSettings, ResumeType } from "../types/types";
+import { Analysis, PdfSettings, ResumeType } from "../types/types";
 import { PDF_SETTINGS } from "../lib/constants";
 
 // Default values for resume data
@@ -113,7 +113,7 @@ const DEFAULT_PDF_SETTINGS = {
 };
 
 // Helper function to safely parse JSON from localStorage
-const getLocalStorageData = (key: string, defaultValue = {}) => {
+const getLocalStorageData = (key: string, defaultValue = null) => {
   try {
     const data = localStorage.getItem(key);
     return data ? JSON.parse(data) : defaultValue;
@@ -183,4 +183,33 @@ export const usePdfSettings = create<PdfSettings>((set) => ({
       return { pdfSettings: newPdfSettings };
     });
   },
+}));
+
+// Create review store
+export const useAnalysis = create<{
+  currentAnalysis: Analysis | null;
+  isAnalyzing: boolean;
+  error: string | null;
+  setAnalysis: (analysis: Analysis) => void;
+  setIsAnalyzing: (isAnalyzing: boolean) => void;
+  clearAnalysis: () => void;
+  setError: (error: string | null) => void;
+}>((set) => ({
+  currentAnalysis: getLocalStorageData("currentAnalysis", null),
+  isAnalyzing: false,
+  error: null,
+
+  setAnalysis: (analysis) => {
+    localStorage.setItem("currentAnalysis", JSON.stringify(analysis));
+    set({ currentAnalysis: analysis });
+  },
+
+  setIsAnalyzing: (isAnalyzing) => set({ isAnalyzing }),
+
+  clearAnalysis: () => {
+    localStorage.removeItem("currentAnalysis");
+    set({ currentAnalysis: null });
+  },
+
+  setError: (error) => set({ error }),
 }));
