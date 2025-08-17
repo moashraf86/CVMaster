@@ -29,7 +29,7 @@ CVMaster is an AI-powered resume builder created with React, TypeScript, Zustand
 - **Express**: for building the backend server.
 - **Tailwind CSS**: A utility-first CSS framework for rapidly building custom designs.
 - **ShadCN UI**: A React component library for building modern web interfaces.
-- **Groq SDK**: Provides AI-powered suggestions to enhance the resume creation process.
+- **Groq SDK**: Provides AI-powered suggestions and reviews to enhance the resume creation process.
 - **Cloudinary**: A cloud-based files management service.
 
 ## Features
@@ -38,6 +38,7 @@ CVMaster is an AI-powered resume builder created with React, TypeScript, Zustand
 - AI-driven suggestions for optimizing resumes.
 - Export resumes as PDF files.
 - Upload and manage PDFs using Cloudinary.
+- AI-powered CV review with detailed analysis, scoring, and personalized recommendations.
 
 ## Getting Started
 
@@ -127,6 +128,8 @@ The backend server is responsible for generating and downloading the PDF resumes
 
 ## Credits
 
-The design and certain features of **CVMaster** were inspired by the open-source project [Reactive Resume](https://rxresu.me). While we drew inspiration from their user-friendly interface, **CVMaster** was implemented using a different technology stack and approach to suit the unique goals of this project.
+The design and certain features of **CVMaster** were inspired by the open-source project [Reactive Resume](https://rxresu.me). While we drew inspiration from their user-friendly interface, **CVMaster** was built with a different technology stack and tailored approach to fit the unique goals of this project.
 
-We appreciate the efforts of the [Reactive Resume](https://rxresu.me) community for their inspiring work.
+In addition, we introduced new features and presented some existing ones in a different way to enhance usability and deliver a more personalized experience.
+
+We deeply appreciate the efforts of the [Reactive Resume](https://rxresu.me) community for their inspiring work.
