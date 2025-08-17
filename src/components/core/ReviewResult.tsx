@@ -151,7 +151,26 @@ export const ReviewResult: React.FC = () => {
 
   // if no analysis, show a loading state
   if (!currentAnalysis) {
-    return <div>No analysis found</div>;
+    return (
+      <main className="flex flex-col items-center justify-center h-[calc(100vh-10rem)]">
+        <div className="space-y-4 text-center">
+          <h1 className="text-3xl font-bold">No analysis found</h1>
+          <p className="text-sm text-muted-foreground">
+            Please review your CV and try again.
+          </p>
+        </div>
+        <div className="flex justify-center mt-4">
+          <Button
+            variant="outline"
+            className="mb-4"
+            onClick={() => navigate("/")}
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back
+          </Button>
+        </div>
+      </main>
+    );
   }
 
   return (

@@ -1101,11 +1101,12 @@ export async function aiReview(
 																- Include only improvement sections where actual gaps exist
 																- Provide actionable, specific guidance rather than generic advice
 																- Maintain exact JSON structure to ensure compatibility
-																- if user input a meaningless job title or description, return a score of 0 and a message saying "Please enter a valid job title and description"`,
+																- if user input a meaningless job title or description, return a score of 0 and a message saying "Please enter a valid job title and description"
+																- if the resume is not a CV/Resume or empty or contains only, return a isResume: false and a message saying "cannot analyze an empty resume"`,
         },
       ],
       model: "openai/gpt-oss-120b",
-      temperature: 1,
+      temperature: 0.5,
       max_tokens: 8192,
       stop: null,
       response_format: { type: "json_object" },
@@ -1121,10 +1122,18 @@ export async function aiReview(
       // throw an error
       throw new Error("Please enter a valid job title and description");
     }
+    if (parsedReview?.isResume === false) {
+      // throw an error
+      throw new Error("cannot analyze an empty resume");
+    }
 
     return parsedReview;
   } catch (error) {
     if (error instanceof Error) {
+      // if error includes rate limit exceeded, throw a new error
+      if (error.message.includes("Rate limit reached")) {
+        throw new Error("AI Model Rate limit reached. Please try again later.");
+      }
       throw new Error(error.message);
     }
     throw error;

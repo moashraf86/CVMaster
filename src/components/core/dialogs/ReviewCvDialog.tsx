@@ -147,15 +147,14 @@ export const ReviewCvDialog: React.FC<{
             </Button>
           </div>
         </div>
-
         {/* loading state */}
         {isAnalyzing && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="fixed inset-0 bg-background/80 backdrop-blur-sm flex items-center justify-center z-[9999]">
             <div className="flex flex-col items-center justify-center">
               <svg viewBox="25 25 50 50" className="animate-dash">
                 <circle r="20" cy="50" cx="50"></circle>
               </svg>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-lg font-medium text-card-foreground mt-4">
                 AI is reviewing your CV...
               </p>
             </div>

@@ -215,6 +215,7 @@ export type FontInfo = {
 };
 
 export type Analysis = {
+  isResume?: boolean;
   overallScore: number;
   jobFitPercentage: number;
   summary: {
