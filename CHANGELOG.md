@@ -10,6 +10,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 
 - Implemented **AI-powered CV review** with detailed analysis, scoring, and personalized recommendations.
+- Updated **README.md** with enhanced credits and acknowledgments.
 
 ### Changed
 
