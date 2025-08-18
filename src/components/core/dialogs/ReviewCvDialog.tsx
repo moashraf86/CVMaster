@@ -55,11 +55,6 @@ export const ReviewCvDialog: React.FC<{
       setIsAnalyzing(true);
       const review = await aiReview(resume, jobTitle, jobDescription);
       setAnalysis(review);
-      toast({
-        title: "Review complete",
-        description: "Your CV has been reviewed successfully",
-        variant: "success",
-      });
       onClose();
       navigate("/review");
     } catch (error) {

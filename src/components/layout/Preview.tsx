@@ -24,32 +24,27 @@ export const Preview: React.FC = () => {
 
   useEffect(() => {
     const width = windowSize.width;
-
     if (!transformRef.current || width === null) return;
 
-    let scale = initialScale || PDF_SETTINGS.SCALE.INITIAL; // default
+    let newScale = PDF_SETTINGS.SCALE.INITIAL;
 
     if (width < 430) {
-      scale = PDF_SETTINGS.SCALE.SMALL;
-      setValue("scale", scale);
+      newScale = PDF_SETTINGS.SCALE.SMALL;
     } else if (width < 640) {
-      scale = PDF_SETTINGS.SCALE.MEDIUM;
-      setValue("scale", scale);
+      newScale = PDF_SETTINGS.SCALE.MEDIUM;
       setWheelPanning(true);
-    } else if (width > 640 && width < 1280) {
-      scale = PDF_SETTINGS.SCALE.INITIAL;
-      setValue("scale", scale);
-    } else if (width > 1280) {
-      scale = PDF_SETTINGS.SCALE.LARGE;
-      setValue("scale", scale);
-      return;
+    } else if (width >= 1280) {
+      newScale = PDF_SETTINGS.SCALE.LARGE;
     }
 
-    // Center view for other scales
-    if (scale === PDF_SETTINGS.SCALE.INITIAL) {
-      transformRef.current.centerView(initialScale, 0);
+    //only update if changed
+    if (newScale !== initialScale) {
+      setValue("scale", newScale);
+
+      //center the view and set the scale to the new scale
+      transformRef.current.centerView(newScale, 0);
     }
-  }, [windowSize]);
+  }, [windowSize.width]);
 
   useEffect(() => {
     loadGoogleFont(fontFamily || "Inter", ["400", "700"]);

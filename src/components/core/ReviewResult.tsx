@@ -5,11 +5,13 @@ import {
   Target,
   TrendingUp,
   FileText,
-  Award,
-  User,
   ArrowLeft,
   CirclePlus,
   Clock,
+  ClipboardList,
+  FileSearch,
+  Lightbulb,
+  UserCheck2,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
 import { Analysis } from "../../types/types";
@@ -30,9 +32,11 @@ import { Label } from "../ui/label";
 const ScoreCircle = ({
   score,
   size = "large",
+  className,
 }: {
   score: number;
   size?: "large" | "small";
+  className?: string;
 }) => {
   const radius = size === "large" ? 45 : 30;
 
@@ -53,7 +57,12 @@ const ScoreCircle = ({
   };
 
   return (
-    <div className="relative inline-flex items-center justify-center">
+    <div
+      className={cn(
+        "relative inline-flex items-center justify-center",
+        className
+      )}
+    >
       <svg
         height={radius * 2}
         width={radius * 2}
@@ -259,19 +268,19 @@ export const ReviewResult: React.FC = () => {
         >
           <TabsList className="w-full justify-start px-4 sm:px-6 h-14 border-b border-border overflow-x-auto overflow-y-hidden scrollbar-hide">
             <TabsTrigger value="overview">
-              <Target className="w-4 h-4 me-2" />
+              <ClipboardList className="w-4 h-4 me-2" />
               Overview
             </TabsTrigger>
             <TabsTrigger value="detailed">
-              <TrendingUp className="w-4 h-4 me-2" />
+              <FileSearch className="w-4 h-4 me-2" />
               Detailed Analysis
             </TabsTrigger>
             <TabsTrigger value="recommendations">
-              <Award className="w-4 h-4 me-2" />
+              <Lightbulb className="w-4 h-4 me-2" />
               Recommendations
             </TabsTrigger>
             <TabsTrigger value="improvements">
-              <User className="w-4 h-4 me-2" />
+              <TrendingUp className="w-4 h-4 me-2" />
               Improvements
             </TabsTrigger>
           </TabsList>
@@ -408,26 +417,30 @@ const DetailedAnalysisContent = ({
             <h3 className="text-lg font-semibold">Content Alignment</h3>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="bg-background p-4 rounded-b-lg border border-border">
-          <div className="mb-4 flex items-center gap-4">
-            <ScoreCircle
-              score={analysis?.detailedAnalysis.contentAlignment.score || 0}
-              size="small"
-            />
-            <div className="flex-1">
-              <div className="text-lg font-semibold">
+        <AccordionContent className="flex flex-col md:flex-row md:gap-4 items-start  bg-background p-4 rounded-b-lg border border-border">
+          <ScoreCircle
+            score={analysis?.detailedAnalysis.contentAlignment.score || 0}
+            size="small"
+            className="hidden md:inline-flex"
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="col-span-2">
+              <div className="flex items-center justify-between gap-2 text-lg font-semibold">
                 Score: {analysis?.detailedAnalysis.contentAlignment.score}
                 /100
+                <ScoreCircle
+                  score={analysis?.detailedAnalysis.contentAlignment.score || 0}
+                  size="small"
+                  className="md:hidden"
+                />
               </div>
 
-              <p className="text-foreground text-sm mt-1">
+              <p className="text-foreground text-sm mt-2 md:mt-1">
                 {analysis?.detailedAnalysis.contentAlignment.feedback}
               </p>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+            <div className="col-span-2 md:col-span-1">
               <h4 className="font-semibold text-green-800 mb-3">
                 ✓ Matching Skills
               </h4>
@@ -441,7 +454,7 @@ const DetailedAnalysisContent = ({
               />
             </div>
 
-            <div>
+            <div className="col-span-2 md:col-span-1">
               <h4 className="font-semibold text-red-800 mb-3">
                 ✗ Missing Skills
               </h4>
@@ -464,30 +477,36 @@ const DetailedAnalysisContent = ({
       >
         <AccordionTrigger className="flex items-center gap-2 bg-background text-foreground hover:bg-accent p-4 rounded-lg border border-border data-[state=open]:shadow-none data-[state=open]:border-b-0 data-[state=open]:rounded-b-none hover:no-underline">
           <div className="flex items-center gap-2">
-            <User className="w-5 h-5 me-2 text-blue-600" />
+            <UserCheck2 className="w-5 h-5 me-2 text-blue-600" />
             <h3 className="text-lg font-semibold">Experience Relevance</h3>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="bg-background p-4 rounded-b-lg border border-border">
-          <div className="mb-4 flex items-center gap-4">
-            <ScoreCircle
-              score={analysis?.detailedAnalysis.experienceRelevance.score || 0}
-              size="small"
-            />
-            <div className="flex-1">
-              <div className="text-lg font-semibold">
+        <AccordionContent className="flex flex-col md:flex-row md:gap-4 items-start bg-background p-4 rounded-b-lg border border-border">
+          <ScoreCircle
+            score={analysis?.detailedAnalysis.experienceRelevance.score || 0}
+            size="small"
+            className="hidden md:inline-flex"
+          />
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="col-span-2">
+              <div className="flex items-center justify-between gap-2 text-lg font-semibold">
                 Score: {analysis?.detailedAnalysis.experienceRelevance.score}
                 /100
+                <ScoreCircle
+                  score={
+                    analysis?.detailedAnalysis.experienceRelevance.score || 0
+                  }
+                  size="small"
+                  className="md:hidden"
+                />
               </div>
 
-              <p className="text-foreground text-sm mt-1">
+              <p className="text-foreground text-sm mt-2 md:mt-1">
                 {analysis?.detailedAnalysis.experienceRelevance.feedback}
               </p>
             </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
+            <div className="col-span-2 md:col-span-1">
               <h4 className="font-semibold text-green-800 mb-3">
                 Relevant Experience
               </h4>
@@ -508,7 +527,7 @@ const DetailedAnalysisContent = ({
               </ul>
             </div>
 
-            <div>
+            <div className="col-span-2 md:col-span-1">
               <h4 className="font-semibold text-red-800 mb-3">
                 Experience Gaps
               </h4>
@@ -542,48 +561,55 @@ const DetailedAnalysisContent = ({
             <h3 className="text-lg font-semibold">Resume Structure</h3>
           </div>
         </AccordionTrigger>
-        <AccordionContent className="bg-background p-4 rounded-b-lg border border-border">
-          <div className="mb-4 flex items-center gap-4">
-            <ScoreCircle
-              score={analysis?.detailedAnalysis.resumeStructure.score || 0}
-              size="small"
-            />
+        <AccordionContent className="flex flex-col md:flex-row md:gap-4 items-start bg-background p-4 rounded-b-lg border border-border">
+          <ScoreCircle
+            score={analysis?.detailedAnalysis.resumeStructure.score || 0}
+            size="small"
+            className="hidden md:inline-flex"
+          />
 
-            <div className="flex-1">
-              <div className="text-lg font-semibold">
+          <div className="space-y-4">
+            <div className="space-y-2 md:space-y-1">
+              <div className="flex items-center justify-between gap-2 text-lg font-semibold">
                 Score: {analysis?.detailedAnalysis.resumeStructure.score}
                 /100
+                <ScoreCircle
+                  score={analysis?.detailedAnalysis.resumeStructure.score || 0}
+                  size="small"
+                  className="md:hidden"
+                />
               </div>
 
-              <p className="text-foreground text-sm mt-1">
+              <p className="text-foreground text-sm">
                 {analysis?.detailedAnalysis.resumeStructure.feedback}
               </p>
             </div>
+
+            <div className="space-y-2">
+              <h4 className="font-semibold text-foreground mb-3">
+                Sections to Improve
+              </h4>
+              <ul className="space-y-2">
+                {analysis?.detailedAnalysis.resumeStructure.sectionsToImprove.map(
+                  (section, index) => (
+                    <li
+                      key={index}
+                      className="space-y-3 text-sm text-foreground bg-muted border border-border rounded p-3"
+                    >
+                      <div className="flex items-center gap-2">
+                        <CirclePlus className="w-4 h-4 text-foreground mt-0.5 flex-shrink-0" />
+                        <strong>{section.sectionName}</strong>
+                      </div>
+
+                      <p className="text-sm text-foreground">
+                        {section.improvement}
+                      </p>
+                    </li>
+                  )
+                )}
+              </ul>
+            </div>
           </div>
-
-          <h4 className="font-semibold text-foreground mb-3">
-            Sections to Improve
-          </h4>
-
-          <ul className="space-y-2">
-            {analysis?.detailedAnalysis.resumeStructure.sectionsToImprove.map(
-              (section, index) => (
-                <li
-                  key={index}
-                  className="space-y-3 text-sm text-foreground bg-muted border border-border rounded p-3"
-                >
-                  <div className="flex items-center gap-2">
-                    <CirclePlus className="w-4 h-4 text-foreground mt-0.5 flex-shrink-0" />
-                    <strong>{section.sectionName}</strong>
-                  </div>
-
-                  <p className="text-sm text-muted-foreground">
-                    {section.improvement}
-                  </p>
-                </li>
-              )
-            )}
-          </ul>
         </AccordionContent>
       </AccordionItem>
 
@@ -593,40 +619,48 @@ const DetailedAnalysisContent = ({
       >
         <AccordionTrigger className="flex items-center gap-2 bg-background text-foreground hover:bg-accent p-4 rounded-lg border border-border data-[state=open]:shadow-none data-[state=open]:border-b-0 data-[state=open]:rounded-b-none hover:no-underline">
           <div className="flex items-center gap-2">
-            <TrendingUp className="w-5 h-5 me-2 text-blue-600" />
+            <CheckCircle className="w-5 h-5 me-2 text-blue-600" />
             <h3 className="text-lg font-semibold">ATS Compatibility</h3>
           </div>
         </AccordionTrigger>
 
-        <AccordionContent className="bg-background p-4 rounded-b-lg border border-border">
-          <div className="mb-4 flex items-center gap-4">
-            <ScoreCircle
-              score={analysis?.detailedAnalysis.atsCompatibility.score || 0}
-              size="small"
-            />
+        <AccordionContent className="flex flex-col md:flex-row md:gap-4 items-start bg-background p-4 rounded-b-lg border border-border">
+          <ScoreCircle
+            score={analysis?.detailedAnalysis.atsCompatibility.score || 0}
+            size="small"
+            className="hidden md:inline-flex"
+          />
 
-            <div className="flex-1">
-              <div className="text-lg font-semibold">
+          <div className="space-y-4">
+            <div className="space-y-2 md:space-y-1">
+              <div className="flex items-center justify-between gap-2 text-lg font-semibold">
                 Score: {analysis?.detailedAnalysis.atsCompatibility.score}
                 /100
+                <ScoreCircle
+                  score={analysis?.detailedAnalysis.atsCompatibility.score || 0}
+                  size="small"
+                  className="md:hidden"
+                />
               </div>
 
-              <p className="text-foreground text-sm mt-1">
+              <p className="text-foreground text-sm">
                 {analysis?.detailedAnalysis.atsCompatibility.feedback}
               </p>
             </div>
+            <div className="space-y-2">
+              <h4 className="font-semibold text-red-800 mb-3">
+                ✗ Missing Keywords
+              </h4>
+
+              <SkillsList
+                skills={
+                  analysis?.detailedAnalysis.atsCompatibility.missingKeywords ||
+                  []
+                }
+                type="missing"
+              />
+            </div>
           </div>
-
-          <h4 className="font-semibold text-red-800 mb-3">
-            ✗ Missing Keywords
-          </h4>
-
-          <SkillsList
-            skills={
-              analysis?.detailedAnalysis.atsCompatibility.missingKeywords || []
-            }
-            type="missing"
-          />
         </AccordionContent>
       </AccordionItem>
     </Accordion>
@@ -643,8 +677,8 @@ const RecommendationsContent = ({
     <div className="space-y-6">
       {/* High Priority */}
       <div className="bg-background border border-red-800 rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-red-800 mb-5 flex items-center gap-2">
-          <AlertCircle className="w-6 h-6" />
+        <h3 className="md:text-xl font-semibold text-red-800 mb-5 flex items-center gap-2">
+          <AlertCircle className="size-4 md:size-6" />
           High Priority Recommendations
         </h3>
 
@@ -654,7 +688,7 @@ const RecommendationsContent = ({
               key={index}
               className="flex items-center gap-3 bg-red-50 border border-red-200 rounded p-4"
             >
-              <p className="text-red-800">{rec}</p>
+              <p className="text-sm md:text-base text-red-800">{rec}</p>
             </div>
           ))}
         </div>
@@ -663,8 +697,8 @@ const RecommendationsContent = ({
       {/* Medium Priority */}
 
       <div className="bg-background border border-yellow-800 rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-yellow-800 mb-5 flex items-center gap-2">
-          <Clock className="w-6 h-6" />
+        <h3 className="md:text-xl font-semibold text-yellow-800 mb-5 flex items-center gap-2">
+          <Clock className="size-4 md:size-6" />
           Medium Priority Recommendations
         </h3>
 
@@ -674,7 +708,7 @@ const RecommendationsContent = ({
               key={index}
               className="flex items-center gap-3 bg-yellow-50 border border-yellow-200 rounded p-4"
             >
-              <p className="text-yellow-800">{rec}</p>
+              <p className="text-sm md:text-base text-yellow-800">{rec}</p>
             </div>
           ))}
         </div>
@@ -682,8 +716,8 @@ const RecommendationsContent = ({
 
       {/* Low Priority */}
       <div className="bg-background border border-green-800 rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-green-800 mb-5 flex items-center gap-2">
-          <CheckCircle className="w-6 h-6" />
+        <h3 className="md:text-xl font-semibold text-green-800 mb-5 flex items-center gap-2">
+          <CheckCircle className="size-4 md:size-6" />
           Low Priority Recommendations
         </h3>
         <div className="space-y-3">
@@ -692,7 +726,7 @@ const RecommendationsContent = ({
               key={index}
               className="flex items-center gap-3 bg-green-50 border border-green-200 rounded p-4"
             >
-              <p className="text-green-800">{rec}</p>
+              <p className="text-sm md:text-base text-green-800">{rec}</p>
             </div>
           ))}
         </div>
@@ -701,18 +735,18 @@ const RecommendationsContent = ({
       {/* Next Steps */}
 
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-        <h3 className="text-xl font-semibold text-blue-800 mb-5">
+        <h3 className="md:text-xl font-semibold text-blue-800 mb-5">
           Immediate Next Steps
         </h3>
 
         <ol className="space-y-4">
           {analysis?.nextSteps.map((step, index) => (
             <li key={index} className="flex items-start gap-3">
-              <span className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm font-bold flex-shrink-0">
+              <span className="bg-blue-600 text-white rounded-full size-5 md:size-6 flex items-center justify-center text-xs md:text-sm font-bold flex-shrink-0 mt-1">
                 {index + 1}
               </span>
 
-              <p className="text-gray-700">{step}</p>
+              <p className="text-sm md:text-base text-gray-700">{step}</p>
             </li>
           ))}
         </ol>
@@ -729,13 +763,13 @@ const ImprovementsContent = ({ analysis }: { analysis: Analysis | null }) => {
         ([section, improvement]) => (
           <div
             key={section}
-            className="bg-muted border border-border rounded-lg p-6"
+            className="bg-background border border-border rounded-lg p-6"
           >
             <h3 className="text-lg font-semibold text-foreground mb-4 capitalize">
               {section.replace(/([A-Z])/g, " $1").trim()}
             </h3>
 
-            <div className="bg-background border border-border rounded p-4">
+            <div className="bg-background">
               <ul className="space-y-4">
                 {[...improvement].map((item: string, index: number) => (
                   <li key={index} className="flex items-start gap-2">

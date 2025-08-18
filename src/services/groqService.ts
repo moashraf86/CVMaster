@@ -1032,6 +1032,8 @@ export async function aiReview(
 
 					5. **PRIORITY-BASED APPROACH**: Focus on changes that will have the highest impact on job fit percentage and ATS compatibility.
 
+					6. **CV TITLE**: The title of the CV should match the job title.
+
 					**MANDATORY RESPONSE FORMAT** (maintain exact structure):
 					{
 						"overallScore": number (0-100),
