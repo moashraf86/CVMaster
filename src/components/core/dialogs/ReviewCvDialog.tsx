@@ -19,8 +19,8 @@ import { toast } from "../../../hooks/use-toast";
 
 // inputs schema for job title and description
 const inputsSchema = z.object({
-  jobTitle: z.string().min(1),
-  jobDescription: z.string().min(1),
+  jobTitle: z.string().min(5),
+  jobDescription: z.string().min(100),
 });
 
 export const ReviewCvDialog: React.FC<{
@@ -47,7 +47,7 @@ export const ReviewCvDialog: React.FC<{
       if (!validatedInputs.success) {
         toast({
           title: "Invalid inputs",
-          description: "Please enter a valid job title and description",
+          description: `title must be at least 5 characters long and job description must be at least 100 characters long.`,
           variant: "destructive",
         });
         return;
@@ -83,24 +83,22 @@ export const ReviewCvDialog: React.FC<{
         </DialogHeader>
 
         <div className="space-y-4 mt-4">
-          <div className="space-y-2">
-            <Label>Enter the job title you are applying for</Label>
-
+          <div className="relative space-y-2">
+            <Label>Job Title</Label>
             <Input
               required
               type="text"
-              placeholder="Enter the job title you are applying for"
+              placeholder="ex: Software Engineer"
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label>Enter the job description and requirements</Label>
-
+            <Label>Job Description</Label>
             <Textarea
               rows={10}
-              placeholder="Enter the job description and requirements to get a more accurate review"
+              placeholder="Enter detailed job description and requirements to get a more accurate review"
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
               required
