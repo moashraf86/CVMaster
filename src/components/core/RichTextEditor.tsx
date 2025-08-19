@@ -24,7 +24,7 @@ import {
   ListOrdered,
   LoaderPinwheel,
   SlidersHorizontal,
-  Sparkles,
+  Sparkle,
   Undo,
 } from "lucide-react";
 import {
@@ -310,7 +310,7 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
         {isRegenerating ? (
           <LoaderPinwheel className="animate-spin size-4" />
         ) : (
-          <Sparkles className="size-4" />
+          <Sparkle className="size-4" />
         )}
         Improve Writing
       </Button>

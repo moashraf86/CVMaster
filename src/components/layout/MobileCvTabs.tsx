@@ -13,7 +13,9 @@ const PersistentTabsContent = ({
   activeValue: string;
   children: React.ReactNode;
 }) => (
-  <div className={activeValue === value ? "block" : "hidden"}>{children}</div>
+  <div className={activeValue === value ? "block" : "hidden-fix"}>
+    {children}
+  </div>
 );
 
 export const MobileCvTabs: React.FC = () => {

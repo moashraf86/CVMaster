@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
-import { Sparkle } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { ReviewCvDialog } from "./dialogs/ReviewCvDialog";
 import { useWindowSize } from "@uidotdev/usehooks";
 
@@ -17,7 +17,7 @@ export const ReviewBtn: React.FC = () => {
         shiny={!isMobile}
         onClick={() => setIsOpen(true)}
       >
-        <Sparkle className="size-4 text-primary" />
+        <Sparkles className="size-4 text-primary" />
 
         <span className="sr-only md:not-sr-only text-primary">AI Review</span>
       </Button>
