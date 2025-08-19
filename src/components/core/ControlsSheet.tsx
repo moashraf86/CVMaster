@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import { Label } from "../ui/label";
 import {
   Sheet,
@@ -19,24 +19,7 @@ import {
   FileText,
 } from "lucide-react";
 import { Slider } from "../ui/slider";
-import {
-  closestCenter,
-  DndContext,
-  DragEndEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import { SectionName } from "../../types/types";
 import { usePdfSettings, useResume } from "../../store/useResume";
-import { SortableItem } from "./SortableItem";
 import { PDF_SETTINGS } from "../../lib/constants";
 import { Button } from "../ui/button";
 import { FontSelectorAccordion } from "./FontSelectorAccordion";
@@ -48,14 +31,15 @@ interface ControlsSheetProps {
   onClose: () => void;
 }
 
+// Lazy load the DndSections component
+const DndSections = lazy(() => import("./DndSections"));
+
 export const ControlsSheet: React.FC<ControlsSheetProps> = ({
   isOpen,
   onClose,
 }) => {
   const {
     setData,
-    sectionOrder,
-    setSectionOrder,
     resumeData: { basics },
   } = useResume();
   const {
@@ -64,27 +48,6 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
   } = usePdfSettings();
   const windowSize = useWindowSize();
   const isMobile = windowSize.width && windowSize.width < 640;
-
-  // Handle drag-and-drop reordering
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (over && active.id !== over.id) {
-      const oldIndex = sectionOrder.indexOf(active.id as SectionName);
-      const newIndex = sectionOrder.indexOf(over.id as SectionName);
-
-      const newOrder = arrayMove(sectionOrder, oldIndex, newIndex);
-      setSectionOrder(newOrder);
-    }
-  };
-
-  // Sensors for drag-and-drop
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  );
 
   const handleFontSizeChange = (value: number) => {
     console.log(value);
@@ -175,22 +138,9 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
               Layout
             </h3>
             <div className="space-y-2">
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                onDragEnd={handleDragEnd}
-              >
-                <SortableContext
-                  items={sectionOrder}
-                  strategy={verticalListSortingStrategy}
-                >
-                  {sectionOrder.map((sectionId) => (
-                    <SortableItem key={sectionId} id={sectionId}>
-                      {sectionId}
-                    </SortableItem>
-                  ))}
-                </SortableContext>
-              </DndContext>
+              <Suspense fallback={<div>Loading...</div>}>
+                <DndSections />
+              </Suspense>
             </div>
           </div>
           <Separator className="my-8" />
