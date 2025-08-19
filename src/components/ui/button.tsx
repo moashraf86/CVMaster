@@ -101,12 +101,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {...shinyAnimationProps}
           {...props}
           className={cn(
-            "relative rounded-lg font-medium backdrop-blur-xl transition-shadow duration-300 ease-in-out hover:shadow dark:bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/10%)_0%,transparent_60%)] dark:hover:shadow-[0_0_20px_hsl(var(--primary)/10%)] disabled:opacity-50 disabled:cursor-not-allowed",
+            "relative rounded-lg font-medium backdrop-blur-xl transition-shadow duration-300 ease-in-out hover:shadow bg-[radial-gradient(circle_at_50%_0%,hsl(var(--primary)/10%)_0%,transparent_60%)] dark:hover:shadow-[0_0_20px_hsl(var(--primary)/10%)] disabled:opacity-50 disabled:cursor-not-allowed text-primary border border-primary",
             buttonVariants({ variant, size, className })
           )}
         >
           <span
-            className="relative flex items-center justify-center gap-2 size-full text-sm  tracking-wide text-[rgb(0,0,0,65%)] dark:font-normal dark:text-[rgb(255,255,255,90%)]"
+            className="relative flex items-center justify-center gap-2 size-full text-sm tracking-wide text-primary font-medium"
             style={{
               maskImage:
                 "linear-gradient(-75deg,hsl(var(--primary)) calc(var(--x) + 20%),transparent calc(var(--x) + 30%),hsl(var(--primary)) calc(var(--x) + 100%))",

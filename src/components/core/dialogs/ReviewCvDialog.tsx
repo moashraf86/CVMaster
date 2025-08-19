@@ -10,7 +10,7 @@ import { Label } from "../../ui/label";
 import { Input } from "../../ui/input";
 import { Textarea } from "../../ui/textarea";
 import { Button } from "../../ui/button";
-import { History, Sparkle } from "lucide-react";
+import { History, Sparkles } from "lucide-react";
 import { useResume, useAnalysis } from "../../../store/useResume";
 import { aiReview } from "../../../services/groqService";
 import { useNavigate } from "react-router";
@@ -135,7 +135,7 @@ export const ReviewCvDialog: React.FC<{
               disabled={isAnalyzing}
               onClick={handleReview}
             >
-              <Sparkle className="size-4 mr-2 text-primary" />
+              <Sparkles className="size-4 mr-2 text-primary" />
               <span className="text-primary">AI Review </span>
             </Button>
           </div>
