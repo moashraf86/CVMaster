@@ -25,21 +25,27 @@ function App() {
   const windowSize = useWindowSize();
   const isMobile = windowSize.width !== null && windowSize.width < 1024;
   const [isAppReady, setIsAppReady] = useState(false);
+  const isFirstVisit = !sessionStorage.getItem("hasVisited");
 
   useEffect(() => {
     const initializeApp = async () => {
       await new Promise((resolve) => setTimeout(resolve, 500));
       setIsAppReady(true);
+
+      // Mark as visited after first load
+      if (isFirstVisit) {
+        sessionStorage.setItem("hasVisited", "true");
+      }
     };
 
     initializeApp();
-  }, []);
+  }, [isFirstVisit]);
 
   // lock body scroll
   useLockBodyScroll();
 
-  // Show loader while app is initializing
-  if (!isAppReady) {
+  // Show loader only on first visit while app is initializing
+  if (isFirstVisit && !isAppReady) {
     return (
       <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <AppLoader />
