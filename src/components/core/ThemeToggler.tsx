@@ -17,6 +17,7 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
 }) => {
   const { theme, setTheme } = useTheme();
 
+  console.log(theme);
   const isDark = theme === "dark";
   const isVertical = direction === "vertical";
   const showBackground = variant === "background" || variant === "both";
@@ -77,10 +78,9 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
     <button
       onClick={handleThemeChange}
       className={cn(
-        "relative inline-flex items-center rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-inner border",
+        "relative inline-flex items-center rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-inner border bg-background dark:bg-primary",
         config.container,
         isVertical && "flex-col",
-        isDark ? "bg-primary" : "bg-background",
         className
       )}
       aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
@@ -101,8 +101,8 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
               config.bgIcon,
               "transition-all duration-300",
               isDark
-                ? "text-secondary scale-90 opacity-60"
-                : "text-secondary scale-100 opacity-60"
+                ? "text-secondary scale-90 opacity-60 rotate-0"
+                : "text-secondary scale-0 opacity-0 -rotate-90"
             )}
           />
           <Moon
@@ -110,8 +110,8 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
               config.bgIcon,
               "transition-all duration-300",
               isDark
-                ? "text-accent-foreground scale-100 opacity-60"
-                : "text-accent-foreground scale-90 opacity-40"
+                ? "text-accent-foreground scale-0 opacity-0 -rotate-90"
+                : "text-accent-foreground scale-90 opacity-40 rotate-0"
             )}
           />
         </div>
@@ -120,20 +120,28 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
       {/* Sliding thumb */}
       <span
         className={cn(
-          "relative z-10 inline-flex items-center justify-center transform rounded-full shadow-lg transition-all duration-300 ease-in-out",
+          "relative z-10 inline-flex items-center justify-center transform rounded-full shadow-lg transition-all duration-300 ease-in-out bg-background dark:bg-primary-foreground",
           config.thumb,
-          config.translate,
-          // Thumb styling
-          isDark ? "bg-primary-foreground" : "bg-white"
+          config.translate
         )}
       >
         {/* Icon in thumb */}
-        {showThumbIcon &&
-          (isDark ? (
-            <Moon className={cn(config.icon, "text-primary")} />
-          ) : (
-            <Sun className={cn(config.icon, "text-primary")} />
-          ))}
+        {showThumbIcon && (
+          <>
+            <Moon
+              className={cn(
+                config.icon,
+                "text-primary scale-0 hidden dark:block dark:scale-100 transition-all duration-300 ease-in-out"
+              )}
+            />
+            <Sun
+              className={cn(
+                config.icon,
+                "text-primary scale-100 dark:hidden dark:scale-0 transition-all duration-300 ease-in-out"
+              )}
+            />
+          </>
+        )}
       </span>
     </button>
   );

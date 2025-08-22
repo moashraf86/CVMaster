@@ -8,18 +8,7 @@ import { MobileCvTabs } from "./components/layout/MobileCvTabs";
 import { useLockBodyScroll, useWindowSize } from "@uidotdev/usehooks";
 import { Header } from "./components/layout/Header";
 import { useState, useEffect } from "react";
-
-// Loading component
-const AppLoader = () => (
-  <div className="flex items-center justify-center min-h-screen bg-background">
-    <div className="text-center space-y-4">
-      <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-      <p className="text-primary text-lg font-semibold font-mono">
-        Loading CV Master...
-      </p>
-    </div>
-  </div>
-);
+import { AppLoader } from "./components/core/AppLoader";
 
 function App() {
   const windowSize = useWindowSize();
@@ -47,14 +36,12 @@ function App() {
   // Show loader only on first visit while app is initializing
   if (isFirstVisit && !isAppReady) {
     return (
-      <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
         <AppLoader />
-      </ThemeProvider>
     );
   }
 
   return (
-    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="cv-master-theme">
       <DialogProvider>
         <div className="size-full overflow-hidden">
           <Header />

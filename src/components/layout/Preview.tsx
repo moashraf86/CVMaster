@@ -69,7 +69,7 @@ export const Preview: React.FC = () => {
     >
       <>
         <TransformComponent
-          wrapperClass="relative !w-screen !h-[calc(100vh-104px)] lg:!h-[calc(100vh-64px)] flex-auto min-w-[60%] 2xl:min-w-[65%] xl:!w-auto !mt-[27px] sm:!mt-0"
+          wrapperClass="relative !w-screen !h-[calc(100vh-104px)] lg:!h-[calc(100vh-64px)] flex-auto grow shrink-0 basis-[60%] 2xl:basis-[65%] xl:!w-auto !mt-[27px] sm:!mt-0"
           contentClass="items-start justify-center pointer-events-none"
           contentStyle={{ width: "100%", transition: "transform 0.1s" }}
         >

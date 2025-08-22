@@ -300,9 +300,8 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
   return (
     <div className="relative flex justify-center flex-wrap gap-2 mt-4">
       <Button
-        shiny
         title="Rewrite Content"
-        variant="ghost"
+        variant="shiny"
         type="button"
         onClick={handleRewrite}
         disabled={!trimmedContent || isRegenerating}
@@ -315,9 +314,8 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
         Improve Writing
       </Button>
       <Button
-        shiny
         title="Fix Spelling & Grammar"
-        variant="ghost"
+        variant="shiny"
         type="button"
         onClick={handleFixTypos}
         disabled={!trimmedContent || isFixingTypos}
@@ -335,10 +333,9 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
         onValueChange={(value) => handleCustomize(value)}
       >
         <Button
-          shiny
-          variant="ghost"
+          asChild
+          variant="shiny"
           type="button"
-          className="px-0"
           onClick={() => setIsOpen(!isOpen)}
           disabled={!trimmedContent || isCustomizing}
         >
@@ -494,7 +491,7 @@ export const RichTextEditor: React.FC<RichTextEditorProps> = ({
       <EditorProvider
         editorContainerProps={{
           className:
-            "editor-container relative border border-border rounded-b-sm min-h-28",
+            "editor-container relative border border-border rounded-b-sm min-h-32",
           children:
             isRegenerating || isCustomizing ? (
               <div

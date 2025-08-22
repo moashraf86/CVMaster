@@ -4,7 +4,7 @@ import { ThemeProvider } from "../providers/ThemeProvider";
 
 export default function ReviewPage() {
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="cv-master-theme">
       <div className="size-full overflow-hidden">
         <Header />
         <ReviewResult />

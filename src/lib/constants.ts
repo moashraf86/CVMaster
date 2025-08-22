@@ -1,3 +1,13 @@
+import {
+  Briefcase,
+  Globe,
+  LinkIcon,
+  Mail,
+  MapPin,
+  Phone,
+  User,
+} from "lucide-react";
+
 export const PDF_SETTINGS = {
   SCALE: {
     MIN: 0.4,
@@ -148,3 +158,20 @@ export const FONT_CATEGORIES = [
   "monospace",
   "handwriting",
 ];
+
+export const ICONS = {
+  email: Mail,
+  phone: Phone,
+  location: MapPin,
+  link: LinkIcon,
+  website: Globe,
+  user: User,
+  briefcase: Briefcase,
+  linkedin: "linkedin",
+  github: "github",
+  behance: "behance",
+  dribbble: "dribbble",
+  facebook: "facebook",
+  x: "x",
+  youtube: "youtube",
+} as const;

@@ -47,7 +47,7 @@ export const ReviewCvDialog: React.FC<{
       if (!validatedInputs.success) {
         toast({
           title: "Invalid inputs",
-          description: `title must be at least 5 characters long and job description must be at least 100 characters long.`,
+          description: `Title must be at least 5 characters long and job description must be at least 100 characters long.`,
           variant: "destructive",
         });
         return;
@@ -97,7 +97,7 @@ export const ReviewCvDialog: React.FC<{
           <div className="space-y-2">
             <Label>Job Description</Label>
             <Textarea
-              rows={10}
+              rows={6}
               placeholder="Enter detailed job description and requirements to get a more accurate review"
               value={jobDescription}
               onChange={(e) => setJobDescription(e.target.value)}
@@ -112,7 +112,7 @@ export const ReviewCvDialog: React.FC<{
             </p>
           </div>
 
-          <div className="flex justify-end gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
             {/* View last analysis */}
             {currentAnalysis && Object.keys(currentAnalysis).length > 0 && (
               <Button
@@ -121,6 +121,7 @@ export const ReviewCvDialog: React.FC<{
                 onClick={() => {
                   navigate("/review");
                 }}
+                className="w-full sm:w-auto"
               >
                 <History className="size-4 mr-2" />
                 View last Review
@@ -129,7 +130,7 @@ export const ReviewCvDialog: React.FC<{
 
             <Button
               variant="outline"
-              className="size-auto border-primary"
+              className="border-primary w-full sm:w-auto"
               shiny
               type="submit"
               disabled={isAnalyzing}
