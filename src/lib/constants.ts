@@ -7,6 +7,15 @@ import {
   Phone,
   User,
 } from "lucide-react";
+// Custom icons
+import { WhatsAppIcon } from "../components/core/icons/WhatsAppIcon";
+import { LinkedInIcon } from "../components/core/icons/LinkedIn";
+import { GithubIcon } from "../components/core/icons/GithubIcon";
+import { BehanceIcon } from "../components/core/icons/BehanceIcon";
+import { DribbleIcon } from "../components/core/icons/DribbleIcon";
+import { FacebookIcon } from "../components/core/icons/FacebookIcon";
+import { XIcon } from "../components/core/icons/XIcon";
+import { YoutubeIcon } from "../components/core/icons/YoutubeIcon";
 
 export const PDF_SETTINGS = {
   SCALE: {
@@ -162,16 +171,17 @@ export const FONT_CATEGORIES = [
 export const ICONS = {
   email: Mail,
   phone: Phone,
+  whatsapp: WhatsAppIcon,
   location: MapPin,
   link: LinkIcon,
   website: Globe,
   user: User,
   briefcase: Briefcase,
-  linkedin: "linkedin",
-  github: "github",
-  behance: "behance",
-  dribbble: "dribbble",
-  facebook: "facebook",
-  x: "x",
-  youtube: "youtube",
+  linkedin: LinkedInIcon,
+  github: GithubIcon,
+  behance: BehanceIcon,
+  dribbble: DribbleIcon,
+  facebook: FacebookIcon,
+  x: XIcon,
+  youtube: YoutubeIcon,
 } as const;

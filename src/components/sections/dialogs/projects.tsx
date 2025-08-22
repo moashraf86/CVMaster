@@ -110,13 +110,18 @@ export const ProjectsDialog: React.FC = () => {
 
   // on submit function
   function onSubmit(data: z.infer<typeof projectsSchema>) {
-    // Remove duplicate keywords
-    const uniqueKeywords = [...new Set(data.keywords)];
-    const cleanedData = { ...data, keywords: uniqueKeywords };
     // Generate unique id for the project
     const projectWithId = isEditMode
-      ? { ...cleanedData, id: projects[index].id }
-      : { ...cleanedData, id: crypto.randomUUID() };
+      ? {
+          ...data,
+          id: projects[index].id,
+          keywords: orderedKeywords,
+        }
+      : {
+          ...data,
+          id: crypto.randomUUID(),
+          keywords: orderedKeywords,
+        };
 
     const currentProjects = projects;
     const updatedProjects = isEditMode
@@ -192,12 +197,11 @@ export const ProjectsDialog: React.FC = () => {
 
   // handle clear keywords
   const handleClearKeywords = () => {
-    console.log("clear keywords");
     setKeywords([]);
     setOrderedKeywords([]);
     form.setValue("keyword", "");
     form.setValue("keywords", []);
-    // form.clearErrors("keywords");
+    form.clearErrors("keywords");
   };
 
   useEffect(() => {

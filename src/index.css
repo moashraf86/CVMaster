@@ -160,6 +160,10 @@
     height: 0;
   }
 
+  [data-radix-scroll-area-viewport] > div:first-child {
+    @apply max-w-full !flex flex-col;
+  }
+
   svg.animate-dash {
     width: 3.25em;
     transform-origin: center;

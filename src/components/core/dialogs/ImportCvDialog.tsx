@@ -271,20 +271,20 @@ export const ImportCvDialog: React.FC<ImportCvDialogProps> = ({
               <SelectContent>
                 <SelectItem value="pdf">
                   <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    PDF, Word (.pdf, .docx) - High accuracy
+                    <FileText className="size-3 min-w-3 sm:size-4 sm:min-w-4" />
+                    PDF - High accuracy
                   </div>
                 </SelectItem>
                 <SelectItem value="image">
                   <div className="flex items-center gap-2">
-                    <FileImage className="h-4 w-4" />
-                    Image (.png, .jpg, .jpeg) - Medium accuracy
+                    <FileImage className="size-3 min-w-3 sm:size-4 sm:min-w-4" />
+                    Image - Medium accuracy
                   </div>
                 </SelectItem>
                 <SelectItem value="cv-master-json">
                   <div className="flex items-center gap-2">
-                    <FileText className="h-4 w-4" />
-                    CV Master JSON (.json) - Fastest & most accurate
+                    <FileText className="size-3 min-w-3 sm:size-4 sm:min-w-4" />
+                    CV Master JSON - Fastest
                   </div>
                 </SelectItem>
                 <SelectItem value="json" disabled>
@@ -300,16 +300,16 @@ export const ImportCvDialog: React.FC<ImportCvDialogProps> = ({
               accept={getAcceptTypes()}
               onChange={handleFileChange}
               disabled={isProcessing}
+              className="pt-1.5"
             />
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <FileText className="h-3 w-3" />
+            <div className="flex items-start gap-2 text-xs text-muted-foreground">
               <span>
                 Accepts:{" "}
                 {fileType === "pdf"
-                  ? "PDF files"
+                  ? "PDF files (.pdf)"
                   : fileType === "image"
-                  ? "Image files (PNG, JPG, JPEG, etc.)"
-                  : "JSON files"}
+                  ? "Image files (.png, .jpg, .jpeg)"
+                  : "JSON files (.json - CV Master version)"}
                 {(fileType === "pdf" || fileType === "image") &&
                   " (AI will extract and structure the data)"}
               </span>

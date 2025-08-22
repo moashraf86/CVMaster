@@ -7,10 +7,7 @@ import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import { CustomIcon } from "../core/CustomIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { LinkedInIcon } from "../core/icons/LinkedIn";
 import { ICONS } from "../../lib/constants";
-import { DribbleIcon } from "../core/icons/DribbleIcon";
-import { FacebookIcon } from "../core/icons/FacebookIcon";
 
 // schema
 const basicsSchema = z.object({
@@ -115,7 +112,7 @@ export const BasicsInfo: React.FC = () => {
           Personal Info
         </h2>
       </header>
-      <main className="grid gap-4 sm:grid-col-2">
+      <main className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="basics.name">Full Name</Label>
           <Input
@@ -285,15 +282,7 @@ export const BasicsInfo: React.FC = () => {
             <Popover>
               <Button variant="ghost" size="icon" asChild>
                 <PopoverTrigger>
-                  {field.iconName === "linkedin" ? (
-                    <LinkedInIcon size={14} />
-                  ) : field.iconName === "dribbble" ? (
-                    <DribbleIcon size={14} />
-                  ) : field.iconName === "facebook" ? (
-                    <FacebookIcon size={14} />
-                  ) : (
-                    <CustomIcon iconName={field.iconName} size={14} />
-                  )}
+                  <CustomIcon iconName={field.iconName} size={14} />
                 </PopoverTrigger>
               </Button>
               <PopoverContent className="w-fit p-2" align="start">
