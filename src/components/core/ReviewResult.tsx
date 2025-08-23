@@ -266,24 +266,29 @@ export const ReviewResult: React.FC = () => {
           value={activeTab}
           onValueChange={setActiveTab}
         >
-          <TabsList className="w-full justify-start px-4 sm:px-6 h-14 border-b border-border overflow-x-auto overflow-y-hidden scrollbar-hide">
-            <TabsTrigger value="overview">
-              <ClipboardList className="w-4 h-4 me-2" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="detailed">
-              <FileSearch className="w-4 h-4 me-2" />
-              Detailed Analysis
-            </TabsTrigger>
-            <TabsTrigger value="recommendations">
-              <Lightbulb className="w-4 h-4 me-2" />
-              Recommendations
-            </TabsTrigger>
-            <TabsTrigger value="improvements">
-              <TrendingUp className="w-4 h-4 me-2" />
-              Improvements
-            </TabsTrigger>
-          </TabsList>
+          <div className="relative">
+            <div className="absolute left-0 top-0 bottom-0 w-4 bg-background-foreground/10  backdrop-blur-sm blur sm:hidden" />
+            <div className="absolute right-0 top-0 bottom-0 w-4 bg-background-foreground/10 backdrop-blur-sm blur sm:hidden" />
+            <TabsList className="w-full justify-start px-4 sm:px-6 h-14 border-b border-border overflow-x-auto overflow-y-hidden scrollbar-hide">
+              {/* tabs */}
+              <TabsTrigger value="overview">
+                <ClipboardList className="w-4 h-4 me-2" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="detailed">
+                <FileSearch className="w-4 h-4 me-2" />
+                Detailed Analysis
+              </TabsTrigger>
+              <TabsTrigger value="recommendations">
+                <Lightbulb className="w-4 h-4 me-2" />
+                Recommendations
+              </TabsTrigger>
+              <TabsTrigger value="improvements">
+                <TrendingUp className="w-4 h-4 me-2" />
+                Improvements
+              </TabsTrigger>
+            </TabsList>
+          </div>
           <TabsContent value="overview" className="p-4 sm:p-6">
             <OverviewContent analysis={currentAnalysis} />
           </TabsContent>

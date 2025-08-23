@@ -13,13 +13,13 @@ export const ReviewBtn: React.FC = () => {
     <>
       <Button
         variant="outline"
-        className="size-8 md:size-auto border-primary"
+        className="size-auto border-primary"
         shiny={!isMobile}
         onClick={() => setIsOpen(true)}
       >
         <Sparkles className="size-4 text-primary" />
 
-        <span className="sr-only md:not-sr-only text-primary">AI Review</span>
+        <span className="text-primary">AI Review</span>
       </Button>
 
       <ReviewCvDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />

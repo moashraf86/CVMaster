@@ -7,7 +7,7 @@ import { Switch } from "../ui/switch";
 import { Button } from "../ui/button";
 import { CustomIcon } from "../core/CustomIcon";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { LinkedInIcon } from "../core/icons/LinkedIn";
+import { ICONS } from "../../lib/constants";
 
 // schema
 const basicsSchema = z.object({
@@ -100,13 +100,6 @@ export const BasicsInfo: React.FC = () => {
     });
   };
 
-  // if icon name is empty, set it to "link"
-  const handleBlurIconNameInput = (id: string, iconName: string) => {
-    if (iconName.trim() === "") {
-      handleUpdateCustomField(id, "iconName", "link");
-    }
-  };
-
   return (
     <section
       className="grid gap-y-6"
@@ -119,7 +112,7 @@ export const BasicsInfo: React.FC = () => {
           Personal Info
         </h2>
       </header>
-      <main className="grid gap-4 sm:grid-col-2">
+      <main className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="basics.name">Full Name</Label>
           <Input
@@ -289,41 +282,28 @@ export const BasicsInfo: React.FC = () => {
             <Popover>
               <Button variant="ghost" size="icon" asChild>
                 <PopoverTrigger>
-                  {field.iconName === "linkedin" ? (
-                    <LinkedInIcon size={14} />
-                  ) : (
-                    <CustomIcon iconName={field.iconName} size={14} />
-                  )}
+                  <CustomIcon iconName={field.iconName} size={14} />
                 </PopoverTrigger>
               </Button>
               <PopoverContent className="w-fit p-2" align="start">
-                <Input
-                  type="text"
-                  placeholder="Icon Name"
-                  value={field.iconName}
-                  onBlur={() =>
-                    handleBlurIconNameInput(field.id, field.iconName)
-                  }
-                  onChange={(e) =>
-                    handleUpdateCustomField(
-                      field.id,
-                      "iconName",
-                      e.target.value
-                    )
-                  }
-                />
-                <p className="text-xs text-muted-foreground/70 mt-2">
-                  Visit{" "}
-                  <a
-                    href="https://lucide.dev/icons/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="underline underline-offset-2 hover:text-primary"
-                  >
-                    lucide.dev/icons
-                  </a>{" "}
-                  for the list of all icons.
-                </p>
+                <div className="flex flex-col gap-2">
+                  {/* Icon List */}
+                  <div className="grid grid-cols-5 gap-2">
+                    {Object.keys(ICONS).map((icon: string) => (
+                      <Button
+                        title={icon.charAt(0).toUpperCase() + icon.slice(1)}
+                        key={icon}
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          handleUpdateCustomField(field.id, "iconName", icon)
+                        }
+                      >
+                        <CustomIcon iconName={icon} size={16} />
+                      </Button>
+                    ))}
+                  </div>
+                </div>
               </PopoverContent>
             </Popover>
             {/* Name Input */}

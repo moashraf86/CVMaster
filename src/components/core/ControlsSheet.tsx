@@ -26,6 +26,7 @@ import { FontSelectorAccordion } from "./FontSelectorAccordion";
 import { loadGoogleFont } from "../../lib/googleFonts";
 import { ScrollArea } from "../ui/scroll-area";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { Switch } from "../ui/switch";
 interface ControlsSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -44,7 +45,14 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
   } = useResume();
   const {
     setValue,
-    pdfSettings: { fontFamily, fontSize, lineHeight, verticalSpacing, margin },
+    pdfSettings: {
+      fontFamily,
+      fontSize,
+      lineHeight,
+      verticalSpacing,
+      margin,
+      pageBreakLine,
+    },
   } = usePdfSettings();
   const windowSize = useWindowSize();
   const isMobile = windowSize.width && windowSize.width < 640;
@@ -83,6 +91,10 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
   // handle margin change
   const handleMarginChange = (value: number) => {
     setValue("margin", { ...margin, VALUE: value });
+  };
+
+  const handlePageBreakLineChange = (value: boolean) => {
+    setValue("pageBreakLine", value);
   };
 
   return (
@@ -290,6 +302,14 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
                   {margin.VALUE}px
                 </span>
               </div>
+            </div>
+            {/* Page Break Line */}
+            <div className="flex items-center justify-between">
+              <Label>Show break line</Label>
+              <Switch
+                checked={pageBreakLine}
+                onCheckedChange={handlePageBreakLineChange}
+              />
             </div>
           </div>
         </ScrollArea>

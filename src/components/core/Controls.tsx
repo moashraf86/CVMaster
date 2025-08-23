@@ -15,7 +15,6 @@ import { useState } from "react";
 import { PDF_SETTINGS } from "../../lib/constants";
 import { ControlsSheet } from "./ControlsSheet";
 import { useWindowSize } from "@uidotdev/usehooks";
-import { ThemeToggler } from "./ThemeToggler";
 
 interface ControlsProps {
   elem: React.RefObject<ReactZoomPanPinchRef>;
@@ -100,10 +99,6 @@ export const Controls: React.FC<ControlsProps> = ({
 
   return (
     <div className="flex shadow-none bg-card border border-border rounded-none sm:rounded-full sm:shadow-xl px-1.5 py-2 max-w-full w-full sm:w-auto flex-nowrap overflow-x-auto">
-      {/* before & after blur effect */}
-      <div className="absolute left-0 top-0 bottom-0 w-3 bg-background/10 backdrop-blur-sm sm:hidden" />
-      <div className="absolute right-0 top-0 bottom-0 w-3 bg-background/10 backdrop-blur-sm sm:hidden" />
-
       {/* Zoom controls */}
       <div className="flex border-r px-.5 sm:px-1">
         <Button
@@ -154,7 +149,7 @@ export const Controls: React.FC<ControlsProps> = ({
           type="button"
           variant="ghost"
           size="icon"
-          className="hidden sm:flex rounded-full"
+          className="flex rounded-full"
           onClick={() => setWheelPanning(!wheelPanning)}
         >
           {wheelPanning ? <Move /> : <Search />}
@@ -183,7 +178,6 @@ export const Controls: React.FC<ControlsProps> = ({
         >
           <SlidersVertical className="size-4" />
         </Button>
-        <ThemeToggler direction="horizontal" className="lg:hidden" />
       </div>
       <ControlsSheet
         isOpen={isControlsOpen}
