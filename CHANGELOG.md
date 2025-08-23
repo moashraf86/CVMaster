@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [v1.3.0] - 2025-08-23
+
+### Highlights
+
+- Major UI/UX improvements across dialogs, inputs, and previews.
+- Added new icons, shiny button variant, and improved theming system.
+- Introduced **SortableKeyword** (drag-and-drop skills) and dropdown navigation.
+
 ## [v1.2.1] - 2025-08-17
 
 ### Changed
