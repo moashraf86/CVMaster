@@ -28,13 +28,7 @@ const DEFAULT_RESUME_DATA = {
   experience: [],
   projects: [],
   education: [],
-  skills: [
-    {
-      id: "",
-      name: "",
-      keywords: [],
-    },
-  ],
+  skills: [],
   languages: [],
   certifications: [],
   awards: [],
