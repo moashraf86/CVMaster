@@ -5,11 +5,16 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [v1.3.0] - 2025-08-23
 
-### Highlights
+### Added
 
-- Major UI/UX improvements across dialogs, inputs, and previews.
-- Added new icons, shiny button variant, and improved theming system.
-- Introduced **SortableKeyword** (drag-and-drop skills) and dropdown navigation.
+- Introduced **custom icons** for better UI clarity.
+- Added **SortableKeyword** component (drag-and-drop skills).
+- Introduced **dropdown menu** for improved mobile navigation.
+
+### Changed
+
+- Separated **AppLoader** into its own file for cleaner structure.
+- General UI/UX refinements across dialogs and inputs.
 
 ## [v1.2.1] - 2025-08-17
 
