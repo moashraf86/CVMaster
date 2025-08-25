@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [v1.4.0] - 2025-08-25
+
+### Changed
+
+- Improved UI consistency across components
+- Enhanced drag-and-drop labels to sync with section titles
+- Standardized icon positioning (icon before text)
+- Refined theme toggle animations
+
+### Fixed
+
+- Better mobile layout handling with dynamic viewport heights
+- Resolved layout issues on devices with notches
+- Removed debug console logs
+
 ## [v1.3.0] - 2025-08-23
 
 ### Added
