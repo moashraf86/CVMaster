@@ -14,8 +14,8 @@ export const ImportCV: React.FC = () => {
         title="Import your CV"
         onClick={() => setIsOpen(true)}
       >
-        Import
         <Upload />
+        Import
       </Button>
       <ImportCvDialog isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>

@@ -10,7 +10,7 @@ export const CvForm: React.FC = () => {
   const { resumeData } = useResume();
 
   return (
-    <div className="flex grow shrink-0 basis-[40%] 2xl:basis-[35%] max-h-[calc(100vh-104px)] lg:max-h-[calc(100vh-64px)] overflow-hidden bg-card border-r border-border">
+    <div className="flex grow shrink-0 basis-[40%] 2xl:basis-[35%] h-[calc(100dvh-104px)] lg:h-[calc(100dvh-64px)] overflow-hidden bg-card border-r border-border">
       <SidebarNavigation className="hidden lg:flex" />
       <ScrollArea className="grow">
         <div className="flex flex-col gap-y-6 p-6">
