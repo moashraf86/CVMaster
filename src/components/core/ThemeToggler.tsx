@@ -49,10 +49,10 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
       bgIcon: "!size-3",
       translate: isVertical
         ? isDark
-          ? "top-0 translate-y-8"
+          ? "top-0 translate-y-9"
           : "top-0 translate-y-1"
         : isDark
-        ? "left-0 translate-x-8"
+        ? "left-0 translate-x-9"
         : "left-0 translate-x-1",
       padding: "p-0",
     },
@@ -63,10 +63,10 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
       bgIcon: "!size-4",
       translate: isVertical
         ? isDark
-          ? "top-0 translate-y-10"
+          ? "top-0 translate-y-11"
           : "top-0 translate-y-1"
         : isDark
-        ? "left-0 translate-x-10"
+        ? "left-0 translate-x-11"
         : "left-0 translate-x-1",
       padding: "p-0",
     },
@@ -79,7 +79,7 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
       onClick={handleThemeChange}
       variant="ghost"
       className={cn(
-        "relative inline-flex items-center rounded-full transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-inner border bg-background dark:bg-primary",
+        "relative inline-flex items-center rounded-full transition-all duration-300 border-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background shadow-inner border bg-muted/80 dark:bg-primary",
         config.container,
         isVertical && "flex-col",
         config.padding,
@@ -92,10 +92,10 @@ export const ThemeToggler: React.FC<ThemeTogglerProps> = ({
       {showBackground && (
         <div
           className={cn(
-            "absolute inset-0 flex items-center",
+            "absolute inset-1 flex items-center",
             isVertical
               ? "flex-col justify-between py-1.5"
-              : "justify-between px-1.5"
+              : "justify-between px-1"
           )}
         >
           <Sun

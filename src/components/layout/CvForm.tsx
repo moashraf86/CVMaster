@@ -12,7 +12,10 @@ export const CvForm: React.FC = () => {
   return (
     <div className="flex grow shrink-0 basis-[40%] 2xl:basis-[35%] max-h-[calc(100vh-104px)] lg:max-h-[calc(100vh-64px)] overflow-hidden bg-card border-r border-border">
       <SidebarNavigation className="hidden lg:flex" />
-      <ScrollArea className="grow pb-6">
+      <ScrollArea
+        className="grow pb-6"
+        style={{ paddingBottom: "env(safe-area-inset-top)" }}
+      >
         <div className="flex flex-col gap-y-6 p-6">
           <BasicsInfo />
           <Separator />
