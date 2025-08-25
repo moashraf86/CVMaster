@@ -18,7 +18,11 @@ import { SectionName } from "../../types/types";
 import { SortableItem } from "./SortableItem";
 
 export default function DndSections() {
-  const { sectionOrder, setSectionOrder } = useResume();
+  const {
+    sectionOrder,
+    setSectionOrder,
+    resumeData: { sectionTitles },
+  } = useResume();
 
   // Sensors for drag-and-drop
   const sensors = useSensors(
@@ -41,6 +45,12 @@ export default function DndSections() {
     }
   };
 
+  // Sync section order names with section titles
+  const sectionOrderWithTitles = sectionOrder.map((sectionId) => ({
+    id: sectionId,
+    title: sectionTitles[sectionId],
+  }));
+
   return (
     <DndContext
       sensors={sensors}
@@ -51,9 +61,9 @@ export default function DndSections() {
         items={sectionOrder}
         strategy={verticalListSortingStrategy}
       >
-        {sectionOrder.map((sectionId) => (
-          <SortableItem key={sectionId} id={sectionId}>
-            {sectionId}
+        {sectionOrderWithTitles.map((section) => (
+          <SortableItem key={section.id} id={section.id}>
+            {section.title}
           </SortableItem>
         ))}
       </SortableContext>
