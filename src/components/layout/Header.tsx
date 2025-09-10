@@ -3,7 +3,7 @@ import { DownloadCV } from "../core/DownloadCV";
 import { ImportCV } from "../core/ImportCV";
 import { ThemeToggler } from "../core/ThemeToggler";
 import { ReviewBtn } from "../core/ReviewBtn";
-import { Link, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { Separator } from "../ui/separator";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { Button } from "../ui/button";

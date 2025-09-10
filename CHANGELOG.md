@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Changed
+
+- Replaced existing logo and favicon images with updated versions.
+- Modified the site web manifest to update the app name and color scheme.
+
+### Added
+
+- Introduced a new `Logo` component for better code organization and reusability in the `Header` component.
+
 ## [v1.4.0] - 2025-08-25
 
 ### Changed
