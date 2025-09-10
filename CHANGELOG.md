@@ -3,12 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [v1.5.0] - 2025-09-10
 
 ### Changed
 
 - Replaced existing logo and favicon images with updated versions.
 - Modified the site web manifest to update the app name and color scheme.
+- Updated cvmaster-ui.png for README.md
 
 ### Added
 
