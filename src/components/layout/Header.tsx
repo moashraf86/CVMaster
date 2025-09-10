@@ -3,7 +3,7 @@ import { DownloadCV } from "../core/DownloadCV";
 import { ImportCV } from "../core/ImportCV";
 import { ThemeToggler } from "../core/ThemeToggler";
 import { ReviewBtn } from "../core/ReviewBtn";
-import { Link, useLocation } from "react-router";
+import { useLocation } from "react-router";
 import { Separator } from "../ui/separator";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { Button } from "../ui/button";
@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { ControlsSheet } from "../core/ControlsSheet";
+import { Logo } from "../core/Logo";
 
 export const Header: React.FC = () => {
   const location = useLocation();
@@ -26,16 +27,7 @@ export const Header: React.FC = () => {
   return (
     <>
       <header className="flex items-center justify-between h-16 p-4 border-b border-border">
-        <Link to="/" className="flex items-center gap-2">
-          <img
-            src="/logo.svg"
-            alt="CV Master"
-            className="size-6 object-contain"
-          />
-          <h1 className="text-lg font-bold text-primary hidden sm:block">
-            CV Master
-          </h1>
-        </Link>
+        <Logo />
         <div className="flex items-center gap-2">
           <ThemeToggler className="lg:hidden" />
           <Button
