@@ -44,6 +44,7 @@ const DEFAULT_RESUME_DATA = {
     awards: "Awards",
     volunteering: "Volunteering",
   },
+  skillsLayout: "inline",
 };
 
 // Default values for pdf settings

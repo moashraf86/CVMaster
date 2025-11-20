@@ -162,6 +162,7 @@ export interface PdfSettings {
       INITIAL: number;
     };
     pageBreakLine: boolean;
+    skillsLayout: "inline" | "grid";
   };
   setValue: (
     key: string,

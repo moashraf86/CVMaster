@@ -17,6 +17,7 @@ import {
   AlignCenterVertical,
   AlignEndVertical,
   FileText,
+  List,
 } from "lucide-react";
 import { Slider } from "../ui/slider";
 import { usePdfSettings, useResume } from "../../store/useResume";
@@ -27,6 +28,7 @@ import { loadGoogleFont } from "../../lib/googleFonts";
 import { ScrollArea } from "../ui/scroll-area";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { Switch } from "../ui/switch";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 interface ControlsSheetProps {
   isOpen: boolean;
   onClose: () => void;
@@ -41,8 +43,12 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
 }) => {
   const {
     setData,
-    resumeData: { basics },
+    resumeData: {
+      basics,
+      sectionTitles: { skills },
+    },
   } = useResume();
+
   const {
     setValue,
     pdfSettings: {
@@ -52,6 +58,7 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
       verticalSpacing,
       margin,
       pageBreakLine,
+      skillsLayout,
     },
   } = usePdfSettings();
   const windowSize = useWindowSize();
@@ -143,11 +150,34 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
             </div>
           </div>
           <Separator className="my-8" />
+          {/* Skills Layout */}
+          <div className="flex flex-col gap-6">
+            <h3 className="text-lg font-semibold flex items-center gap-2">
+              <List className="size-4" />
+              {skills} layout
+            </h3>
+            <div className="flex flex-col gap-2">
+              <RadioGroup
+                value={skillsLayout}
+                onValueChange={(value) => setValue("skillsLayout", value)}
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="inline" id="inline" />
+                  <Label htmlFor="inline">Inline</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="grid" id="grid" />
+                  <Label htmlFor="grid">Grid</Label>
+                </div>
+              </RadioGroup>
+            </div>
+          </div>
+          <Separator className="my-8" />
           {/* Layout*/}
           <div className="flex flex-col gap-6">
             <h3 className="text-lg font-semibold flex items-center gap-2">
               <GalleryVertical className="size-4" />
-              Layout
+              Layout Reorder
             </h3>
             <div className="space-y-2">
               <Suspense fallback={<div>Loading...</div>}>
