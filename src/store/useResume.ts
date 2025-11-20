@@ -44,7 +44,6 @@ const DEFAULT_RESUME_DATA = {
     awards: "Awards",
     volunteering: "Volunteering",
   },
-  skillsLayout: "inline",
 };
 
 // Default values for pdf settings
@@ -63,6 +62,7 @@ const DEFAULT_PDF_SETTINGS = {
     STEP: PDF_SETTINGS.MARGIN.STEP,
   },
   pageBreakLine: true, // show page break in preview mode
+  skillsLayout: "inline",
 };
 
 // Helper function to safely parse JSON from localStorage
