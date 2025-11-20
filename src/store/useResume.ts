@@ -119,6 +119,13 @@ export const useResume = create<ResumeType>((set) => ({
   },
 }));
 
+// Migration: ensure old users' pdfSetting includes skillsLayout
+if (localPdfSetting && localPdfSetting.skillsLayout === undefined) {
+  // If skillsLayout is missing, add it and save back
+  localPdfSetting.skillsLayout = "inline";
+  localStorage.setItem("pdfSetting", JSON.stringify(localPdfSetting));
+}
+
 // Create PDF settings store
 export const usePdfSettings = create<PdfSettings>((set) => ({
   pdfSettings: {
