@@ -296,6 +296,7 @@ export async function generateJSONFromText(text: string) {
 							"scale": 0.65,
 							"verticalSpacing": 2,
 							"pageBreakLine": true,
+							"skillsLayout": "inline",
 							"margin": {
 								"MIN": 10,
 								"MAX": 50,
@@ -386,6 +387,7 @@ export async function generateJSONFromText(text: string) {
           scale: 0.65,
           verticalSpacing: 2,
           pageBreakLine: true,
+          skillsLayout: "inline",
           margin: {
             MIN: 10,
             MAX: 50,
@@ -597,6 +599,7 @@ Always return valid JSON only, no additional text or explanations.`,
 									"scale": 0.65,
 									"verticalSpacing": 2,
 									"pageBreakLine": true,
+									skillsLayout: "inline",
 									"margin": {
 										"MIN": 10,
 										"MAX": 50,
@@ -696,6 +699,7 @@ Always return valid JSON only, no additional text or explanations.`,
           INITIAL: 20,
         },
         pageBreakLine: true,
+        skillsLayout: "inline",
       };
     }
 
@@ -810,6 +814,7 @@ function createFallbackStructure() {
       scale: 0.65,
       verticalSpacing: 2,
       pageBreakLine: true,
+      skillsLayout: "inline",
       margin: {
         MIN: 10,
         MAX: 50,
