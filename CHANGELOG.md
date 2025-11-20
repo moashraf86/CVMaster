@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.7.0] - 2525-11-20
+
+### Added
+
+- Added new "inline" and "grid" layout options to Technical Skills section
+- Updated resume store and types to support layout selection
+
 ## [1.6.0] - 2025-10-20
 
 ### Fixed
