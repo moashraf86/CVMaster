@@ -3,7 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.7.0] - 2525-11-20
+## [1.7.1] - 2025-11-21
+
+### Fixed
+
+- add "skillsLayout" to pdfSetting for legacy users
+
+## [1.7.0] - 2025-11-20
 
 ### Added
 
