@@ -3,7 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
-## [1.7.1] - 2025-11-21
+## [1.7.2] - 2025-11-21
+
+### Added
+
+- Added missing "skillsLayout" to pdfSetting in resume store for legacy users
+- extend skillsLayout type to include grid (columns), grid (rows), inline
 
 ### Fixed
 
