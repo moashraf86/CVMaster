@@ -29,10 +29,12 @@ export const SkillsPreview: React.FC = () => {
         style={{
           lineHeight: `${lineHeight * 0.25}rem`,
         }}
-        className={cn("", {
-          grid: skillsLayout === "grid",
-          "grid-cols-[repeat(auto-fill,_minmax(200px,_1fr))]":
-            skillsLayout === "grid",
+        className={cn("gap-4", {
+          grid: skillsLayout !== "inline",
+          "grid-cols-[repeat(auto-fit,minmax(0,1fr))]":
+            skillsLayout === "grid-col",
+          "grid-rows-[repeat(auto-fit,minmax(0,1fr))]":
+            skillsLayout === "grid-row",
         })}
       >
         {skillsLayout === "inline" ? (
@@ -62,7 +64,7 @@ export const SkillsPreview: React.FC = () => {
                   {skill.keywords.map((keyword, index) => (
                     <li key={keyword}>
                       {keyword}
-                      {index !== skill.keywords.length - 1 && ", "}
+                      {index !== skill.keywords.length - 1}
                     </li>
                   ))}
                 </ul>
