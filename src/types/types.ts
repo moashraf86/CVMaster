@@ -162,7 +162,7 @@ export interface PdfSettings {
       INITIAL: number;
     };
     pageBreakLine: boolean;
-    skillsLayout: "inline" | "grid";
+    skillsLayout: "inline" | "grid-col" | "grid-row";
   };
   setValue: (
     key: string,

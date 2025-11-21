@@ -17,7 +17,7 @@ import {
   AlignCenterVertical,
   AlignEndVertical,
   FileText,
-  List,
+  LayoutTemplate,
 } from "lucide-react";
 import { Slider } from "../ui/slider";
 import { usePdfSettings, useResume } from "../../store/useResume";
@@ -153,7 +153,7 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
           {/* Skills Layout */}
           <div className="flex flex-col gap-6">
             <h3 className="text-lg font-semibold flex items-center gap-2">
-              <List className="size-4" />
+              <LayoutTemplate className="size-4" />
               {skills} layout
             </h3>
             <div className="flex flex-col gap-2">
@@ -166,8 +166,12 @@ export const ControlsSheet: React.FC<ControlsSheetProps> = ({
                   <Label htmlFor="inline">Inline</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="grid" id="grid" />
-                  <Label htmlFor="grid">Grid</Label>
+                  <RadioGroupItem value="grid-col" id="grid-col" />
+                  <Label htmlFor="grid-col">Grid (Columns)</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="grid-row" id="grid-row" />
+                  <Label htmlFor="grid-row">Grid (Rows)</Label>
                 </div>
               </RadioGroup>
             </div>
