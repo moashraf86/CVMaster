@@ -7,7 +7,6 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 
-- Added missing "skillsLayout" to pdfSetting in resume store for legacy users
 - extend skillsLayout type to include grid (columns), grid (rows), inline
 
 ### Fixed
