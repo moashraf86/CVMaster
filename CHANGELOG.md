@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.7.3] - 2025-11-25
+
+### Fixed
+- Resolved an issue where the Google Fonts API key was undefined in the request URL.
+
 ## [1.7.2] - 2025-11-21
 
 ### Added
