@@ -8,21 +8,18 @@ export async function fetchGoogleFonts(
   googleFontApiKey: string | undefined,
   category: string | undefined
 ): Promise<FontInfo[]> {
+  if (!googleFontApiKey) throw new Error("Google Fonts API key is required");
+
   const query = qs.stringify({
+    key: googleFontApiKey,
     ...(category && { category }),
     sort: "trending",
     capability: "WOFF2",
   });
   try {
-    if (!googleFontApiKey) throw new Error("Google Fonts API key is required");
-
     if (category === "ATS-Friendly") return [];
 
-    const response = await fetch(`${GOOGLE_FONTS_API_URL}?${query}`, {
-      headers: {
-        "X-Goog-Api-Key": googleFontApiKey,
-      },
-    });
+    const response = await fetch(`${GOOGLE_FONTS_API_URL}?${query}`);
 
     if (!response.ok)
       throw new Error(`Google Fonts API error: ${response.status}`);
