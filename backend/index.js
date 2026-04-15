@@ -42,15 +42,21 @@ app.post("/pdf", async (req, res) => {
   const fullName = name.split(" ").join("-").toLowerCase();
   const fullTitle = title.split(" ").join("-").toLowerCase();
 
-  // format the date
-  const now = new Date();
-  const formattedDate = now
-    .toLocaleDateString("en-US", {
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-    })
-    .replace(/\//g, "-");
+  // // Generate random uuid
+  // const now = new Date();
+  function generateId() {
+    const today = new Date();
+
+    const day = String(today.getDate()).padStart(2, "0");
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const year = today.getFullYear();
+
+    const randomId = crypto.randomUUID().replace(/-/g, "").slice(0, 6);
+
+    return `${day}-${month}-${year}_${randomId}`;
+  }
+
+  const uuid = generateId();
 
   if (!htmlContent) {
     return res.status(400).json({ message: "HTML content is required" });
@@ -100,7 +106,7 @@ app.post("/pdf", async (req, res) => {
           resource_type: "image",
           folder: "cvs",
           format: "pdf",
-          public_id: `${fullName}_${fullTitle}_${formattedDate}`,
+          public_id: `${fullName}_${fullTitle}_${uuid}`,
         },
         (error, result) => {
           if (error) reject(error);
