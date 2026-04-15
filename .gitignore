@@ -23,3 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 .env
+
+# stats
+stats.html
+
+
+#Ignore cursor AI rules
+.cursor/rules/codacy.mdc

@@ -6,6 +6,7 @@ import {
   Education,
   Project,
   Skill,
+  Analysis,
 } from "../types/types";
 
 const groq = new Groq({
@@ -35,7 +36,7 @@ export async function improveContent(content: string | object) {
           content: `Please improve the following content while preserving all HTML markup. Make it more professional, concise, and impactful:\n\n${content}`,
         },
       ],
-      model: "gemma2-9b-it",
+      model: "llama-3.1-8b-instant",
       temperature: 0.1,
       max_tokens: 1024,
       top_p: 1,
@@ -70,7 +71,7 @@ export async function fixTypos(content: string | object) {
             "Return only the corrected content without any explanations.",
         },
       ],
-      model: "gemma2-9b-it",
+      model: "llama-3.1-8b-instant",
       temperature: 0.1,
       max_tokens: 1024,
       top_p: 1,
@@ -109,7 +110,7 @@ export async function customizeContent(
             "Return only the modified content.",
         },
       ],
-      model: "gemma2-9b-it",
+      model: "llama-3.1-8b-instant",
       temperature: 0.1,
       max_tokens: 1024,
       top_p: 1,
@@ -295,6 +296,7 @@ export async function generateJSONFromText(text: string) {
 							"scale": 0.65,
 							"verticalSpacing": 2,
 							"pageBreakLine": true,
+							"skillsLayout": "inline",
 							"margin": {
 								"MIN": 10,
 								"MAX": 50,
@@ -385,6 +387,7 @@ export async function generateJSONFromText(text: string) {
           scale: 0.65,
           verticalSpacing: 2,
           pageBreakLine: true,
+          skillsLayout: "inline",
           margin: {
             MIN: 10,
             MAX: 50,
@@ -596,6 +599,7 @@ Always return valid JSON only, no additional text or explanations.`,
 									"scale": 0.65,
 									"verticalSpacing": 2,
 									"pageBreakLine": true,
+									skillsLayout: "inline",
 									"margin": {
 										"MIN": 10,
 										"MAX": 50,
@@ -695,6 +699,7 @@ Always return valid JSON only, no additional text or explanations.`,
           INITIAL: 20,
         },
         pageBreakLine: true,
+        skillsLayout: "inline",
       };
     }
 
@@ -809,6 +814,7 @@ function createFallbackStructure() {
       scale: 0.65,
       verticalSpacing: 2,
       pageBreakLine: true,
+      skillsLayout: "inline",
       margin: {
         MIN: 10,
         MAX: 50,
@@ -970,5 +976,173 @@ function validateCVData(parsedData: ResumeType["resumeData"]): void {
     throw new Error(
       "This image doesn't contain typical CV/Resume content. Please upload a proper CV or resume document."
     );
+  }
+}
+
+// AI CV Review
+export async function aiReview(
+  resume: string,
+  jobTitle: string,
+  jobDescription: string
+) {
+  try {
+    const response = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert resume reviewer and career consultant with 15+ years of experience in talent acquisition and career development. Your expertise spans across multiple industries, ATS systems, and recruitment best practices.
+
+					CORE ANALYSIS APPROACH:
+					- Conduct evidence-based analysis focusing on actual gaps and opportunities in the specific resume
+					- Provide concrete, measurable recommendations tailored to the exact job requirements
+					- Prioritize high-impact improvements that directly address identified weaknesses
+					- Focus on actionable insights rather than generic advice
+
+					ENHANCED SCORING CRITERIA:
+					- 95-100: Exceptional fit, immediately interview-ready, exceeds most requirements
+					- 85-94: Strong candidate, minor targeted improvements for optimization
+					- 75-84: Good potential, moderate enhancements needed for competitive edge
+					- 65-74: Adequate match, significant improvements required
+					- 55-64: Needs development, major restructuring necessary
+					- Below 55: Poor alignment, fundamental gaps to address
+
+					CRITICAL ANALYSIS REQUIREMENTS:
+					- Base ALL feedback on specific deficiencies found in THIS resume
+					- Tailor every recommendation to the target job requirements
+					- Provide specific examples and concrete action steps
+					- Focus on measurable improvements with clear implementation guidance
+					- Maintain professional, constructive tone throughout`,
+        },
+        {
+          role: "user",
+          content: `
+					**RESUME ANALYSIS REQUEST**
+
+					**TARGET POSITION:**
+					Job Title: \`\`\`${jobTitle}\`\`\`
+					Job Requirements: \`\`\`${jobDescription}\`\`\`
+
+					**CANDIDATE RESUME:**
+					\`\`\`${resume}\`\`\`
+
+					**ENHANCED ANALYSIS INSTRUCTIONS:**
+
+					1. **EVIDENCE-BASED EVALUATION**: Analyze only what you observe in the actual resume content. Base all recommendations on specific gaps, weaknesses, or missing elements you identify.
+
+					2. **TARGETED IMPROVEMENTS**: In the "specificImprovements" section, only include areas where you identify actual deficiencies. If a section is strong, omit it entirely. Each improvement must be specific to what's lacking in this particular resume.
+
+					3. **JOB-SPECIFIC FOCUS**: Tailor all feedback to the exact job requirements. Identify missing keywords, skills, and experiences that are specifically mentioned in the job description.
+
+					4. **ACTIONABLE RECOMMENDATIONS**: Provide concrete steps the candidate can take, not general advice. Include specific phrases to add, skills to highlight, or content to modify.
+
+					5. **PRIORITY-BASED APPROACH**: Focus on changes that will have the highest impact on job fit percentage and ATS compatibility.
+
+					6. **CV TITLE**: The title of the CV should match the job title.
+
+					**MANDATORY RESPONSE FORMAT** (maintain exact structure):
+					{
+						"overallScore": number (0-100),
+						"jobFitPercentage": number (0-100),
+						"summary": {
+							"strengths": [string], // Actual strengths found in this specific resume
+							"weaknesses": [string], // Specific weaknesses identified in this resume
+							"fitLevel": "Excellent" | "Good" | "Fair" | "Poor"
+							},
+							"detailedAnalysis": {
+								"contentAlignment": {
+									"score": number (0-100),
+									"feedback": string, // Specific to this resume-job combination
+									"matchingSkills": [string], // Skills actually present in resume that match job
+									"missingSkills": [string] // Required skills specifically absent from this resume
+									},
+									"experienceRelevance": {
+										"score": number (0-100),
+										"feedback": string, // Based on actual experience in this resume
+										"relevantExperience": [string], // Specific experiences that align with job
+										"experienceGaps": [string] // Specific experience gaps for this role
+										},
+										"resumeStructure": {
+											"score": number (0-100),
+											"feedback": string, // Assessment of this resume's actual structure
+											"sectionsToImprove": [
+												{
+													"sectionName": string, // Only sections that actually need improvement
+													"improvement": string // Specific improvement needed for this section
+													}
+													]
+													},
+													"atsCompatibility": {
+														"score": number (0-100),
+														"feedback": string, // ATS assessment of this specific resume
+														"missingKeywords": [string] // Job-specific keywords missing from this resume
+														}
+														},
+														"recommendations": {
+															"highPriority": [string], // Most critical improvements for this specific case
+															"mediumPriority": [string], // Important but secondary improvements
+															"lowPriority": [string] // Nice-to-have enhancements
+															},
+															"specificImprovements": {
+																// CRITICAL: Only include sections where you identify actual deficiencies
+																// If a section is adequate, do NOT include it in the response
+																// Each array should contain specific, actionable improvements based on what you observed is missing/weak
+
+																"professionalSummary": [string], // Only if summary needs improvement - specific actions
+																"skillsSection": [string], // Only if skills section has gaps - specific skills to add
+																"experienceSection": [string], // Only if experience descriptions need work - specific improvements
+																"educationSection": [string], // Only if education section needs enhancement
+																"projectsSection": [string], // Only if projects section needs enhancement
+																"additionalSections": [string] // Only if new sections are needed - specify what to add (e.g. "achievements", "certifications", "projects", languages, etc.)
+
+																// You may add other relevant sections based on what you identify needs improvement:
+																// "achievements": [string], "certifications": [string], "projects": [string], etc.
+																},
+																"nextSteps": [string], // Sequential actions in order of priority
+																"estimatedImprovementTime": string // Realistic time estimate for implementing changes
+																}
+
+																**CRITICAL REQUIREMENTS:**
+																- Return ONLY the JSON object with no additional text
+																- Base every recommendation on specific deficiencies you identify in this resume
+																- Tailor all suggestions to the exact job requirements provided
+																- Include only improvement sections where actual gaps exist
+																- Provide actionable, specific guidance rather than generic advice
+																- Maintain exact JSON structure to ensure compatibility
+																- if user input a meaningless job title or description, return a score of 0 and a message saying "Please enter a valid job title and description"
+																- if the resume is not a CV/Resume or empty or contains only, return a isResume: false and a message saying "cannot analyze an empty resume"`,
+        },
+      ],
+      model: "openai/gpt-oss-120b",
+      temperature: 0.5,
+      max_tokens: 8192,
+      stop: null,
+      response_format: { type: "json_object" },
+    });
+
+    const review: string = response.choices[0]?.message?.content as string;
+
+    const parsedReview = JSON.parse(review) as Analysis;
+
+    console.log(parsedReview);
+    // check if the job title and description are meaningful
+    if (parsedReview?.jobFitPercentage === 0) {
+      // throw an error
+      throw new Error("Please enter a valid job title and description");
+    }
+    if (parsedReview?.isResume === false) {
+      // throw an error
+      throw new Error("cannot analyze an empty resume");
+    }
+
+    return parsedReview;
+  } catch (error) {
+    if (error instanceof Error) {
+      // if error includes rate limit exceeded, throw a new error
+      if (error.message.includes("Rate limit reached")) {
+        throw new Error("AI Model Rate limit reached. Please try again later.");
+      }
+      throw new Error(error.message);
+    }
+    throw error;
   }
 }

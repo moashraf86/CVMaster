@@ -162,6 +162,7 @@ export interface PdfSettings {
       INITIAL: number;
     };
     pageBreakLine: boolean;
+    skillsLayout: "inline" | "grid-col" | "grid-row";
   };
   setValue: (
     key: string,
@@ -213,3 +214,55 @@ export type FontInfo = {
   variants: string[];
   variable: boolean;
 };
+
+export type Analysis = {
+  isResume?: boolean;
+  overallScore: number;
+  jobFitPercentage: number;
+  summary: {
+    strengths: string[];
+    weaknesses: string[];
+    fitLevel: string;
+  };
+  detailedAnalysis: {
+    contentAlignment: {
+      score: number;
+      feedback: string;
+      matchingSkills: string[];
+      missingSkills: string[];
+    };
+    experienceRelevance: {
+      score: number;
+      feedback: string;
+      relevantExperience: string[];
+      experienceGaps: string[];
+    };
+    resumeStructure: {
+      score: number;
+      feedback: string;
+      sectionsToImprove: {
+        sectionName: string;
+        improvement: string;
+      }[];
+    };
+    atsCompatibility: {
+      score: number;
+      feedback: string;
+      missingKeywords: string[];
+    };
+  };
+  recommendations: {
+    highPriority: string[];
+    mediumPriority: string[];
+    lowPriority: string[];
+  };
+  specificImprovements: {
+    professionalSummary: string;
+    skillsSection: string;
+    experienceSection: string;
+    educationSection: string;
+    additionalSections: string;
+  };
+  nextSteps: string[];
+  estimatedImprovementTime: string;
+} | null;

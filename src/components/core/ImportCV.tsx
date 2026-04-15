@@ -9,6 +9,7 @@ export const ImportCV: React.FC = () => {
   return (
     <>
       <Button
+        type="button"
         variant="outline"
         title="Import your CV"
         onClick={() => setIsOpen(true)}

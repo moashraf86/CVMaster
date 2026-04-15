@@ -182,7 +182,7 @@ export const VolunteeringDialog: React.FC = () => {
                 />
               </div>
             </div>
-            <Button type="submit" className="flex ms-auto">
+            <Button type="submit" className="flex w-full sm:w-auto ms-auto">
               {isEditMode ? "Save Changes" : "Create"}
             </Button>
           </form>

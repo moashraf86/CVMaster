@@ -107,6 +107,8 @@ const pdfSettingsSchema = z.object({
   ]),
   lineHeight: z.number(),
   verticalSpacing: z.number(),
+  skillsLayout: z.string(),
+  pageBreakLine: z.boolean(),
   margin: z.object({
     MIN: z.number(),
     MAX: z.number(),

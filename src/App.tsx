@@ -7,15 +7,41 @@ import { Analytics } from "@vercel/analytics/react";
 import { MobileCvTabs } from "./components/layout/MobileCvTabs";
 import { useLockBodyScroll, useWindowSize } from "@uidotdev/usehooks";
 import { Header } from "./components/layout/Header";
+import { useState, useEffect } from "react";
+import { AppLoader } from "./components/core/AppLoader";
 
 function App() {
   const windowSize = useWindowSize();
   const isMobile = windowSize.width !== null && windowSize.width < 1024;
+  const [isAppReady, setIsAppReady] = useState(false);
+  const isFirstVisit = !sessionStorage.getItem("hasVisited");
+
+  useEffect(() => {
+    const initializeApp = async () => {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      setIsAppReady(true);
+
+      // Mark as visited after first load
+      if (isFirstVisit) {
+        sessionStorage.setItem("hasVisited", "true");
+      }
+    };
+
+    initializeApp();
+  }, [isFirstVisit]);
 
   // lock body scroll
   useLockBodyScroll();
+
+  // Show loader only on first visit while app is initializing
+  if (isFirstVisit && !isAppReady) {
+    return (
+        <AppLoader />
+    );
+  }
+
   return (
-    <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
+    <ThemeProvider defaultTheme="system" storageKey="cv-master-theme">
       <DialogProvider>
         <div className="size-full overflow-hidden">
           <Header />

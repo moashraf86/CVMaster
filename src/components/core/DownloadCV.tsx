@@ -39,6 +39,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
       scale,
       verticalSpacing,
       margin,
+      skillsLayout,
     },
   } = usePdfSettings();
   const { basics } = resumeData;
@@ -180,6 +181,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
           lineHeight,
           scale,
           verticalSpacing,
+          skillsLayout,
           margin: {
             MIN: margin.MIN,
             MAX: margin.MAX,
@@ -214,15 +216,15 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         {isLoading ? (
           <>
             <span className="flex items-center gap-2">
-              Downloading...
               <LoaderCircle className="animate-spin" />
+              Downloading...
             </span>
           </>
         ) : type === "icon" ? (
           <Download />
         ) : (
           <span className="flex items-center gap-2">
-            Download <Download />
+            <Download /> Download
           </span>
         )}
       </Button>

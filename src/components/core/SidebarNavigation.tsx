@@ -36,7 +36,7 @@ export const SidebarNavigation: React.FC<{ className?: string }> = ({
   return (
     <aside
       className={cn(
-        "flex flex-auto flex-row lg:flex-col items-center justify-between lg:justify- gap-10 py-3 lg:py-6 px-2 shadow-md lg:border-r border-border bg-card",
+        "flex flex-auto flex-row max-w-fit lg:flex-col items-center justify-between lg:justify- gap-10 py-3 lg:py-6 px-2 shadow-md lg:border-r border-border bg-card",
         className
       )}
       role="navigation"

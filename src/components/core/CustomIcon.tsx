@@ -1,4 +1,8 @@
-import * as LucideIcons from "lucide-react";
+import React from "react";
+
+import { ICONS } from "../../lib/constants";
+
+export type IconName = keyof typeof ICONS;
 
 export const CustomIcon: React.FC<{
   iconName?: string;
@@ -6,15 +10,9 @@ export const CustomIcon: React.FC<{
 }> = ({ iconName, size = 14 }) => {
   if (!iconName) return null;
 
-  const iconKey = Object.keys(LucideIcons).find(
-    (key) => key.toLowerCase() === iconName.toLowerCase()
-  ) as keyof typeof LucideIcons;
+  const key = iconName.toLowerCase() as IconName;
 
-  const IconComponent = LucideIcons[iconKey] as React.ComponentType<{
-    size?: number;
-  }>;
-
-  if (!IconComponent) return null;
+  const IconComponent = ICONS[key] as React.ElementType;
 
   return <IconComponent size={size} />;
 };

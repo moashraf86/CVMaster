@@ -1,0 +1,14 @@
+import { ReviewResult } from "../components/core/ReviewResult";
+import { Header } from "../components/layout/Header";
+import { ThemeProvider } from "../providers/ThemeProvider";
+
+export default function ReviewPage() {
+  return (
+    <ThemeProvider defaultTheme="system" storageKey="cv-master-theme">
+      <div className="size-full overflow-hidden">
+        <Header />
+        <ReviewResult />
+      </div>
+    </ThemeProvider>
+  );
+}

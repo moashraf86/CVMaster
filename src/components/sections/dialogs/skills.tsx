@@ -23,8 +23,23 @@ import { useResume } from "../../../store/useResume";
 import { Button } from "../../ui/button";
 import { useEffect, useState } from "react";
 import { Skill } from "../../../types/types";
+import {
+  horizontalListSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
+import { SortableKeyword } from "./SortableKeyword";
+import {
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 import { X } from "lucide-react";
-import { cn } from "../../../lib/utils";
 
 // define skills schema
 const skillsSchema = z.object({
@@ -44,7 +59,9 @@ export const SkillsDialog: React.FC = () => {
   const [keywords, setKeywords] = useState<string[]>(
     skills && index !== null ? skills[index].keywords : []
   );
+  const [orderedKeywords, setOrderedKeywords] = useState<string[]>([]);
   const [toDeleteKeyword, setToDeleteKeyword] = useState<number | null>(null);
+
   // check if user is in edit mode
   const isEditMode = skills && index !== null && skills[index];
 
@@ -64,6 +81,25 @@ export const SkillsDialog: React.FC = () => {
     defaultValues,
   });
 
+  // sensor for drag-and-drop
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+
+  // handle drag-and-drop
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = orderedKeywords.indexOf(active.id as string);
+      const newIndex = orderedKeywords.indexOf(over.id as string);
+      const newOrder = arrayMove(orderedKeywords, oldIndex, newIndex);
+      setOrderedKeywords(newOrder);
+    }
+  };
+
   // on submit function
   function onSubmit(data: z.infer<typeof skillsSchema>) {
     // Generate Unique ID If creating
@@ -71,10 +107,12 @@ export const SkillsDialog: React.FC = () => {
       ? {
           ...data,
           id: skills[index].id,
+          keywords: orderedKeywords,
         }
       : {
           ...data,
           id: crypto.randomUUID(),
+          keywords: orderedKeywords,
         };
     // update the skills array in the resume data
     const updatedSkills = isEditMode
@@ -87,6 +125,7 @@ export const SkillsDialog: React.FC = () => {
     setData({
       skills: updatedSkills,
     });
+
     closeDialog();
     form.reset();
   }
@@ -100,11 +139,14 @@ export const SkillsDialog: React.FC = () => {
       // check  if the keyword is not empty or duplicate
       const newKeyword = form.getValues("keyword")?.trim() || "";
       if (!newKeyword || keywords.includes(newKeyword)) return;
-      setKeywords([...keywords, newKeyword]);
-      form.setValue("keywords", [
-        ...(form.getValues("keywords") || []),
-        newKeyword,
-      ]);
+
+      const newKeywords = [...keywords, newKeyword];
+      const newOrder = [...orderedKeywords, newKeyword];
+
+      // update the keywords and keywords order in the resume data
+      setKeywords(newKeywords);
+      setOrderedKeywords(newOrder);
+      form.setValue("keywords", newKeywords);
       form.setValue("keyword", "");
     }
     // clear the error message
@@ -116,32 +158,61 @@ export const SkillsDialog: React.FC = () => {
     // if user pastes text, split the text by comma and add to the keywords array
     e.preventDefault();
     const clipboardData = e.clipboardData.getData("text");
-    const clipboardKeywords = clipboardData.split(",");
-    setKeywords([...keywords, ...clipboardKeywords]);
-    form.setValue("keywords", [
-      ...(form.getValues("keywords") || []),
-      ...clipboardKeywords,
-    ]);
+    // remove duplicated keywords
+    const clipboardKeywords = clipboardData
+      .split(",")
+      .map((keyword) => keyword.trim())
+      .filter((keyword) => keyword && !keywords.includes(keyword));
+
+    // add the new keywords to the keywords array and the ordered keywords array
+    const newKeywords = [...keywords, ...clipboardKeywords];
+    const newOrder = [...orderedKeywords, ...clipboardKeywords];
+
+    // update the keywords and keywords order in the resume data
+    setKeywords(newKeywords);
+    setOrderedKeywords(newOrder);
+    form.setValue("keywords", newKeywords);
     form.setValue("keyword", "");
   };
 
   // delete keyword
-  const deleteKeyword = (index: number) => () => {
-    setToDeleteKeyword(index);
+  const deleteKeyword = (keywordToDelete: string) => () => {
+    const keywordIndex = keywords.indexOf(keywordToDelete);
+    setToDeleteKeyword(keywordIndex);
+
     setTimeout(() => {
-      const newKeywords = keywords.filter((_, i) => i !== index);
+      const newKeywords = keywords.filter((k) => k !== keywordToDelete);
+      const newOrder = orderedKeywords.filter((k) => k !== keywordToDelete);
+
       setKeywords(newKeywords);
+      setOrderedKeywords(newOrder);
       form.setValue("keywords", newKeywords);
       setToDeleteKeyword(null);
     }, 300);
   };
 
+  // handle clear keywords
+  const handleClearKeywords = () => {
+    setKeywords([]);
+    setOrderedKeywords([]);
+    form.setValue("keyword", "");
+    form.setValue("keywords", []);
+    form.clearErrors("keywords");
+  };
+
   useEffect(() => {
-    // set the keywords to the keywords in the form state
-    setKeywords(isEditMode ? skills[index].keywords : []);
+    // if dialog is open, update the keywords and keywords order
+    if (isEditMode && skills[index]) {
+      const skill = skills[index];
+      setKeywords(skill.keywords || []);
+      setOrderedKeywords(skill.keywords || []);
+    } else {
+      setKeywords([]);
+      setOrderedKeywords([]);
+    }
     // reset the form
     form.reset(defaultValues);
-  }, [index, skills]);
+  }, [index, skills, isOpen]);
 
   return (
     <Dialog open={isOpen("skills")} onOpenChange={closeDialog}>
@@ -164,7 +235,7 @@ export const SkillsDialog: React.FC = () => {
                   <FormItem>
                     <FormLabel>Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Languages" {...field} />
+                      <Input placeholder="ex: Languages" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -176,12 +247,22 @@ export const SkillsDialog: React.FC = () => {
                 name="keyword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Keywords</FormLabel>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>Keywords</FormLabel>
+                      <Button
+                        aria-label="Clear All Keywords"
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleClearKeywords}
+                      >
+                        <X className="!size-4" /> Clear All
+                      </Button>
+                    </div>
                     <FormControl>
                       <Input
                         onKeyDown={addKeyword}
                         onPaste={pasteKeywords}
-                        placeholder="React, Node.js, MongoDB"
+                        placeholder="ex: React, Node.js, MongoDB"
                         {...field}
                         hasError={form.formState.errors.keywords !== undefined}
                       />
@@ -193,32 +274,43 @@ export const SkillsDialog: React.FC = () => {
                     <FormMessage>
                       {form.formState.errors.keywords?.message}
                     </FormMessage>
-                    {/* display keywords here */}
-                    <ul
-                      className="flex items-center flex-wrap gap-2"
-                      role="list"
-                    >
-                      {keywords.map((keyword, index) => (
-                        <li
-                          role="listitem"
-                          onClick={deleteKeyword(index)}
-                          key={keyword}
-                          className={cn(
-                            "inline-flex gap-2 items-center px-3 py-0.5 bg-primary text-primary-foreground rounded-full text-sm cursor-pointer animate-in slide-in-from-top fade-in duration-300",
-                            toDeleteKeyword === index &&
-                              "animate-out slide-out-to-left fade-out duration-300"
-                          )}
+                    {/* Sortable Keywords Display */}
+                    {keywords.length > 0 && (
+                      <div className="mt-4">
+                        <DndContext
+                          sensors={sensors}
+                          collisionDetection={closestCenter}
+                          onDragEnd={handleDragEnd}
                         >
-                          {keyword}
-                          <X size={16} />
-                        </li>
-                      ))}
-                    </ul>
+                          <SortableContext
+                            items={orderedKeywords}
+                            strategy={horizontalListSortingStrategy}
+                          >
+                            <ul className="flex flex-wrap gap-2">
+                              {orderedKeywords.map((keyword) => {
+                                return (
+                                  <SortableKeyword
+                                    key={keyword}
+                                    id={keyword}
+                                    keyword={keyword}
+                                    onDelete={deleteKeyword(keyword)}
+                                    isDeleting={
+                                      toDeleteKeyword ===
+                                      keywords.indexOf(keyword)
+                                    }
+                                  />
+                                );
+                              })}
+                            </ul>
+                          </SortableContext>
+                        </DndContext>
+                      </div>
+                    )}
                   </FormItem>
                 )}
               />
             </div>
-            <Button type="submit" className="flex ms-auto">
+            <Button type="submit" className="flex w-full sm:w-auto ms-auto">
               {isEditMode ? "Save Changes" : "Create"}
             </Button>
           </form>

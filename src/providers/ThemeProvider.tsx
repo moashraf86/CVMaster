@@ -23,7 +23,7 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 export function ThemeProvider({
   children,
   defaultTheme = "system",
-  storageKey = "vite-ui-theme",
+  storageKey = "cv-master-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setTheme] = useState<Theme>(
@@ -40,7 +40,7 @@ export function ThemeProvider({
         .matches
         ? "dark"
         : "light";
-
+      setTheme(systemTheme);
       root.classList.add(systemTheme);
       return;
     }

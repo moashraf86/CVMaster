@@ -1,4 +1,4 @@
-import { Copy, Pencil, Trash } from "lucide-react";
+import { Copy, Pencil, Plus, Trash } from "lucide-react";
 import { Button } from "../../ui/button";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
@@ -236,7 +236,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
             className="flex me-auto"
             onClick={() => openDialog(id)}
           >
-            + Add new item
+            <Plus /> Add new item
           </Button>
         </footer>
       )}
