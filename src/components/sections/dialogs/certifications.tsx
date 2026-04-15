@@ -26,8 +26,8 @@ import { RichTextEditor } from "../../core/RichTextEditor";
 
 // define certifications schema
 const certificationSchema = z.object({
-  name: z.string().trim().min(1, { message: "Name is required" }),
-  issuer: z.string().trim().min(1, { message: "Issuer is required" }),
+  name: z.string().trim().optional(), // make optional
+  issuer: z.string().trim().optional(), // make optional
   date: z.string().trim(),
   website: z.literal("").or(z.string().url()),
   summary: z.string().trim(),
@@ -84,6 +84,8 @@ export const CertificationsDialog: React.FC = () => {
 
   useEffect(() => {
     form.reset(defaultValues);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [index, certifications]);
 
   return (

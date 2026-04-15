@@ -16,6 +16,14 @@ export const SkillsPreview: React.FC = () => {
     return null;
   }
 
+  const isGridLayout = skillsLayout !== "inline";
+  const gridTemplateStyles =
+    skillsLayout === "grid-col"
+      ? { gridTemplateColumns: `repeat(${skills.length}, minmax(0, 1fr))` }
+      : skillsLayout === "grid-row"
+      ? { gridTemplateRows: `repeat(${skills.length}, minmax(0, 1fr))` }
+      : {};
+
   return (
     <section>
       <h3
@@ -28,13 +36,10 @@ export const SkillsPreview: React.FC = () => {
       <div
         style={{
           lineHeight: `${lineHeight * 0.25}rem`,
+          ...gridTemplateStyles,
         }}
         className={cn("gap-4", {
-          grid: skillsLayout !== "inline",
-          "grid-cols-[repeat(auto-fit,minmax(0,1fr))]":
-            skillsLayout === "grid-col",
-          "grid-rows-[repeat(auto-fit,minmax(0,1fr))]":
-            skillsLayout === "grid-row",
+          grid: isGridLayout,
         })}
       >
         {skillsLayout === "inline" ? (
