@@ -26,3 +26,7 @@ dist-ssr
 
 # stats
 stats.html
+
+
+#Ignore cursor AI rules
+.cursor/rules/codacy.mdc
