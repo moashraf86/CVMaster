@@ -542,6 +542,44 @@ function createFallbackStructure() {
   };
 }
 
+// Fallback review structure when AI fails
+function createFallbackReviewStructure(): Analysis | null {
+  return {
+    overallScore: 0,
+    jobFitPercentage: 0,
+    summary: { strengths: [], weaknesses: [], fitLevel: "" },
+    detailedAnalysis: {
+      contentAlignment: {
+        score: 0,
+        feedback: "",
+        matchingSkills: [],
+        missingSkills: [],
+      },
+      experienceRelevance: {
+        score: 0,
+        feedback: "",
+        relevantExperience: [],
+        experienceGaps: [],
+      },
+      resumeStructure: {
+        score: 0,
+        feedback: "",
+        sectionsToImprove: [{ sectionName: "", improvement: "" }],
+      },
+      atsCompatibility: { score: 0, feedback: "", missingKeywords: [] },
+    },
+    recommendations: { highPriority: [], mediumPriority: [], lowPriority: [] },
+    specificImprovements: {
+      professionalSummary: "",
+      skillsSection: "",
+      experienceSection: "",
+      educationSection: "",
+      additionalSections: "",
+    },
+    nextSteps: [],
+    estimatedImprovementTime: "",
+  };
+}
 // CV validation function from the image processing
 function validateCVData(parsedData: ResumeType["resumeData"]): void {
   // Check if we got any meaningful data at all
@@ -772,7 +810,7 @@ export async function aiReview(
   resume: string,
   jobTitle: string,
   jobDescription: string
-) {
+): Promise<Analysis> {
   for (const model of MODELS) {
     try {
       const response = await groq.chat.completions.create({
@@ -812,7 +850,8 @@ export async function aiReview(
           error.message.includes("tokens per minute");
 
         if (isRateLimitExceeded) {
-          continue; // try next model
+          console.warn(`Rate limit hit on model: ${model}. Trying next...`);
+          continue;
         }
 
         // non-rate-limit error — fail immediately
@@ -821,7 +860,7 @@ export async function aiReview(
           description: error.message,
           variant: "destructive",
         });
-        return createFallbackStructure();
+        return createFallbackReviewStructure();
       }
     }
   }
@@ -832,5 +871,5 @@ export async function aiReview(
     description: "Please wait a moment and try again.",
     variant: "destructive",
   });
-  return createFallbackStructure();
+  return createFallbackReviewStructure();
 }
