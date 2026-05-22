@@ -29,6 +29,16 @@ app.use(
 // Middleware to handle JSON parsing with increased payload limit
 app.use(express.json({ limit: "50mb" }));
 
+/** Cloudinary public_id: alphanumeric, /, _, - only */
+function toCloudinaryPublicIdSegment(value) {
+  return String(value || "")
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
 // Define routes here
 app.get("/", (req, res) => {
   res.send("Server is running");
@@ -38,9 +48,8 @@ app.get("/", (req, res) => {
 app.post("/pdf", async (req, res) => {
   const { htmlContent, name, title, margin } = req.body;
 
-  // Replace spaces with underscores and convert to lowercase
-  const fullName = name.split(" ").join("-").toLowerCase();
-  const fullTitle = title.split(" ").join("-").toLowerCase();
+  const fullName = toCloudinaryPublicIdSegment(name) || "cv";
+  const fullTitle = toCloudinaryPublicIdSegment(title) || "resume";
 
   // // Generate random uuid
   // const now = new Date();
