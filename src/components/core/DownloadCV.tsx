@@ -3,13 +3,16 @@ import { flushSync } from "react-dom";
 import { Button } from "../ui/button";
 import { Download, LoaderCircle } from "lucide-react";
 import { Page } from "../preview";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "../../hooks/use-toast";
 import { Basics } from "../../types/types";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { cn } from "../../lib/utils";
 import { DownloadOptionsDialog } from "./dialogs/DownloadOptionsDialog";
 import { buildFontCssUrl } from "../../lib/googleFonts";
+
+const TAILWIND_CDN =
+  "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
 
 const div = document.createElement("div");
 const root = createRoot(div);
@@ -44,14 +47,42 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
   } = usePdfSettings();
   const { basics } = resumeData;
 
+  useEffect(() => {
+    const links: HTMLLinkElement[] = [];
+
+    const preconnect = document.createElement("link");
+    preconnect.rel = "preconnect";
+    preconnect.href = "https://cdn.jsdelivr.net";
+    preconnect.crossOrigin = "anonymous";
+    document.head.appendChild(preconnect);
+    links.push(preconnect);
+
+    const prefetch = document.createElement("link");
+    prefetch.rel = "prefetch";
+    prefetch.as = "style";
+    prefetch.href = TAILWIND_CDN;
+    document.head.appendChild(prefetch);
+    links.push(prefetch);
+
+    return () => {
+      links.forEach((link) => link.remove());
+    };
+  }, []);
+
   // render CVPreview component to HTML
   const getHtmlContent = () => {
+    const fontCssUrl = buildFontCssUrl(fontFamily, ["400", "700"]);
+
     return `<html>
 			<head>
-				<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-				<link href="${buildFontCssUrl(fontFamily, ["400", "700"])}" rel="stylesheet">
-			</head>
-			<style>
+				<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+				<link rel="preconnect" href="https://fonts.googleapis.com">
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+				<link rel="preload" href="${TAILWIND_CDN}" as="style">
+				<link rel="preload" href="${fontCssUrl}" as="style">
+				<link href="${TAILWIND_CDN}" rel="stylesheet">
+				<link href="${fontCssUrl}" rel="stylesheet">
+				<style>
 					:root {
 						--resume-font-family: ${fontFamily};
 					}
@@ -74,9 +105,9 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
 					a {
 						text-decoration: underline;
 					}
-			</style>
+				</style>
+			</head>
 			<body>
-				<!-- Add other dynamic sections here with Tailwind classes -->
 				${div.innerHTML}
 			</body>
 		</html>`;
@@ -126,29 +157,48 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
           name: basics.name,
           title: basics.title,
           margin,
+          uploadToCloudinary: true,
         }),
       });
 
       // check if the response is ok
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Failed to generate PDF.");
+        const errorData = await res.json().catch(() => null);
+        throw new Error(errorData?.message || "Failed to generate PDF.");
       }
 
-      // get the data from the server
-      const data = await res.json();
-      if (!data.url) {
-        throw new Error("Invalid response from server. Please try again.");
+      const contentType = res.headers.get("content-type") || "";
+      const downloadName = `${basics.name}-${basics.title}.pdf`;
+
+      if (!contentType.includes("application/pdf")) {
+        const data = await res.json();
+        if (!data.url) {
+          throw new Error("Invalid response from server. Please try again.");
+        }
+
+        const link = document.createElement("a");
+        link.href = data.url;
+        link.target = "_blank";
+        link.download = downloadName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return;
       }
 
-      // Create a link element and trigger the download
+      const blob = await res.blob();
+      if (blob.size < 100) {
+        throw new Error("Generated PDF is empty. Please try again.");
+      }
+
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.href = data.url;
-      link.target = "_blank";
-      link.download = `${basics.name}-${basics.title}.pdf`;
+      link.href = url;
+      link.download = downloadName;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (error) {
       // show the error message to the user
       toast({

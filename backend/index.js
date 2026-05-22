@@ -16,6 +16,45 @@ cloudinary.config({
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+const isProduction = process.env.NODE_ENV === "production";
+
+let browserPromise = null;
+
+function logPdfTiming(step, startedAt) {
+  const ms = Date.now() - startedAt;
+  console.log(`[pdf] ${step}: ${ms}ms`);
+  return Date.now();
+}
+
+async function getBrowser() {
+  if (browserPromise) {
+    try {
+      const browser = await browserPromise;
+      if (browser.isConnected()) {
+        return browser;
+      }
+    } catch {
+      browserPromise = null;
+    }
+  }
+
+  const launchStartedAt = Date.now();
+  browserPromise = isProduction
+    ? puppeteerCore.launch({
+        args: Chromium.args,
+        defaultViewport: Chromium.defaultViewport,
+        executablePath: await Chromium.executablePath(),
+        headless: Chromium.headless,
+      })
+    : puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"],
+      });
+
+  const browser = await browserPromise;
+  logPdfTiming("browser_launch", launchStartedAt);
+  return browser;
+}
 
 // Configure CORS to allow requests from the specified origin
 app.use(
@@ -23,7 +62,7 @@ app.use(
     origin: "*", // Allow requests from any origin
     methods: ["GET", "POST", "OPTIONS"], // Explicitly allow OPTIONS method
     allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
-  })
+  }),
 );
 
 // Middleware to handle JSON parsing with increased payload limit
@@ -46,13 +85,19 @@ app.get("/", (req, res) => {
 
 // POST /pdf route to generate PDF from HTML content
 app.post("/pdf", async (req, res) => {
-  const { htmlContent, name, title, margin } = req.body;
+  const {
+    htmlContent,
+    name,
+    title,
+    margin,
+    uploadToCloudinary = true,
+  } = req.body;
+  const requestStartedAt = Date.now();
+  let stepStartedAt = requestStartedAt;
 
   const fullName = toCloudinaryPublicIdSegment(name) || "cv";
   const fullTitle = toCloudinaryPublicIdSegment(title) || "resume";
 
-  // // Generate random uuid
-  // const now = new Date();
   function generateId() {
     const today = new Date();
 
@@ -66,72 +111,84 @@ app.post("/pdf", async (req, res) => {
   }
 
   const uuid = generateId();
+  const marginValue = margin?.VALUE ?? 0;
 
   if (!htmlContent) {
     return res.status(400).json({ message: "HTML content is required" });
   }
 
+  let page;
+
   try {
-    let browser;
+    const browser = await getBrowser();
+    stepStartedAt = logPdfTiming("get_browser", stepStartedAt);
 
-    if (process.env.NODE_ENV === "development") {
-      // Use standard Puppeteer locally
-      browser = await puppeteer.launch({
-        headless: true,
-        args: ["--no-sandbox", "--disable-setuid-sandbox"],
-      });
-    }
+    page = await browser.newPage();
+    stepStartedAt = logPdfTiming("new_page", stepStartedAt);
 
-    if (process.env.NODE_ENV === "production") {
-      // Use Puppeteer with Chromium in production
-      browser = await puppeteerCore.launch({
-        args: Chromium.args,
-        defaultViewport: Chromium.defaultViewport,
-        executablePath: await Chromium.executablePath(),
-        headless: Chromium.headless,
-      });
-    }
+    await page.setContent(htmlContent, {
+      waitUntil: "load",
+      timeout: 15000,
+    });
+    stepStartedAt = logPdfTiming("set_content", stepStartedAt);
 
-    const page = await browser.newPage();
-    await page.setContent(htmlContent, { waitUntil: "networkidle0" });
+    await page.evaluate(() => document.fonts?.ready);
+    stepStartedAt = logPdfTiming("fonts_ready", stepStartedAt);
 
-    const pdfBuffer = await page.pdf({
+    const pdfBytes = await page.pdf({
       format: "a4",
       printBackground: true,
       margin: {
-        top: `${margin.VALUE}px`,
-        bottom: `${margin.VALUE}px`,
-        left: `${margin.VALUE}px`,
-        right: `${margin.VALUE}px`,
+        top: `${marginValue}px`,
+        bottom: `${marginValue}px`,
+        left: `${marginValue}px`,
+        right: `${marginValue}px`,
       },
     });
+    stepStartedAt = logPdfTiming("page_pdf", stepStartedAt);
 
-    await browser.close();
+    await page.close();
+    page = null;
 
-    // Upload to Cloudinary
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: "image",
-          folder: "cvs",
-          format: "pdf",
-          public_id: `${fullName}_${fullTitle}_${uuid}`,
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
+    const pdfBuffer = Buffer.from(pdfBytes);
+    const fileName = `${fullName}_${fullTitle}_${uuid}.pdf`;
 
-      uploadStream.end(pdfBuffer);
-    });
+    if (uploadToCloudinary) {
+      const uploadResult = await new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            resource_type: "image",
+            folder: "cvs",
+            format: "pdf",
+            public_id: `${fullName}_${fullTitle}_${uuid}`,
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          },
+        );
 
-    res.json({
-      message: "PDF generated and uploaded successfully",
-      url: uploadResult.secure_url,
-      public_id: uploadResult.public_id,
-    });
+        uploadStream.end(pdfBuffer);
+      });
+      logPdfTiming("cloudinary_upload", stepStartedAt);
+
+      if (!uploadResult?.secure_url) {
+        throw new Error("Cloudinary upload did not return a URL");
+      }
+
+      res.setHeader("X-Cloudinary-Url", uploadResult.secure_url);
+      res.setHeader("Access-Control-Expose-Headers", "X-Cloudinary-Url");
+    }
+
+    logPdfTiming("total_direct", requestStartedAt);
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Length", pdfBuffer.length);
+    res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+    return res.end(pdfBuffer);
   } catch (error) {
+    if (page) {
+      await page.close().catch(() => {});
+    }
     console.error("PDF Generation or upload error:", error);
     res
       .status(500)
@@ -140,9 +197,17 @@ app.post("/pdf", async (req, res) => {
 });
 
 // check server does not run in serverless environment
-if (process.env.NODE_ENV !== "production") {
+if (!isProduction) {
   app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
+  });
+
+  process.on("SIGINT", async () => {
+    if (browserPromise) {
+      const browser = await browserPromise.catch(() => null);
+      await browser?.close().catch(() => {});
+    }
+    process.exit(0);
   });
 }
 
