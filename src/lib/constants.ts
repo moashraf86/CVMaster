@@ -52,6 +52,20 @@ export const PDF_SETTINGS = {
     VALUE: 20,
     STEP: 1,
   },
+  PHOTO: {
+    SIZE: {
+      MIN: 40,
+      MAX: 200,
+      DEFAULT: 100,
+      STEP: 1,
+    },
+    RADIUS: {
+      MIN: 0,
+      MAX: 100,
+      DEFAULT: 4,
+      STEP: 1,
+    },
+  },
 };
 
 // Paper size constants

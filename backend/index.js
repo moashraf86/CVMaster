@@ -5,6 +5,7 @@ import puppeteerCore from "puppeteer-core";
 import Chromium from "@sparticuz/chromium";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
+import rateLimit from "express-rate-limit";
 
 dotenv.config();
 
@@ -42,6 +43,59 @@ function toCloudinaryPublicIdSegment(value) {
 // Define routes here
 app.get("/", (req, res) => {
   res.send("Server is running");
+});
+
+// Rate limiter for photo uploads: 10 requests per 15 minutes per IP
+const uploadPhotoLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // limit each IP to 10 requests per windowMs
+  message: { message: "Too many upload requests. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+app.post("/upload-photo", uploadPhotoLimiter, async (req, res) => {
+  const { image } = req.body;
+
+  if (!image) {
+    return res.status(400).json({ message: "Image data is required" });
+  }
+
+  try {
+    const base64Data = image.includes(",") ? image.split(",")[1] : image;
+    const imageBuffer = Buffer.from(base64Data, "base64");
+
+    const maxSize = 2 * 1024 * 1024;
+    if (imageBuffer.length > maxSize) {
+      return res.status(400).json({
+        message: "Image file too large. Maximum size is 2MB.",
+      });
+    }
+
+    const uploadResult = await new Promise((resolve, reject) => {
+      const uploadStream = cloudinary.uploader.upload_stream(
+        {
+          resource_type: "image",
+          folder: "profile-photos",
+        },
+        (error, result) => {
+          if (error) reject(error);
+          else resolve(result);
+        },
+      );
+
+      uploadStream.end(imageBuffer);
+    });
+
+    if (!uploadResult?.secure_url) {
+      throw new Error("Cloudinary upload did not return a URL");
+    }
+
+    res.json({ url: uploadResult.secure_url });
+  } catch (error) {
+    console.error("Photo upload error:", error);
+    res.status(500).json({ message: "Failed to upload photo" });
+  }
 });
 
 // POST /pdf route to generate PDF from HTML content
