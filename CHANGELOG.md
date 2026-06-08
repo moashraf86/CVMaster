@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.8.0] - 2026-06-08
+
+### Added
+
+- **Profile Photo Feature**: Add profile photo to basics section
+  - Upload via file picker (PNG, JPG, JPEG, WebP, max 2MB)
+  - Paste external image URL
+  - Cloudinary cloud storage integration
+  - Size control (40-200px) with reset to default (100px)
+  - Border radius control (0-100px) with reset to default (4px)
+  - Hide/show toggle to preview CV without photo
+  - Delete confirmation dialog before removing photo
+  - Instant preview with background upload
+
+### Changed
+
+- Improved accessibility with ARIA labels and keyboard navigation for photo upload
+- Enhanced image alt text to include user's name
+
+### Security
+
+- Added server-side file size validation (2MB limit)
+- Implemented rate limiting on photo upload endpoint (10 requests per 15 minutes)
+- Sanitized error messages to prevent information leakage
+
 ## [1.7.3] - 2025-11-25
 
 ### Fixed
