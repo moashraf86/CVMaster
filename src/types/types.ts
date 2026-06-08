@@ -20,6 +20,12 @@ export interface Basics {
     iconName: string;
     value: string;
   }[];
+  photo: {
+    url: string;
+    size: number;
+    borderRadius: number;
+    visible: boolean;
+  };
 }
 
 // [2] Define type for summary

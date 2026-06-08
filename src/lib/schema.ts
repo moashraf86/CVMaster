@@ -24,6 +24,12 @@ const basicsSchema = z.object({
     })
   ),
   alignment: z.enum(["start", "center", "end"]).optional(),
+  photo: z.object({
+    url: z.string(),
+    size: z.number().min(40).max(200),
+    borderRadius: z.number().min(0).max(100),
+    visible: z.boolean(),
+  }),
 });
 
 // Define summary

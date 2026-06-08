@@ -20,6 +20,12 @@ const DEFAULT_RESUME_DATA = {
     },
     customFields: [],
     alignment: "start",
+    photo: {
+      url: "",
+      size: 100,
+      borderRadius: 4,
+      visible: true,
+    },
   },
   summary: {
     sectionTitle: "Summary",
