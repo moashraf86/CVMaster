@@ -17,6 +17,7 @@ const cvMasterJsonSchema = cvMasterSchema.pick({
   volunteering: true,
   sectionTitles: true,
   pdfSettings: true,
+  hiddenItemIds: true,
 });
 
 export type ValidatedData = z.infer<typeof cvMasterJsonSchema>;

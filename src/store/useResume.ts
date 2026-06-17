@@ -86,9 +86,12 @@ const getLocalStorageData = (key: string, defaultValue = null) => {
 const localResumeData = getLocalStorageData("resumeData");
 const localPdfSetting = getLocalStorageData("pdfSetting");
 const localSectionOrder = getLocalStorageData("sectionOrder");
+const localHiddenItemIds =
+  (getLocalStorageData("hiddenItemIds") as { hiddenItemIds?: string[] })
+    ?.hiddenItemIds ?? [];
 
 // Create resume store
-export const useResume = create<ResumeType>((set) => ({
+export const useResume = create<ResumeType>((set, get) => ({
   sectionOrder: [
     "summary",
     "experience",
@@ -101,6 +104,7 @@ export const useResume = create<ResumeType>((set) => ({
     "volunteering",
   ],
   ...localSectionOrder,
+  hiddenItemIds: localHiddenItemIds,
   resumeData: {
     ...DEFAULT_RESUME_DATA,
     ...localResumeData,
@@ -121,6 +125,24 @@ export const useResume = create<ResumeType>((set) => ({
     localStorage.setItem(
       "sectionOrder",
       JSON.stringify({ sectionOrder: order })
+    );
+  },
+  toggleHiddenItem: (id) => {
+    const current = get().hiddenItemIds;
+    const next = current.includes(id)
+      ? current.filter((x) => x !== id)
+      : [...current, id];
+    set({ hiddenItemIds: next });
+    localStorage.setItem(
+      "hiddenItemIds",
+      JSON.stringify({ hiddenItemIds: next })
+    );
+  },
+  setHiddenItemIds: (ids) => {
+    set({ hiddenItemIds: ids });
+    localStorage.setItem(
+      "hiddenItemIds",
+      JSON.stringify({ hiddenItemIds: ids })
     );
   },
 }));

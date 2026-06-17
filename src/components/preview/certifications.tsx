@@ -4,11 +4,16 @@ import { Certification } from "../../types/types";
 export const CertificationsPreview: React.FC = () => {
   const {
     resumeData: { certifications, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
+
+  const visibleCertifications = certifications.filter(
+    (cert) => !hiddenItemIds.includes(cert.id)
+  );
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -16,13 +21,13 @@ export const CertificationsPreview: React.FC = () => {
   };
 
   // process education data to display in the component
-  const processedEducation = certifications.map((cert: Certification) => ({
+  const processedEducation = visibleCertifications.map((cert: Certification) => ({
     ...cert,
     summary: removeBulletPoints(cert.summary),
   }));
 
   // IF there are no certifications, return null
-  if (!certifications || certifications.length === 0) {
+  if (!visibleCertifications || visibleCertifications.length === 0) {
     return null;
   }
 

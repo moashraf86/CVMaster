@@ -5,7 +5,7 @@ import { ValidatedData } from "./useValidateJson";
 
 export const useImportJSON = () => {
   const [isImporting, setIsImporting] = useState(false);
-  const { setData } = useResume();
+  const { setData, setHiddenItemIds } = useResume();
   const { setValue } = usePdfSettings();
 
   const importJSONData = async (validatedData: ValidatedData | null) => {
@@ -23,10 +23,18 @@ export const useImportJSON = () => {
       // Simulate a delay (to be removed in future enhancement)
       await new Promise((resolve) => setTimeout(resolve, 500));
 
+      // Extract hiddenItemIds out of the resume data fields
+      const { hiddenItemIds, ...resumeFields } = validatedData;
+
       // set the resume data
       setData({
-        ...validatedData,
+        ...resumeFields,
       });
+
+      // apply the hiddenItemIds list (if present)
+      if (hiddenItemIds && Array.isArray(hiddenItemIds)) {
+        setHiddenItemIds(hiddenItemIds);
+      }
 
       // set the pdf settings to the pdf settings in the validated data
       setValue("fontFamily", validatedData.pdfSettings.fontFamily);

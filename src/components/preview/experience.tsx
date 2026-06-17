@@ -4,11 +4,17 @@ import { Experience } from "../../types/types";
 export const ExperiencePreview: React.FC = () => {
   const {
     resumeData: { experience, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
+
+  // filter out hidden items
+  const visibleExperience = experience.filter(
+    (exp) => !hiddenItemIds.includes(exp.id)
+  );
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -16,12 +22,12 @@ export const ExperiencePreview: React.FC = () => {
   };
 
   // process experience data to display in the component
-  const processedExperience = experience.map((exp: Experience) => ({
+  const processedExperience = visibleExperience.map((exp: Experience) => ({
     ...exp,
     summary: removeBulletPoints(exp.summary),
   }));
 
-  if (!experience || experience.length === 0) {
+  if (!visibleExperience || visibleExperience.length === 0) {
     return null;
   }
 
@@ -33,7 +39,7 @@ export const ExperiencePreview: React.FC = () => {
       >
         {sectionTitles.experience}
       </h3>
-      {experience &&
+      {visibleExperience &&
         processedExperience.map((exp: Experience) => (
           <div key={exp.id}>
             <div className="flex items-center justify-between">

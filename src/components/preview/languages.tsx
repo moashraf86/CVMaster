@@ -4,14 +4,19 @@ import { Language } from "../../types/types";
 export const LanguagesPreview: React.FC = () => {
   const {
     resumeData: { languages, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { fontSize, lineHeight },
   } = usePdfSettings();
 
+  const visibleLanguages = languages.filter(
+    (lang) => !hiddenItemIds.includes(lang.id)
+  );
+
   // IF there are no languages, return null
-  if (!languages || languages.length === 0) {
+  if (!visibleLanguages || visibleLanguages.length === 0) {
     return null;
   }
 
@@ -24,7 +29,7 @@ export const LanguagesPreview: React.FC = () => {
         {sectionTitles.languages}
       </h3>
       <div style={{ lineHeight: `${lineHeight * 0.25}rem` }}>
-        {languages.map((lang: Language) => (
+        {visibleLanguages.map((lang: Language) => (
           <div key={lang.id}>
             <span className="font-bold">{lang.name}</span>: {lang.level}
           </div>

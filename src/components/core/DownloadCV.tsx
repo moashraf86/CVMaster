@@ -3,23 +3,13 @@ import { flushSync } from "react-dom";
 import { Button } from "../ui/button";
 import { Download, LoaderCircle } from "lucide-react";
 import { Page } from "../preview";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "../../hooks/use-toast";
 import { Basics } from "../../types/types";
 import { usePdfSettings, useResume } from "../../store/useResume";
 import { cn } from "../../lib/utils";
 import { DownloadOptionsDialog } from "./dialogs/DownloadOptionsDialog";
 import { buildFontCssUrl } from "../../lib/googleFonts";
-
-const div = document.createElement("div");
-const root = createRoot(div);
-flushSync(() => {
-  root.render(
-    <>
-      <Page mode="print" />
-    </>
-  );
-});
 
 interface DownloadCVProps {
   className?: string;
@@ -29,7 +19,7 @@ interface DownloadCVProps {
 export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const { resumeData } = useResume();
+  const { resumeData, hiddenItemIds } = useResume();
   const {
     pdfSettings: {
       fontFamily,
@@ -43,6 +33,21 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
     },
   } = usePdfSettings();
   const { basics } = resumeData;
+
+  // Render the print version of the page into a detached div and return the HTML.
+  // Re-rendered on every call so the latest state (e.g. hiddenInPdf) is reflected.
+  const renderPrintHtml = useCallback((): string => {
+    const div = document.createElement("div");
+    const root = createRoot(div);
+    flushSync(() => {
+      root.render(
+        <>
+          <Page mode="print" />
+        </>
+      );
+    });
+    return div.innerHTML;
+  }, []);
 
   // render CVPreview component to HTML
   const getHtmlContent = () => {
@@ -77,7 +82,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
 			</style>
 			<body>
 				<!-- Add other dynamic sections here with Tailwind classes -->
-				${div.innerHTML}
+				${renderPrintHtml()}
 			</body>
 		</html>`;
   };
@@ -174,6 +179,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
     const json = JSON.stringify(
       {
         ...resumeData,
+        hiddenItemIds,
         pdfSettings: {
           fontFamily,
           fontSize,
