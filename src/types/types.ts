@@ -147,6 +147,7 @@ export interface ResumeType {
   setData: (data: Record<string, unknown>) => void;
   setSectionOrder: (order: SectionName[]) => void;
   toggleHiddenItem: (id: string) => void;
+  setHiddenItemIds: (ids: string[]) => void;
 }
 
 export interface PdfSettings {

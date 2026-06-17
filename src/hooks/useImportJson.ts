@@ -5,7 +5,7 @@ import { ValidatedData } from "./useValidateJson";
 
 export const useImportJSON = () => {
   const [isImporting, setIsImporting] = useState(false);
-  const { setData, toggleHiddenItem } = useResume();
+  const { setData, setHiddenItemIds } = useResume();
   const { setValue } = usePdfSettings();
 
   const importJSONData = async (validatedData: ValidatedData | null) => {
@@ -31,9 +31,9 @@ export const useImportJSON = () => {
         ...resumeFields,
       });
 
-      // apply the hiddenItemIds list (if present) by toggling each one
+      // apply the hiddenItemIds list (if present)
       if (hiddenItemIds && Array.isArray(hiddenItemIds)) {
-        hiddenItemIds.forEach((id) => toggleHiddenItem(id));
+        setHiddenItemIds(hiddenItemIds);
       }
 
       // set the pdf settings to the pdf settings in the validated data

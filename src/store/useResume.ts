@@ -138,6 +138,13 @@ export const useResume = create<ResumeType>((set, get) => ({
       JSON.stringify({ hiddenItemIds: next })
     );
   },
+  setHiddenItemIds: (ids) => {
+    set({ hiddenItemIds: ids });
+    localStorage.setItem(
+      "hiddenItemIds",
+      JSON.stringify({ hiddenItemIds: ids })
+    );
+  },
 }));
 
 // Migration: ensure old users' pdfSetting includes skillsLayout
