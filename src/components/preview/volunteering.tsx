@@ -4,11 +4,16 @@ import { Volunteering } from "../../types/types";
 export const VolunteeringPreview: React.FC = () => {
   const {
     resumeData: { volunteering, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
+
+  const visibleVolunteering = volunteering.filter(
+    (vol) => !hiddenItemIds.includes(vol.id)
+  );
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -16,13 +21,13 @@ export const VolunteeringPreview: React.FC = () => {
   };
 
   // process education data to display in the component
-  const processedEducation = volunteering.map((vol: Volunteering) => ({
+  const processedEducation = visibleVolunteering.map((vol: Volunteering) => ({
     ...vol,
     summary: removeBulletPoints(vol.summary),
   }));
 
   // IF there are no volunteering, return null
-  if (!volunteering || volunteering.length === 0) {
+  if (!visibleVolunteering || visibleVolunteering.length === 0) {
     return null;
   }
 

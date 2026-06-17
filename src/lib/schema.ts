@@ -123,6 +123,9 @@ const pdfSettingsSchema = z.object({
   }),
 });
 
+// Hidden item IDs schema
+const hiddenItemIdsSchema = z.array(z.string()).optional();
+
 // Final CV Master schema
 export const cvMasterSchema = z.object({
   basics: basicsSchema,
@@ -137,4 +140,5 @@ export const cvMasterSchema = z.object({
   volunteering: z.array(z.any()), // empty array for now
   sectionTitles: sectionTitlesSchema,
   pdfSettings: pdfSettingsSchema,
+  hiddenItemIds: hiddenItemIdsSchema,
 });

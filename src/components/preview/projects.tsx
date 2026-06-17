@@ -4,23 +4,28 @@ import { Project } from "../../types/types";
 export const ProjectsPreview: React.FC = () => {
   const {
     resumeData: { projects, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
 
+  const visibleProjects = projects.filter(
+    (project) => !hiddenItemIds.includes(project.id)
+  );
+
   // remove bullet points from the summary
   const removeBulletPoints = (summary: string) => {
     return summary.replace(/• /g, "");
   };
   //processed data
-  const processedExperience = projects.map((project: Project) => ({
+  const processedExperience = visibleProjects.map((project: Project) => ({
     ...project,
     summary: removeBulletPoints(project.summary),
   }));
   // IF there are no projects, return null
-  if (!projects || projects.length === 0) {
+  if (!visibleProjects || visibleProjects.length === 0) {
     return null;
   }
   return (

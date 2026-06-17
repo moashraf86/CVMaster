@@ -1,4 +1,12 @@
-import { Copy, Pencil, Plus, Trash } from "lucide-react";
+import {
+  Copy,
+  Eye,
+  EyeOff,
+  MoreVertical,
+  Pencil,
+  Plus,
+  Trash,
+} from "lucide-react";
 import { Button } from "../../ui/button";
 import { useDialog } from "../../../hooks/useDialog";
 import { useResume } from "../../../store/useResume";
@@ -8,10 +16,17 @@ import { useState, useMemo, useRef, useEffect } from "react";
 import { DeleteConfirmation } from "../../core/dialogs/DeleteConfirmation";
 import { cn } from "../../../lib/utils";
 import { Input } from "../../ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../ui/dropdown-menu";
 
 export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const { openDialog, updateDialog } = useDialog();
-  const { resumeData, setData } = useResume();
+  const { resumeData, setData, hiddenItemIds, toggleHiddenItem } = useResume();
   const [deleteDialog, setDeleteDialog] = useState<{
     isOpen: boolean;
     index: number | null;
@@ -22,7 +37,7 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
   const [itemToDelete, setItemToDelete] = useState<number | null>(null);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [sectionTitle, setSectionTitle] = useState(
-    resumeData.sectionTitles[id] || name
+    resumeData.sectionTitles[id] || name,
   );
 
   // Track rendered items to prevent re-animation
@@ -133,17 +148,19 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
           sectionData.map((item: SectionItem, index: number) => {
             // Check if this item should animate in (new item)
             const shouldAnimateIn = !renderedItems.current.has(
-              item.id as string
+              item.id as string,
             );
+            const isItemHidden = hiddenItemIds.includes(item.id as string);
 
             return (
               <li
                 key={item.id as string}
                 className={cn(
-                  "border border-border p-4 duration-300 group rounded-sm",
+                  "border border-border p-4 duration-300 rounded-sm transition-opacity",
                   shouldAnimateIn && "animate-in slide-in-from-top fade-in",
                   itemToDelete === index &&
-                    "animate-out slide-out-to-left fade-out"
+                    "animate-out slide-out-to-left fade-out",
+                  isItemHidden && "opacity-50",
                 )}
               >
                 <div className="flex items-center justify-between">
@@ -174,44 +191,53 @@ export const SectionBase: React.FC<Section> = ({ name, itemsCount, id }) => {
                       ) : null
                     }
                   </div>
-                  <div className="lg:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex">
-                    <Button
-                      aria-label={`Edit ${item.name}`}
-                      title="Edit"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => updateDialog(id, index)}
-                    >
-                      <Pencil />
-                    </Button>
-                    <Button
-                      aria-label={`Duplicate ${item.name}`}
-                      title="Duplicate"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        // duplicate the item
-                        const newItem = {
-                          ...item,
-                          id: crypto.randomUUID(),
-                        };
-                        setData({ [id]: [...sectionData, newItem] });
-                      }}
-                    >
-                      <Copy />
-                    </Button>
-                    <Button
-                      aria-label={`Delete ${item.name}`}
-                      title="Delete"
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => {
-                        setDeleteDialog({ isOpen: true, index: index });
-                      }}
-                    >
-                      <Trash />
-                    </Button>
-                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button
+                        aria-label={`Actions for ${item.name}`}
+                        title="Actions"
+                        variant="ghost"
+                        size="icon"
+                        className="transition-opacity duration-300 rounded-full"
+                      >
+                        <MoreVertical />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => updateDialog(id, index)}>
+                        <Pencil />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          const newItem = {
+                            ...item,
+                            id: crypto.randomUUID(),
+                          };
+                          setData({ [id]: [...sectionData, newItem] });
+                        }}
+                      >
+                        <Copy />
+                        Duplicate
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => toggleHiddenItem(item.id as string)}
+                      >
+                        {isItemHidden ? <Eye /> : <EyeOff />}
+                        {isItemHidden ? "Show in PDF" : "Hide from PDF"}
+                      </DropdownMenuItem>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem
+                        className="text-red-500 focus:text-red-500"
+                        onClick={() => {
+                          setDeleteDialog({ isOpen: true, index: index });
+                        }}
+                      >
+                        <Trash className="text-red-500" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </li>
             );

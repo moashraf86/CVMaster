@@ -4,11 +4,16 @@ import { Education } from "../../types/types";
 export const EducationPreview: React.FC = () => {
   const {
     resumeData: { education, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
+
+  const visibleEducation = education.filter(
+    (edu) => !hiddenItemIds.includes(edu.id)
+  );
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -16,13 +21,13 @@ export const EducationPreview: React.FC = () => {
   };
 
   // process education data to display in the component
-  const processedEducation = education.map((edu: Education) => ({
+  const processedEducation = visibleEducation.map((edu: Education) => ({
     ...edu,
     summary: removeBulletPoints(edu.summary),
   }));
 
   // IF there are no education, return null
-  if (!education || education.length === 0) {
+  if (!visibleEducation || visibleEducation.length === 0) {
     return null;
   }
 

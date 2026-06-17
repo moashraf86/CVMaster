@@ -5,23 +5,28 @@ import { Skill } from "../../types/types";
 export const SkillsPreview: React.FC = () => {
   const {
     resumeData: { skills, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { fontSize, lineHeight, skillsLayout },
   } = usePdfSettings();
 
+  const visibleSkills = skills.filter(
+    (skill) => !hiddenItemIds.includes(skill.id)
+  );
+
   // IF there are no skills, return null
-  if (!skills || skills.length === 0) {
+  if (!visibleSkills || visibleSkills.length === 0) {
     return null;
   }
 
   const isGridLayout = skillsLayout !== "inline";
   const gridTemplateStyles =
     skillsLayout === "grid-col"
-      ? { gridTemplateColumns: `repeat(${skills.length}, minmax(0, 1fr))` }
+      ? { gridTemplateColumns: `repeat(${visibleSkills.length}, minmax(0, 1fr))` }
       : skillsLayout === "grid-row"
-      ? { gridTemplateRows: `repeat(${skills.length}, minmax(0, 1fr))` }
+      ? { gridTemplateRows: `repeat(${visibleSkills.length}, minmax(0, 1fr))` }
       : {};
 
   return (
@@ -44,7 +49,7 @@ export const SkillsPreview: React.FC = () => {
       >
         {skillsLayout === "inline" ? (
           <>
-            {skills.map((skill: Skill) => (
+            {visibleSkills.map((skill: Skill) => (
               <div key={skill.id}>
                 {skill.name && (
                   <span className="font-bold">{skill.name}: </span>
@@ -60,7 +65,7 @@ export const SkillsPreview: React.FC = () => {
           </>
         ) : (
           <>
-            {skills.map((skill: Skill) => (
+            {visibleSkills.map((skill: Skill) => (
               <div key={skill.id}>
                 {skill.name && (
                   <span className="font-bold">{skill.name}: </span>

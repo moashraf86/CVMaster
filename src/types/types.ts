@@ -127,6 +127,7 @@ export type SectionName =
 // DEfine ResumeData type
 export interface ResumeType {
   sectionOrder: SectionName[];
+  hiddenItemIds: string[];
   resumeData: {
     basics: Basics;
     summary: Summary;
@@ -145,6 +146,7 @@ export interface ResumeType {
   };
   setData: (data: Record<string, unknown>) => void;
   setSectionOrder: (order: SectionName[]) => void;
+  toggleHiddenItem: (id: string) => void;
 }
 
 export interface PdfSettings {

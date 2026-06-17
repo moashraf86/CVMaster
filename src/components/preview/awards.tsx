@@ -4,11 +4,16 @@ import { Award } from "../../types/types";
 export const AwardsPreview: React.FC = () => {
   const {
     resumeData: { awards, sectionTitles },
+    hiddenItemIds,
   } = useResume();
 
   const {
     pdfSettings: { lineHeight, fontSize },
   } = usePdfSettings();
+
+  const visibleAwards = awards.filter(
+    (award) => !hiddenItemIds.includes(award.id)
+  );
 
   // remove bullets from the description
   const removeBulletPoints = (summary: string) => {
@@ -16,13 +21,13 @@ export const AwardsPreview: React.FC = () => {
   };
 
   // process education data to display in the component
-  const processedEducation = awards.map((award: Award) => ({
+  const processedEducation = visibleAwards.map((award: Award) => ({
     ...award,
     summary: removeBulletPoints(award.summary),
   }));
 
   // IF there are no awards, return null
-  if (!awards || awards.length === 0) {
+  if (!visibleAwards || visibleAwards.length === 0) {
     return null;
   }
 
