@@ -1,9 +1,9 @@
 import { createRoot } from "react-dom/client";
 import { flushSync } from "react-dom";
 import { Button } from "../ui/button";
-import { Download, LoaderCircle } from "lucide-react";
+import { Download } from "lucide-react";
 import { Page } from "../preview";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "../../hooks/use-toast";
 import { Basics } from "../../types/types";
 import { usePdfSettings, useResume } from "../../store/useResume";
@@ -28,8 +28,19 @@ const blobToBase64 = (blob: Blob): Promise<string> =>
   });
 
 export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const autoCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // clear any pending auto-close timer on unmount or new download
+  useEffect(() => {
+    return () => {
+      if (autoCloseTimerRef.current) {
+        clearTimeout(autoCloseTimerRef.current);
+      }
+    };
+  }, []);
   const { resumeData, hiddenItemIds } = useResume();
   const {
     pdfSettings: {
@@ -54,7 +65,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
       root.render(
         <>
           <Page mode="print" />
-        </>
+        </>,
       );
     });
     return div.innerHTML;
@@ -112,15 +123,12 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
 
   const downloadPdf = async () => {
     try {
-      // close the menu
-      setIsDialogOpen(false);
-
-      setIsLoading(true);
+      setIsGenerating(true);
 
       // check if user is offline
       if (!navigator.onLine) {
         throw new Error(
-          "You are offline. Please check your internet connection."
+          "You are offline. Please check your internet connection.",
         );
       }
 
@@ -192,12 +200,28 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
               title: basics.title,
               uuid,
             }),
-          })
+          }),
         )
         .catch(() => {
           // silent — background upload is best-effort
         });
+
+      // show success state in the dialog, then auto-close via the
+      // onClose callback (respects the controlled-component contract)
+      setIsGenerating(false);
+      setIsSuccess(true);
+      if (autoCloseTimerRef.current) {
+        clearTimeout(autoCloseTimerRef.current);
+      }
+      autoCloseTimerRef.current = setTimeout(() => {
+        setIsDialogOpen(false);
+        setIsSuccess(false);
+        autoCloseTimerRef.current = null;
+      }, 1500);
     } catch (error) {
+      setIsGenerating(false);
+      setIsDialogOpen(false);
+
       // show the error message to the user
       toast({
         title: "Error",
@@ -208,8 +232,6 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         }`,
         variant: "destructive",
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -241,7 +263,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         },
       },
       null,
-      2
+      2,
     );
     console.log(json);
     const blob = new Blob([json], { type: "application/json" });
@@ -261,15 +283,9 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         size={type === "icon" ? "icon" : "default"}
         className={cn("rounded-md", className)}
         onClick={() => setIsDialogOpen(true)}
+        disabled={isGenerating || isSuccess}
       >
-        {isLoading ? (
-          <>
-            <span className="flex items-center gap-2">
-              <LoaderCircle className="animate-spin" />
-              Downloading...
-            </span>
-          </>
-        ) : type === "icon" ? (
+        {type === "icon" ? (
           <Download />
         ) : (
           <span className="flex items-center gap-2">
@@ -282,6 +298,8 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         onClose={() => setIsDialogOpen(false)}
         downloadPdf={downloadPdf}
         downloadJson={downloadJson}
+        isGenerating={isGenerating}
+        isSuccess={isSuccess}
       />
     </>
   );
