@@ -6,8 +6,13 @@ import Chromium from "@sparticuz/chromium";
 import { v2 as cloudinary } from "cloudinary";
 import dotenv from "dotenv";
 import rateLimit from "express-rate-limit";
+import { fileURLToPath } from "url";
+import path from "path";
 
-dotenv.config();
+// Load .env from the backend/ directory, not the CWD the server was
+// started from (e.g. when run as `node backend/index.js` from root).
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+dotenv.config({ path: path.join(__dirname, ".env") });
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -50,6 +55,16 @@ const uploadPhotoLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // limit each IP to 10 requests per windowMs
   message: { message: "Too many upload requests. Please try again later." },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
+// Separate rate limiter for PDF uploads: 30 requests per 15 minutes per IP
+// (higher than photos since downloading CVs is a core user action)
+const uploadPdfLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  message: { message: "Too many PDF upload requests. Please try again later." },
   standardHeaders: true,
   legacyHeaders: false,
 });
@@ -98,28 +113,34 @@ app.post("/upload-photo", uploadPhotoLimiter, async (req, res) => {
   }
 });
 
-// POST /pdf route to generate PDF from HTML content
+// Upload a PDF (base64 string) to Cloudinary with the given public_id.
+// Uses the data URI upload approach — more reliable than upload_stream
+// for base64-decoded content. Resolves with the Cloudinary result,
+// rejects on error.
+function uploadPdfToCloudinary(base64Data, publicId) {
+  const dataUri = `data:application/pdf;base64,${base64Data}`;
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.upload(
+      dataUri,
+      {
+        resource_type: "image",
+        folder: "cvs",
+        format: "pdf",
+        public_id: publicId,
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+  });
+}
+
+// POST /pdf route to generate PDF from HTML content.
+// Returns the raw PDF buffer so the client can download instantly.
+// Cloudinary upload is handled separately by POST /upload-pdf.
 app.post("/pdf", async (req, res) => {
-  const { htmlContent, name, title, margin } = req.body;
-
-  const fullName = toCloudinaryPublicIdSegment(name) || "cv";
-  const fullTitle = toCloudinaryPublicIdSegment(title) || "resume";
-
-  // // Generate random uuid
-  // const now = new Date();
-  function generateId() {
-    const today = new Date();
-
-    const day = String(today.getDate()).padStart(2, "0");
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const year = today.getFullYear();
-
-    const randomId = crypto.randomUUID().replace(/-/g, "").slice(0, 6);
-
-    return `${day}-${month}-${year}_${randomId}`;
-  }
-
-  const uuid = generateId();
+  const { htmlContent, margin } = req.body;
 
   if (!htmlContent) {
     return res.status(400).json({ message: "HTML content is required" });
@@ -162,34 +183,58 @@ app.post("/pdf", async (req, res) => {
 
     await browser.close();
 
-    // Upload to Cloudinary
-    const uploadResult = await new Promise((resolve, reject) => {
-      const uploadStream = cloudinary.uploader.upload_stream(
-        {
-          resource_type: "image",
-          folder: "cvs",
-          format: "pdf",
-          public_id: `${fullName}_${fullTitle}_${uuid}`,
-        },
-        (error, result) => {
-          if (error) reject(error);
-          else resolve(result);
-        }
-      );
-
-      uploadStream.end(pdfBuffer);
-    });
-
-    res.json({
-      message: "PDF generated and uploaded successfully",
-      url: uploadResult.secure_url,
-      public_id: uploadResult.public_id,
-    });
+    // Puppeteer 23.x returns a Uint8Array from page.pdf(); Express's
+    // res.send() only recognizes Buffer instances, so wrap it explicitly
+    // and use res.end() to send raw bytes without body processing.
+    res.setHeader("Content-Type", "application/pdf");
+    res.end(Buffer.from(pdfBuffer));
   } catch (error) {
-    console.error("PDF Generation or upload error:", error);
+    console.error("PDF Generation error:", error);
     res
       .status(500)
       .json({ message: "Internal server error: " + error.message });
+  }
+});
+
+// POST /upload-pdf route to upload a generated PDF to Cloudinary in the
+// background. Acknowledges instantly with 202, then runs the upload after
+// the response is sent. Retries exactly once on failure; swallows the
+// second failure to the server console only.
+app.post("/upload-pdf", uploadPdfLimiter, async (req, res) => {
+  const { pdf, name, title, uuid } = req.body;
+
+  if (!pdf || !uuid) {
+    return res
+      .status(400)
+      .json({ message: "PDF data and uuid are required" });
+  }
+
+  const fullName = toCloudinaryPublicIdSegment(name) || "cv";
+  const fullTitle = toCloudinaryPublicIdSegment(title) || "resume";
+  const publicId = `${fullName}_${fullTitle}_${uuid}`;
+
+  // strip data URL prefix if present (e.g. "data:application/pdf;base64,...")
+  const base64Data = pdf.includes(",") ? pdf.split(",")[1] : pdf;
+
+  // Acknowledge instantly. On @vercel/node the async handler continues
+  // running after the response is flushed, keeping the function alive
+  // until the upload completes or maxDuration is hit. This is best-effort
+  // — if the platform terminates the function early, the upload is lost
+  // (acceptable per the silent-background-upload design).
+  res.status(202).json({ message: "Upload queued" });
+
+  try {
+    await uploadPdfToCloudinary(base64Data, publicId);
+  } catch (firstError) {
+    console.error("Cloudinary upload failed, retrying:", firstError);
+    try {
+      await uploadPdfToCloudinary(base64Data, publicId);
+    } catch (secondError) {
+      console.error(
+        "Cloudinary upload failed after retry:",
+        secondError
+      );
+    }
   }
 });
 

@@ -16,6 +16,17 @@ interface DownloadCVProps {
   type?: "icon" | "button";
 }
 
+// Convert a Blob to a base64 string via FileReader.
+// Mirrors the photo-upload pattern in sections/basics.tsx and avoids
+// the btoa spread-argument stack overflow on large blobs.
+const blobToBase64 = (blob: Blob): Promise<string> =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(blob);
+  });
+
 export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -119,7 +130,7 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
       // get the html content
       const htmlContent = getHtmlContent();
 
-      // send the html content to the server
+      // send the html content to the server to generate the PDF
       const api = import.meta.env.VITE_BACKEND_URL;
       const res = await fetch(`${api}/pdf`, {
         method: "POST",
@@ -128,8 +139,6 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         },
         body: JSON.stringify({
           htmlContent,
-          name: basics.name,
-          title: basics.title,
           margin,
         }),
       });
@@ -140,20 +149,54 @@ export const DownloadCV: React.FC<DownloadCVProps> = ({ className, type }) => {
         throw new Error(errorData.message || "Failed to generate PDF.");
       }
 
-      // get the data from the server
-      const data = await res.json();
-      if (!data.url) {
-        throw new Error("Invalid response from server. Please try again.");
+      // verify the server actually sent a PDF, not an unexpected JSON
+      // error with a 200 status
+      const contentType = res.headers.get("content-type");
+      if (!contentType?.includes("application/pdf")) {
+        throw new Error("Server did not return a PDF.");
       }
 
-      // Create a link element and trigger the download
+      // get the PDF as a blob and trigger an instant local download
+      const pdfBlob = await res.blob();
+      if (pdfBlob.size === 0) {
+        throw new Error("Received empty PDF from server.");
+      }
+      const blobUrl = URL.createObjectURL(pdfBlob);
       const link = document.createElement("a");
-      link.href = data.url;
-      link.target = "_blank";
+      link.href = blobUrl;
       link.download = `${basics.name}-${basics.title}.pdf`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
+      // delay revoking the blob URL — link.click() queues the download
+      // asynchronously, and revoking too early produces a corrupt file
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 1000);
+
+      // generate a uuid for the Cloudinary public_id to ensure uniqueness
+      const uuid = crypto.randomUUID();
+
+      // fire the background upload to Cloudinary without awaiting it
+      // in the UI flow. Note: keepalive is intentionally omitted —
+      // browsers cap keepalive request bodies at 64KB, and a base64
+      // PDF far exceeds that, causing the request to stall.
+      blobToBase64(pdfBlob)
+        .then((base64) =>
+          fetch(`${api}/upload-pdf`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              pdf: base64,
+              name: basics.name,
+              title: basics.title,
+              uuid,
+            }),
+          })
+        )
+        .catch(() => {
+          // silent — background upload is best-effort
+        });
     } catch (error) {
       // show the error message to the user
       toast({
