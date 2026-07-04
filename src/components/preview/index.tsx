@@ -10,7 +10,10 @@ import { usePdfSettings, useResume } from "../../store/useResume";
 import { CertificationsPreview } from "./certifications";
 import { AwardsPreview } from "./awards";
 import { VolunteeringPreview } from "./volunteering";
+import { PageBreakLines } from "./PageBreakLines";
 import { MM_TO_PX, PAPER_SIZES } from "../../lib/constants";
+import { useContentHeight } from "../../hooks/useContentHeight";
+import { useRef } from "react";
 
 // Preview props type
 interface PreviewProps {
@@ -28,14 +31,25 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
     },
   } = usePdfSettings();
 
-  const { sectionOrder } = useResume();
+  const { sectionOrder, resumeData } = useResume();
 
   // Page size in pixels
   const WIDTH = PAPER_SIZES.width * MM_TO_PX;
   const HEIGHT = PAPER_SIZES.height * MM_TO_PX;
 
+  const contentRef = useRef<HTMLDivElement>(null);
+  const totalHeight = useContentHeight(contentRef, mode === "preview", [
+    fontSize,
+    fontFamily,
+    margin,
+    verticalSpacing,
+    sectionOrder,
+    resumeData,
+  ]);
+
   return (
     <div
+      ref={contentRef}
       className={cn("relative bg-white text-black", `font-${fontFamily}`)}
       style={{
         fontSize: `${fontSize || 14}px`,
@@ -85,17 +99,13 @@ export const Page: React.FC<PreviewProps> = ({ mode }) => {
           }
         })}
       </div>
-      {mode === "preview" && pageBreakLine && (
-        <hr
-          className={`absolute w-full left-0`}
-          style={{
-            top: `${HEIGHT + margin.VALUE / 2}px`,
-            borderTop: "1px dashed transparent",
-            borderImage:
-              "repeating-linear-gradient(to right, black 0, black 8px, transparent 8px, transparent 16px) 1",
-          }}
-        />
-      )}
+      <PageBreakLines
+        totalHeight={totalHeight}
+        width={WIDTH}
+        height={HEIGHT}
+        margin={margin}
+        enabled={pageBreakLine && mode === "preview"}
+      />
     </div>
   );
 };
