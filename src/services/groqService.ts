@@ -46,8 +46,8 @@ export async function improveContent(content: string | object) {
 
     return response.choices[0]?.message?.content?.trim() || "No response";
   } catch (error) {
-    console.log(error);
-    return "No response";
+    console.error("improveContent error:", error);
+    throw new Error("Failed to improve content. Please try again.");
   }
 }
 
@@ -81,15 +81,15 @@ export async function fixTypos(content: string | object) {
 
     return response.choices[0]?.message?.content?.trim() || "No response";
   } catch (error) {
-    console.log(error);
-    return "No response";
+    console.error("fixTypos error:", error);
+    throw new Error("Failed to fix typos. Please try again.");
   }
 }
 
 // Customize content with AI
 export async function customizeContent(
   content: string | object,
-  prompt: string
+  prompt: string,
 ) {
   try {
     const response = await groq.chat.completions.create({
@@ -120,8 +120,8 @@ export async function customizeContent(
 
     return response.choices[0]?.message?.content?.trim() || "No response";
   } catch (error) {
-    console.log(error);
-    return "No response";
+    console.error("customizeContent error:", error);
+    throw new Error("Failed to customize content. Please try again.");
   }
 }
 
@@ -429,7 +429,7 @@ export async function generateJSONFromText(text: string) {
 // New function for Vision API
 export const generateJSONFromImage = async (
   base64Image: string,
-  mimeType: string
+  mimeType: string,
 ) => {
   try {
     const completion = await groq.chat.completions.create({
@@ -728,7 +728,7 @@ Always return valid JSON only, no additional text or explanations.`,
         error.message.includes("fetch")
       ) {
         throw new Error(
-          "Network error. Please check your connection and try again."
+          "Network error. Please check your connection and try again.",
         );
       }
     }
@@ -881,14 +881,14 @@ function validateCVData(parsedData: ResumeType["resumeData"]): void {
   // Must have at least 2 CV-related sections to be considered a valid CV
   if (cvSectionCount < 2) {
     throw new Error(
-      "This doesn't appear to be a CV/Resume. Please upload an image containing a CV or resume document."
+      "This doesn't appear to be a CV/Resume. Please upload an image containing a CV or resume document.",
     );
   }
 
   // Additional validation: must have either basic info + one other section, or experience/education
   if (!hasBasicInfo && !hasExperience && !hasEducation) {
     throw new Error(
-      "Could not find essential CV information (name, contact details, experience, or education). Please ensure the image contains a clear CV/Resume."
+      "Could not find essential CV information (name, contact details, experience, or education). Please ensure the image contains a clear CV/Resume.",
     );
   }
 
@@ -899,7 +899,7 @@ function validateCVData(parsedData: ResumeType["resumeData"]): void {
     parsedData.basics.name.length < 2
   ) {
     throw new Error(
-      "The extracted name is too short. Please ensure the image quality is good and contains readable text."
+      "The extracted name is too short. Please ensure the image quality is good and contains readable text.",
     );
   }
 
@@ -937,12 +937,12 @@ function validateCVData(parsedData: ResumeType["resumeData"]): void {
   ];
 
   const foundNonCVIndicators = nonCVIndicators.filter((indicator) =>
-    allTextContent.includes(indicator)
+    allTextContent.includes(indicator),
   );
 
   if (foundNonCVIndicators.length > 2) {
     throw new Error(
-      `This appears to be a ${foundNonCVIndicators[0]} document rather than a CV/Resume. Please upload a CV or resume image.`
+      `This appears to be a ${foundNonCVIndicators[0]} document rather than a CV/Resume. Please upload a CV or resume image.`,
     );
   }
 
@@ -969,12 +969,12 @@ function validateCVData(parsedData: ResumeType["resumeData"]): void {
   ];
 
   const foundCVKeywords = cvKeywords.filter((keyword) =>
-    allTextContent.includes(keyword)
+    allTextContent.includes(keyword),
   ).length;
 
   if (foundCVKeywords < 2) {
     throw new Error(
-      "This image doesn't contain typical CV/Resume content. Please upload a proper CV or resume document."
+      "This image doesn't contain typical CV/Resume content. Please upload a proper CV or resume document.",
     );
   }
 }
@@ -983,7 +983,7 @@ function validateCVData(parsedData: ResumeType["resumeData"]): void {
 export async function aiReview(
   resume: string,
   jobTitle: string,
-  jobDescription: string
+  jobDescription: string,
 ) {
   try {
     const response = await groq.chat.completions.create({
@@ -1123,7 +1123,6 @@ export async function aiReview(
 
     const parsedReview = JSON.parse(review) as Analysis;
 
-    console.log(parsedReview);
     // check if the job title and description are meaningful
     if (parsedReview?.jobFitPercentage === 0) {
       // throw an error

@@ -146,24 +146,24 @@ app.post("/pdf", async (req, res) => {
     return res.status(400).json({ message: "HTML content is required" });
   }
 
-  try {
-    let browser;
+  let browser;
 
+  try {
     if (process.env.NODE_ENV === "development") {
-      // Use standard Puppeteer locally
       browser = await puppeteer.launch({
         headless: true,
         args: ["--no-sandbox", "--disable-setuid-sandbox"],
       });
-    }
-
-    if (process.env.NODE_ENV === "production") {
-      // Use Puppeteer with Chromium in production
+    } else if (process.env.NODE_ENV === "production") {
       browser = await puppeteerCore.launch({
         args: Chromium.args,
         defaultViewport: Chromium.defaultViewport,
         executablePath: await Chromium.executablePath(),
         headless: Chromium.headless,
+      });
+    } else {
+      return res.status(500).json({
+        message: "Server misconfigured: NODE_ENV is not set",
       });
     }
 
@@ -181,18 +181,19 @@ app.post("/pdf", async (req, res) => {
       },
     });
 
-    await browser.close();
-
-    // Puppeteer 23.x returns a Uint8Array from page.pdf(); Express's
-    // res.send() only recognizes Buffer instances, so wrap it explicitly
-    // and use res.end() to send raw bytes without body processing.
     res.setHeader("Content-Type", "application/pdf");
     res.end(Buffer.from(pdfBuffer));
   } catch (error) {
     console.error("PDF Generation error:", error);
-    res
-      .status(500)
-      .json({ message: "Internal server error: " + error.message });
+    res.status(500).json({ message: "Internal server error" });
+  } finally {
+    if (browser) {
+      try {
+        await browser.close();
+      } catch (closeError) {
+        console.error("Failed to close browser:", closeError);
+      }
+    }
   }
 });
 
