@@ -32,6 +32,7 @@ import {
   fixTypos,
   improveContent,
 } from "../../services/groqService";
+import { toast } from "../../hooks/use-toast";
 import clsx from "clsx";
 import { Skeleton } from "../ui/skeleton";
 import {
@@ -245,7 +246,11 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
       // call the handleChange function to update the content
       handleChange(regeneratedContent);
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Failed to improve content",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      });
     } finally {
       // set isRegenerating to false
       setIsRegenerating(false);
@@ -264,7 +269,11 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
       // call the handleChange function to update the content
       handleChange(fixedContent);
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Failed to fix typos",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      });
     } finally {
       // set isRegenerating to false
       setIsFixingTypos(false);
@@ -283,7 +292,11 @@ const AiActionButtons: React.FC<AiActionButtonsProps> = ({
       // call the handleChange function to update the content
       handleChange(customizedContent);
     } catch (error) {
-      console.log(error);
+      toast({
+        title: "Failed to customize content",
+        description: error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      });
     } finally {
       // set isCustomizing to false
       setIsCustomizing(false);

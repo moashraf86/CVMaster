@@ -35,9 +35,7 @@ function App() {
 
   // Show loader only on first visit while app is initializing
   if (isFirstVisit && !isAppReady) {
-    return (
-        <AppLoader />
-    );
+    return <AppLoader />;
   }
 
   return (

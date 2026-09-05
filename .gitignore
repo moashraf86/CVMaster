@@ -30,3 +30,5 @@ stats.html
 
 #Ignore cursor AI rules
 .cursor/rules/codacy.mdc
+
+docs/

@@ -42,8 +42,6 @@ export const useValidateJson = () => {
     try {
       setIsValidating(true);
       setError(null);
-      // Simulate a delay (to be removed in future enhancement)
-      await new Promise((resolve) => setTimeout(resolve, 500));
       await validateCvMasterJson(file);
       return true;
     } catch (error) {
